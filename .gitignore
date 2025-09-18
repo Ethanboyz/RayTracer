@@ -9,6 +9,7 @@
 # Ignore text/log files
 *.log
 *.txt
+*.output
 
 # Ignore IDE-specific files
 .vscode/

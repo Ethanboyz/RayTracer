@@ -34,6 +34,6 @@ $(BUILD_DIR)/main.o: $(SRC_DIR)/main.cpp
 
 # Clean up
 clean:
-	rm -rf $(BUILD_DIR) *.ppm main
+	rm -rf $(BUILD_DIR) *.ppm *.txt main
 
 .PHONY: all clean
