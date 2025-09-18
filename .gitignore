@@ -1,6 +1,7 @@
 # Ignore compiled code
 *.o
 *.x
+main
 /build/
 
 # Ignore renders
@@ -13,3 +14,4 @@
 
 # Ignore IDE-specific files
 .vscode/
+.idea/
