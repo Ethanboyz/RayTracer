@@ -1,0 +1,14 @@
+# Ignore compiled code
+*.o
+*.x
+/build/
+
+# Ignore renders
+*.ppm
+
+# Ignore text/log files
+*.log
+*.txt
+
+# Ignore IDE-specific files
+.vscode/
