@@ -3,6 +3,7 @@
 *.x
 main
 /build/
+/cmake-build-debug/
 
 # Ignore renders
 *.ppm
@@ -10,6 +11,7 @@ main
 # Ignore text/log files
 *.log
 *.txt
+!CMakeLists.txt
 *.output
 
 # Ignore IDE-specific files

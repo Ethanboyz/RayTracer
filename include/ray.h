@@ -5,7 +5,7 @@
 
 class ray {
 public:
-    ray() {}
+    ray() = default;
     ray(const coord3& pos, const vec3& dir) : orig{pos}, dir{dir} {}
 
     // Keep rays immutable

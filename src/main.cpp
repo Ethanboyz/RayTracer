@@ -1,9 +1,14 @@
 #include <iostream>
+#include <fstream>
 
 int main() {
     // Image
     int image_width = 256;
     int image_height = 256;
+
+    std::ofstream file("image.ppm");
+    std::streambuf* cout_buff = std::cout.rdbuf();
+    std::cout.rdbuf(file.rdbuf());
 
     // Render
     std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
@@ -14,12 +19,17 @@ int main() {
             auto g = static_cast<double>(j) / (image_height - 1);
             auto b = 0.0;
 
-            int ir = int(255.999 * r);
-            int ig = int(255.999 * g);
-            int ib = int(255.999 * b);
+            int ir = static_cast<int>(255.999 * r);
+            int ig = static_cast<int>(255.999 * g);
+            int ib = static_cast<int>(255.999 * b);
 
             std::cout << ir << ' ' << ig << ' ' << ib << '\n';
         }
     }
     std::clog << std::endl;
+
+    std::cout.rdbuf(cout_buff);
+    file.close();
+
+    return 0;
 }
