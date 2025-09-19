@@ -18,13 +18,6 @@ public:
     constexpr float z() const { return s[2]; }
 
     // Operator overloading
-    vec3 operator+(const vec3& other) const noexcept {
-        return vec3{
-            s[0] + other.s[0],
-            s[1] + other.s[1],
-            s[2] + other.s[2]
-        };
-    }
     vec3& operator+=(const vec3& other) noexcept {
         s[0] += other.s[0];
         s[1] += other.s[1];
@@ -38,38 +31,17 @@ public:
             -s[2]
         };
     }
-    vec3 operator-(const vec3& other) const noexcept {
-        return vec3{
-            s[0] - other.s[0],
-            s[1] - other.s[1],
-            s[2] - other.s[2]
-        };
-    }
     vec3& operator-=(const vec3& other) noexcept {
         s[0] -= other.s[0];
         s[1] -= other.s[1];
         s[2] -= other.s[2];
         return *this;
     }
-    vec3 operator*(const float t) const noexcept {
-        return vec3{
-            s[0] * t,
-            s[1] * t,
-            s[2] * t
-        };
-    }
     vec3& operator*=(const float t) noexcept {
         s[0] *= t;
         s[1] *= t;
         s[2] *= t;
         return *this;
-    }
-    vec3 operator/(const float t) const {
-        return vec3{
-            s[0] / t,
-            s[1] / t,
-            s[2] / t
-        };
     }
     vec3& operator/=(const float t) {
         s[0] /= t;
@@ -78,5 +50,29 @@ public:
         return *this;
     }
 
+    // Scalar-vector arithmetic
+    friend constexpr vec3 operator+(const vec3& u, const vec3& v) noexcept {
+        return vec3{u.s[0] + v.s[0], u.s[1] + v.s[1], u.s[2] + v.s[2]};
+    }
+    friend vec3 operator-(const vec3& u, const vec3& v) noexcept {
+        return vec3{u.s[0] - v.s[0], u.s[1] - v.s[1], u.s[2] - v.s[2]};
+    }
+    friend vec3 operator*(const vec3& v, const float t) noexcept {
+        return vec3{v.s[0] * t, v.s[1] * t, v.s[2] * t};
+    }
+    friend vec3 operator*(const float t, const vec3& v) noexcept {
+        return v * t;
+    }
+    friend vec3 operator/(const vec3& v, const float t) {
+        return vec3{v.s[0] / t, v.s[1] / t, v.s[2] / t};
+    }
+
+    float length_squared() const noexcept {
+        return s[0] * s[0] + s[1] * s[1] + s[2] * s[2];
+    }
+    float length() const noexcept {
+        return std::sqrt(this->length_squared());
+    }
 };
+
 //#endif
