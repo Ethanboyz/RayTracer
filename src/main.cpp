@@ -1,5 +1,9 @@
 #include <iostream>
 #include <fstream>
+#include "camera.h"
+#include "color.h"
+#include "vec3.h"
+#include "ray.h"
 
 int main() {
     float aspect_ratio = 16.f/9.f;
@@ -17,19 +21,11 @@ int main() {
     for (int j = 0; j < image_height; j++) {
         std::clog << "\rProgress: " << (static_cast<double>(j) / image_height) * 100 << "% " << std::flush;
         for (int i = 0; i < image_width; i++) {
-            auto r = static_cast<double>(i) / (image_width - 1);
-            auto g = static_cast<double>(j) / (image_height - 1);
-            auto b = 0.0;
 
-            int ir = static_cast<int>(255.999 * r);
-            int ig = static_cast<int>(255.999 * g);
-            int ib = static_cast<int>(255.999 * b);
-
-            std::cout << ir << ' ' << ig << ' ' << ib << '\n';
         }
     }
-    std::clog << std::endl;
 
+    std::clog << std::endl;
     std::cout.rdbuf(cout_buff);
     file.close();
 

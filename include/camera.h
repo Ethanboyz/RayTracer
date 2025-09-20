@@ -46,8 +46,8 @@ private:
     int image_h;            // Img height
     float viewport_w;       // Viewport width
     float viewport_h;       // Viewport height
-    vec3 viewport_u;       // Viewport width vec representation
-    vec3 viewport_v;       // Viewport height vec representation
+    vec3 viewport_u;        // Viewport width vec representation
+    vec3 viewport_v;        // Viewport height vec representation
 };
 
 #endif
