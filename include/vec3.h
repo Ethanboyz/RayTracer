@@ -9,7 +9,6 @@ using coord3 = vec3;
 
 class vec3 {
 public:
-    // Very simple vectors
     constexpr vec3() : s{0.f, 0.f, 0.f} {}
     constexpr vec3(const float x, const float y, const float z) : s{x, y, z} {}
 
@@ -93,7 +92,7 @@ public:
     float length() const noexcept {
         return std::sqrt(this->length_squared());
     }
-    friend vec3 unit_vec3(const vec3& v) {
+    friend vec3 unit(const vec3& v) {
         return v / v.length();
     }
 

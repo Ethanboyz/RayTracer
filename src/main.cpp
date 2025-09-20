@@ -2,9 +2,11 @@
 #include <fstream>
 
 int main() {
-    // Image
-    int image_width = 256;
-    int image_height = 256;
+    float aspect_ratio = 16.f/9.f;
+    int image_width = 400;
+    int image_height = static_cast<int>(static_cast<float>(image_width) / aspect_ratio);
+    float viewport_height = 2.f;
+    float viewport_width = viewport_height * static_cast<float>(static_cast<float>(image_width) / static_cast<float>(image_height));
 
     std::ofstream file("image.ppm");
     std::streambuf* cout_buff = std::cout.rdbuf();

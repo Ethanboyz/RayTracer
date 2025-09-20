@@ -4,6 +4,7 @@
 main
 /build/
 /cmake-build-debug/
+Makefile
 
 # Ignore renders
 *.ppm
