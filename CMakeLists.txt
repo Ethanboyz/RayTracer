@@ -11,7 +11,8 @@ add_executable(RayTracer
         include/vec3.h
         include/camera.h
         include/color.h
-        src/main.cpp)
+        src/main.cpp
+        include/sphere.h)
 set_target_properties(RayTracer PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 

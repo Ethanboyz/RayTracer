@@ -6,7 +6,7 @@
 class Ray {
 public:
     Ray() = default;
-    Ray(const Coord3& pos, const Vec3& dir) : orig{pos}, dir{dir} {}
+    Ray(const Coord3& position, const Vec3& direction) : orig{position}, dir{direction} {}
 
     // Keep rays immutable
     const constexpr Coord3& origin() const noexcept { return orig; }

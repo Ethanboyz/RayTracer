@@ -7,13 +7,13 @@ class Camera {
 
 public:
     Camera(
-        const Coord3& pos,
+        const Coord3& position,
         const float fov,
         const float aspect_ratio,
         const int image_height,
         const float viewport_height
     ) :
-    pos{pos},
+    pos{position},
     fov{fov},
     image_h{image_height},
     viewport_h{viewport_height} {
