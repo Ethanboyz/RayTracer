@@ -4,20 +4,20 @@
 #include <iostream>
 #include "vec3.h"
 
-using color = vec3;
+using Color = Vec3;
 
 // Output a specific color to a pixel
-inline void write_color(std::ostream& outstr, const color& pixel_color) {
-    float r = pixel_color.x();
-    float g = pixel_color.y();
-    float b = pixel_color.z();
+inline void write_color(std::ostream& outstr, const Color& pixel_color) {
+    const float r = pixel_color.x();
+    const float g = pixel_color.y();
+    const float b = pixel_color.z();
 
-    int ir = static_cast<int>(255.999 * r);
-    int ig = static_cast<int>(255.999 * g);
-    int ib = static_cast<int>(255.999 * b);
+    const int ir = static_cast<int>(255.999 * r);
+    const int ig = static_cast<int>(255.999 * g);
+    const int ib = static_cast<int>(255.999 * b);
 
     // Output color components PPM-style
-    std::cout << ir << ' ' << ig << ' ' << ib << '\n';
+    outstr << ir << ' ' << ig << ' ' << ib << '\n';
 }
 
 #endif

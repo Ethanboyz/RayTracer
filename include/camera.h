@@ -3,11 +3,11 @@
 
 #include "vec3.h"
 
-class camera {
+class Camera {
 
 public:
-    camera(
-        const coord3& pos,
+    Camera(
+        const Coord3& pos,
         const float fov,
         const float aspect_ratio,
         const int image_height,
@@ -15,39 +15,37 @@ public:
     ) :
     pos{pos},
     fov{fov},
-    aspect_ratio{aspect_ratio},
     image_h{image_height},
     viewport_h{viewport_height} {
-        image_w = static_cast<int>(image_h * aspect_ratio);
-        viewport_w = viewport_h * (image_w / image_h);
-        viewport_u = vec3{viewport_w, 0.f, 0.f};
-        viewport_v = vec3{0.f, -viewport_h, 0.f};
+        image_w = static_cast<int>(static_cast<float>(image_h) * aspect_ratio);
+        viewport_w = viewport_h * (static_cast<float>(image_w) / static_cast<float>(image_h));
+        viewport_u = Vec3{viewport_w, 0.f, 0.f};
+        viewport_v = Vec3{0.f, -viewport_h, 0.f};
     }
 
-    constexpr coord3 position() const noexcept { return pos; }
+    constexpr Coord3 position() const noexcept { return pos; }
     constexpr float focal_len() const noexcept { return fov; }
 
-    constexpr vec3 pixel_delta_u() const {
-        return viewport_u / image_w;
+    Vec3 pixel_delta_u() const {
+        return viewport_u / static_cast<float>(image_w);
     }
-    constexpr vec3 pixel_delta_v() const {
-        return viewport_v / image_h;
+    Vec3 pixel_delta_v() const {
+        return viewport_v / static_cast<float>(image_h);
     }
     // Position of upperleft corner of viewport (hardcoded straight down the Z axis)
-    constexpr vec3 viewport_upperleft_corner() const {
-        return pos + vec3{0.f, 0.f, -fov} - viewport_u / 2 - viewport_v / 2;
+    Coord3 viewport_upperleft_corner() const {
+        return pos + Vec3{0.f, 0.f, -fov} - viewport_u / 2 - viewport_v / 2;
     }
 
 private:
-    coord3 pos;             // Camera position
+    Coord3 pos;             // Camera position
     float fov;              // Focus length, controls fov
-    float aspect_ratio;     // Aspect ratio
     int image_w;            // Img width
     int image_h;            // Img height
     float viewport_w;       // Viewport width
     float viewport_h;       // Viewport height
-    vec3 viewport_u;        // Viewport width vec representation
-    vec3 viewport_v;        // Viewport height vec representation
+    Vec3 viewport_u;        // Viewport width vec representation
+    Vec3 viewport_v;        // Viewport height vec representation
 };
 
 #endif

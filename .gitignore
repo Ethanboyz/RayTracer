@@ -1,8 +1,9 @@
-# Ignore compiled code
+# Ignore compiled and build files
 *.o
 *.x
 main
 /build/
+/bin/
 /cmake-build-debug/
 Makefile
 

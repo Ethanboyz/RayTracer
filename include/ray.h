@@ -3,20 +3,20 @@
 
 #include "vec3.h"
 
-class ray {
+class Ray {
 public:
-    ray() = default;
-    ray(const coord3& pos, const vec3& dir) : orig{pos}, dir{dir} {}
+    Ray() = default;
+    Ray(const Coord3& pos, const Vec3& dir) : orig{pos}, dir{dir} {}
 
     // Keep rays immutable
-    const constexpr coord3& origin() const noexcept { return orig; }
-    const constexpr vec3& direction() const noexcept { return dir; }
+    const constexpr Coord3& origin() const noexcept { return orig; }
+    const constexpr Vec3& direction() const noexcept { return dir; }
 
-    coord3 pos(const float t) const noexcept { return coord3{orig + t * dir}; }
+    Coord3 pos(const float t) const noexcept { return Coord3{orig + t * dir}; }
 
 private:
-    coord3 orig;
-    vec3 dir;
+    Coord3 orig;
+    Vec3 dir;
 };
 
 #endif
