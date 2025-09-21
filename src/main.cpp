@@ -37,7 +37,7 @@ int main() {
             Vec3 ray_dir = pixel_center - cam.position();
             Ray ray{cam.position(), ray_dir};
 
-            if (!sphere.ray_hit(ray)) {
+            if (sphere.ray_hit(ray) == -1) {
                 // Background color light gray gradient dependent on y coord. -1 <= y <= 1, but 0 <= a <= 1 for color = (1 - a) * low_y_color + a * high_y_color
                 Color color{ray_dir};
                 float a = 0.5f * (ray_dir.y() + 1);

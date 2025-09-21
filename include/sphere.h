@@ -8,12 +8,16 @@ class Sphere {
 public:
     Sphere(const Coord3& position, const float radius) : pos{position}, rad{radius} {}
 
-    // Determines if a ray intersects with the sphere
-    bool ray_hit(const Ray& r) const {
-        const float a = dot(r.direction(), r.direction());
-        const float b = dot(-2 * r.direction(), pos - r.origin());
-        const float c = dot(pos - r.origin(), pos - r.origin()) - (rad * rad);
-        return (b * b) - 4 * a * c >= 0;    // If determinant is not 0, the ray intersects the sphere
+    // Returns earliest t where ray intersects with the sphere
+    float ray_hit(const Ray& r) const {
+        const float a = {r.direction().length_squared()};
+        const float b = {dot(r.direction(), pos - r.origin())};
+        const float c = {(pos - r.origin()).length_squared() - (rad * rad)};
+        const float det = {(b * b) - a * c};
+        if (det < 0) {
+            return -1.f;
+        }
+        return (b - std::sqrt(det)) / a; // Return only smallest possible t
     }
 
 private:
