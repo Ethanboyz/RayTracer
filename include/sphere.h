@@ -8,6 +8,10 @@ class Sphere {
 public:
     Sphere(const Coord3& position, const float radius) : pos{position}, rad{radius} {}
 
+    // Accessors
+    constexpr Coord3 position() const noexcept { return pos; }
+    constexpr float radius() const noexcept { return rad; }
+
     // Returns earliest t where ray intersects with the sphere
     float ray_hit(const Ray& r) const {
         const float a = {r.direction().length_squared()};

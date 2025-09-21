@@ -37,17 +37,19 @@ int main() {
             Vec3 ray_dir = pixel_center - cam.position();
             Ray ray{cam.position(), ray_dir};
 
-            if (sphere.ray_hit(ray) == -1) {
+            const float t = sphere.ray_hit(ray);
+            if (t == -1) {
                 // Background color light gray gradient dependent on y coord. -1 <= y <= 1, but 0 <= a <= 1 for color = (1 - a) * low_y_color + a * high_y_color
-                Color color{ray_dir};
                 float a = 0.5f * (ray_dir.y() + 1);
                 auto lightgray{Color{0.9f, 0.9f, 0.9f}};
                 auto gray{Color{0.4f, 0.4f, 0.4f}};
-                color = (1 - a) * lightgray + a * gray;
+                Color color = (1 - a) * lightgray + a * gray;
                 write_color(std::cout, color);
             } else {
                 // Green sphere
-                write_color(std::cout, {0, 1, 0});
+                Vec3 surface_normal = unit(ray.position(t) - sphere.position());
+                Color color = 0.5 * Color{surface_normal.x() + 1, surface_normal.y() + 1, surface_normal.z() + 1}; // Prevent negative color components
+                write_color(std::cout, color);
             }
         }
     }
