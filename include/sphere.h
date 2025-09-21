@@ -1,10 +1,11 @@
 #ifndef SPHERE_H
 #define SPHERE_H
 
+#include "hittable.h"
 #include "ray.h"
 #include "vec3.h"
 
-class Sphere {
+class Sphere : Hittable {
 public:
     Sphere(const Coord3& position, const float radius) : pos{position}, rad{radius} {}
 
@@ -12,16 +13,27 @@ public:
     constexpr Coord3 position() const noexcept { return pos; }
     constexpr float radius() const noexcept { return rad; }
 
-    // Returns earliest t where ray intersects with the sphere
-    float ray_hit(const Ray& r) const {
+    // Returns true and populates hit_record if sphere intersects with ray (min_t <= t <= max_t)
+    bool ray_hit(const Ray& r, const float min_t, const float max_t, HitRecord& hit_record) const override {
         const float a = {r.direction().length_squared()};
         const float b = {dot(r.direction(), pos - r.origin())};
         const float c = {(pos - r.origin()).length_squared() - (rad * rad)};
         const float det = {(b * b) - a * c};
         if (det < 0) {
-            return -1.f;
+            return false;
         }
-        return (b - std::sqrt(det)) / a; // Return only smallest possible t
+        float t = (b - std::sqrt(det)) / a;
+        if (t < min_t || t > max_t) {
+            t = (b + std::sqrt(det)) / a;       // Still the quadratic formula, eval other root
+            if (t < min_t || t > max_t) {
+                return false;
+            }
+        }
+
+        hit_record.point(r.position(t));
+        hit_record.normal(unit(hit_record.point() - pos));
+        hit_record.t(t);
+        return true;
     }
 
 private:
