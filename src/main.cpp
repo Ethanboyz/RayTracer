@@ -37,8 +37,8 @@ int main() {
             Vec3 ray_dir = pixel_center - cam.position();
             Ray ray{cam.position(), ray_dir};
 
-            const float t = sphere.ray_hit(ray);
-            if (t == -1) {
+            HitRecord hit_record;
+            if (!sphere.ray_hit(ray, 0, std::numeric_limits<float>::max(), hit_record)) {
                 // Background color light gray gradient dependent on y coord. -1 <= y <= 1, but 0 <= a <= 1 for color = (1 - a) * low_y_color + a * high_y_color
                 float a = 0.5f * (ray_dir.y() + 1);
                 auto lightgray{Color{0.9f, 0.9f, 0.9f}};
@@ -47,7 +47,7 @@ int main() {
                 write_color(std::cout, color);
             } else {
                 // Green sphere
-                Vec3 surface_normal = unit(ray.position(t) - sphere.position());
+                Vec3 surface_normal = unit(ray.position(hit_record.t()) - sphere.position());
                 Color color = 0.5 * Color{surface_normal.x() + 1, surface_normal.y() + 1, surface_normal.z() + 1}; // Prevent negative color components
                 write_color(std::cout, color);
             }
