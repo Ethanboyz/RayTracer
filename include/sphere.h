@@ -31,8 +31,9 @@ public:
         }
 
         hit_record.point(r.position(t));
-        hit_record.normal(unit(hit_record.point() - center_pos));
+        hit_record.normal(hit_record.point() - center_pos);
         hit_record.t(t);
+        hit_record.set_face_normal(r);
         return true;
     }
 
