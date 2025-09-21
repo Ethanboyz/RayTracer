@@ -6,17 +6,17 @@
 class Ray {
 public:
     Ray() = default;
-    Ray(const Coord3& position, const Vec3& direction) : orig{position}, dir{direction} {}
+    Ray(const coord3& position, const uvec3& direction) : orig{position}, dir{direction} {}
 
     // Keep rays immutable
-    const constexpr Coord3& origin() const noexcept { return orig; }
-    const constexpr Vec3& direction() const noexcept { return dir; }
+    const constexpr coord3& origin() const noexcept { return orig; }
+    const constexpr uvec3& direction() const noexcept { return dir; }
 
-    Coord3 position(const float t) const noexcept { return Coord3{orig + t * dir}; }
+    coord3 position(const float t) const noexcept { return coord3{orig + t * dir}; }
 
 private:
-    Coord3 orig;
-    Vec3 dir;
+    coord3 orig;
+    uvec3 dir;
 };
 
 #endif

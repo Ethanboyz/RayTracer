@@ -4,7 +4,7 @@
 #include <iostream>
 #include "vec3.h"
 
-using Color = Vec3;
+using Color = vec3;
 
 // Output a specific color to a pixel
 inline void write_color(std::ostream& outstr, const Color& pixel_color) {

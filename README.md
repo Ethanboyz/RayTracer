@@ -4,7 +4,7 @@ This project is very young and under heavy development. There will be lots of ch
 and generally a lot of incompleteness.
 
 ## What is this project??
-Nothing more than a small undertaking to learn more about how GPUs, expose myself to the
+Nothing more than a small undertaking to learn more about how GPUs work, expose myself to the
 math/theory behind raytracing, and test my linear algebra coursework in my free time.
 Right now, it simply outputs simple raytraced renders to a .ppm image file. More exciting
 stuff to come in the near future...
