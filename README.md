@@ -22,10 +22,12 @@ completed render.
   - Surface normals
 
 #### WIP:
+- BVH?
 - Lights (directional, point lights)
   - Diffuse
   - Specular
   - Shadows
+  - Refractions + reflections
 - Antialiasing
 - Possible camera panning?
   - Proper camera coord system (+world space transformations)

@@ -30,6 +30,7 @@ public:
             }
         }
 
+        // Initialize all HitRecord fields before returning
         hit_record.point(r.position(t));
         hit_record.t(t);
         hit_record.set_face_normal(r, unit(hit_record.point() - center_pos));
