@@ -44,7 +44,9 @@ int main() {
 
     // Setup the world and 3d objects
     HittableList world;
-    world.add(make_shared<Sphere>(coord3{0, 0, -1}, 0.5f));    // Sphere in front of camera
+    world.add(make_shared<Sphere>(coord3{0, 0, -2}, 0.5f));    // Sphere in front of camera
+    world.add(make_shared<Sphere>(coord3{-1, 2, -5}, 0.5f));    // Sphere farther back
+    world.add(make_shared<Sphere>(coord3{3, 0.5f, -3}, 0.5f));    // Sphere in front of camera
     world.add(make_shared<Sphere>(coord3{0, -100.5, -1}, 100.f)); // Ground (giant sphere)
 
     // Sequential ray generation
@@ -60,6 +62,7 @@ int main() {
     }
 
     // Done rendering
+    std::clog << "\rProgress: 100.0%                         " << std::flush;
     std::clog << std::endl;
     std::cout.rdbuf(cout_buff);
     file.close();
