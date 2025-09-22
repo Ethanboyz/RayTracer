@@ -1,29 +1,36 @@
 #ifndef HITTABLE_LIST_H
 #define HITTABLE_LIST_H
 
+#include <memory>
+
 #include "hittable.h"
 #include <vector>
 #include <memory>
+
+#include "sphere.h"
 
 using std::make_shared;
 using std::shared_ptr;
 
 // Replace list with something else like BVH
-class HittableList : Hittable {
+class HittableList : public Hittable {
 public:
-    HittableList() {}
+    HittableList() = default;
     HittableList(shared_ptr<Hittable> object) { objs.push_back(object); }
 
     void clear() { objs.clear(); }
     void add(shared_ptr<Hittable> object) { objs.push_back(object); }
 
+    // Returns true if ray hits any Hittable in the HittableList. Populates hit_record with record of the closest hit (lowest t) of the ray.
     bool ray_hit(const Ray &r, const float min_t, const float max_t, HitRecord &hit_record) const override {
         HitRecord rec;
         bool anything_hit = false;
+        float closest_t = max_t;
 
         for (const shared_ptr<Hittable>& object : objs) {
-            if (object->ray_hit(r, min_t, max_t, rec)) {
+            if (object->ray_hit(r, min_t, closest_t, rec)) {
                 anything_hit = true;
+                closest_t = rec.t();
                 hit_record = rec;
             }
         }

@@ -1,11 +1,29 @@
 #include <iostream>
 #include <fstream>
-
+#include <memory>
 #include "camera.h"
+#include "hittable_list.h"
 #include "color.h"
 #include "vec3.h"
 #include "ray.h"
 #include "sphere.h"
+using std::make_shared;
+using std::shared_ptr;
+
+// Calculate color that should be written (depends on if/what the ray hits)
+inline Color ray_color(const Ray& r, const Hittable& world) {
+    HitRecord hit_record;
+    if (!world.ray_hit(r, 0, std::numeric_limits<float>::max(), hit_record)) {   // min_t = 0 so camera effectively looks forwards (not also backwards)
+        // Background color light gray gradient dependent on y coord. -1 <= y <= 1, but 0 <= a <= 1 for color = (1 - a) * low_y_color + a * high_y_color
+        const float a = 0.5f * (r.direction().y() + 1);
+        constexpr auto lightgray{Color{0.9f, 0.9f, 0.9f}};
+        constexpr auto gray{Color{0.4f, 0.4f, 0.4f}};
+        return (1 - a) * lightgray + a * gray;
+    } else {
+        // Colored sphere
+        return 0.5 * (nounit(hit_record.normal()) + Color{1, 1, 1}); // Prevent negative color components
+    }
+}
 
 int main() {
     constexpr float fov = 1.f;
@@ -24,8 +42,10 @@ int main() {
     // Center of first pixel (upper left) will be at the upperleft corner of viewport shifted halfway a pixel delta
     coord3 pixel_0_center = cam.viewport_upperleft_corner() + (0.5 * (cam.pixel_delta_u() + cam.pixel_delta_v()));
 
-    // Insert sphere in front of camera
-    Sphere sphere{coord3{0, 0, -1}, 0.5f};
+    // Setup the world and 3d objects
+    HittableList world;
+    world.add(make_shared<Sphere>(coord3{0, 0, -1}, 0.5f));    // Sphere in front of camera
+    world.add(make_shared<Sphere>(coord3{0, -100.5, -1}, 100.f)); // Ground (giant sphere)
 
     // Sequential ray generation
     std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
@@ -34,23 +54,8 @@ int main() {
         for (int x = 0; x < image_width; x++) {
             // Use pixel's and camera's location to generate a ray
             coord3 pixel_center = pixel_0_center + cam.pixel_delta_u() * static_cast<float>(x) + cam.pixel_delta_v() * static_cast<float>(y);
-            uvec3 ray_dir{unit(pixel_center - cam.position())};
-            Ray ray{cam.position(), ray_dir};
-
-            HitRecord hit_record;
-            if (!sphere.ray_hit(ray, 0, std::numeric_limits<float>::max(), hit_record)) {   // min_t = 0 so camera effectively looks forwards (not also backwards)
-                // Background color light gray gradient dependent on y coord. -1 <= y <= 1, but 0 <= a <= 1 for color = (1 - a) * low_y_color + a * high_y_color
-                float a = 0.5f * (ray_dir.y() + 1);
-                auto lightgray{Color{0.9f, 0.9f, 0.9f}};
-                auto gray{Color{0.4f, 0.4f, 0.4f}};
-                Color color = (1 - a) * lightgray + a * gray;
-                write_color(std::cout, color);
-            } else {
-                // Colored sphere
-                uvec3 surface_normal = hit_record.normal();
-                Color color = 0.5 * Color{surface_normal.x() + 1, surface_normal.y() + 1, surface_normal.z() + 1}; // Prevent negative color components
-                write_color(std::cout, color);
-            }
+            Ray ray{cam.position(), unit(pixel_center - cam.position())};
+            write_color(std::cout, ray_color(ray, world));
         }
     }
 

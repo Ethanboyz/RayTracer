@@ -5,7 +5,7 @@
 #include "ray.h"
 #include "vec3.h"
 
-class Sphere : Hittable {
+class Sphere : public Hittable {
 public:
     Sphere(const coord3& center, const float radius) : center_pos{center}, rad{radius} {}
 
