@@ -19,7 +19,7 @@ public:
     // Constructors
     constexpr Vec3() : s{0.f, 0.f, 0.f} {}
     constexpr Vec3(const float x, const float y, const float z) : s{x, y, z} {
-        if (std::is_same_v<Tag, unit_tag>) {
+        if (std::is_same_v<Tag, unit_tag> && std::abs(length_squared() - 1) < 1.0e-7) {  // No need to normalize if already length ≈ 1
             normalize();
         }
     }
@@ -92,12 +92,6 @@ public:
     }
 
     // Scalar-vector arithmetic
-    constexpr friend vec3 operator+(const Vec3& u, const Vec3& v) noexcept {
-        return vec3{u.s[0] + v.s[0], u.s[1] + v.s[1], u.s[2] + v.s[2]};
-    }
-    constexpr friend vec3 operator-(const Vec3& u, const Vec3& v) noexcept {
-        return vec3{u.s[0] - v.s[0], u.s[1] - v.s[1], u.s[2] - v.s[2]};
-    }
     constexpr friend vec3 operator*(const Vec3& v, const float t) noexcept {
         return vec3{v.s[0] * t, v.s[1] * t, v.s[2] * t};
     }
@@ -109,7 +103,13 @@ public:
     }
 
     // Vector-vector arithmetic
-    friend float dot(const Vec3& u, const Vec3& v) {
+    constexpr friend vec3 operator+(const Vec3& u, const Vec3& v) noexcept {
+        return vec3{u.s[0] + v.s[0], u.s[1] + v.s[1], u.s[2] + v.s[2]};
+    }
+    constexpr friend vec3 operator-(const Vec3& u, const Vec3& v) noexcept {
+        return vec3{u.s[0] - v.s[0], u.s[1] - v.s[1], u.s[2] - v.s[2]};
+    }
+    constexpr friend float dot(const Vec3& u, const Vec3& v) {
         return u.s[0] * v.s[0] + u.s[1] * v.s[1] + u.s[2] * v.s[2];
     }
 
@@ -122,21 +122,21 @@ public:
     }
 
     // Misc
-    float length_squared() const noexcept {
+    constexpr float length_squared() const noexcept {
         return s[0] * s[0] + s[1] * s[1] + s[2] * s[2];
     }
-    float length() const noexcept {
+    constexpr float length() const noexcept {
         return std::sqrt(this->length_squared());
     }
     // Convert from vec3 to uvec3
     template<class T = Tag, std::enable_if_t<std::is_same_v<T, any_tag>, int> = 0>
-    friend uvec3 unit(const Vec3& v) {
+    constexpr friend uvec3 unit(const Vec3& v) noexcept {
         const Vec3 res = v / v.length();
         return uvec3{res.x(), res.y(), res.z()};
     }
     // Convert from uvec3 to vec3
     template<class T = Tag, std::enable_if_t<std::is_same_v<T, unit_tag>, int> = 0>
-    friend vec3 nounit(const Vec3& v) noexcept {
+    constexpr friend vec3 nounit(const Vec3& v) noexcept {
         return vec3{v.x(), v.y(), v.z()};
     }
 
