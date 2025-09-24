@@ -27,7 +27,7 @@ public:
     constexpr float front_face() const noexcept { return frnt_face; }
 
     constexpr void point(const coord3 point) noexcept { p = point; }
-    void normal(const uvec3 normal) noexcept { n = normal; }
+    constexpr void normal(const uvec3 normal) noexcept { n = normal; }
     constexpr void t(const float t) noexcept { ray_t = t; }
     constexpr void front_face(const bool front_face) noexcept { frnt_face = front_face; }
 
@@ -58,7 +58,7 @@ public:
     virtual ~Hittable() = default;
 
     // If ray intersects, populates hit_record with Ray-Hittable intersect info
-    virtual bool ray_hit(const Ray& r, Interval<float> t, HitRecord& hit_record) const = 0;
+    virtual bool ray_hit(const Ray& r, const Interval<float>& t, HitRecord& hit_record) const = 0;
 };
 
 #endif

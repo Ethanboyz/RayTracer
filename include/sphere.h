@@ -14,7 +14,7 @@ public:
     constexpr float radius() const noexcept { return rad; }
 
     // Returns true and populates hit_record if sphere intersects with ray (min_t <= t <= max_t)
-    bool ray_hit(const Ray& r, const Interval<float> t, HitRecord& hit_record) const override {
+    bool ray_hit(const Ray& r, const Interval<float>& t, HitRecord& hit_record) const override {
         const float a = {r.direction().length_squared()};
         const float b = {dot(nounit(r.direction()), center_pos - r.origin())};
         const float c = {(center_pos - r.origin()).length_squared() - (rad * rad)};

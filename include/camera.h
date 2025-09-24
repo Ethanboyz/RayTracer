@@ -23,19 +23,9 @@ public:
         viewport_v = vec3{0.f, -viewport_h, 0.f};
     }
 
+    // Accessors
     constexpr coord3 position() const noexcept { return pos; }
     constexpr float focal_len() const noexcept { return fov; }
-
-    constexpr vec3 pixel_delta_u() const {
-        return viewport_u / static_cast<float>(image_w);
-    }
-    constexpr vec3 pixel_delta_v() const {
-        return viewport_v / static_cast<float>(image_h);
-    }
-    // Position of upperleft corner of viewport (hardcoded straight down the Z axis)
-    constexpr coord3 viewport_upperleft_corner() const {
-        return pos + vec3{0.f, 0.f, -fov} - viewport_u / 2 - viewport_v / 2;
-    }
 
 private:
     coord3 pos;             // Camera position
@@ -46,6 +36,18 @@ private:
     float viewport_h;       // Viewport height
     vec3 viewport_u;        // Viewport width vec representation
     vec3 viewport_v;        // Viewport height vec representation
+
+    friend class Renderer;  // Only the renderer will need these functions
+    constexpr vec3 pixel_delta_u() const {
+        return viewport_u / static_cast<float>(image_w);
+    }
+    constexpr vec3 pixel_delta_v() const {
+        return viewport_v / static_cast<float>(image_h);
+    }
+    // Position of upperleft corner of viewport (hardcoded straight down the Z axis)
+    constexpr coord3 viewport_upperleft_corner() const {
+        return pos + vec3{0.f, 0.f, -fov} - viewport_u / 2 - viewport_v / 2;
+    }
 };
 
 #endif

@@ -1,5 +1,3 @@
-#include <iostream>
-#include <fstream>
 #include <memory>
 #include "camera.h"
 #include "hittable_list.h"
@@ -18,8 +16,6 @@ int main() {
     constexpr float viewport_height = 2.f;
 
     const auto camera = Camera{vec3{0, 0, 0}, fov, aspect_ratio, image_height, viewport_height};
-
-    // Center of first pixel (upper left) will be at the upperleft corner of viewport shifted halfway a pixel delta
 
     // Setup the world and 3d objects
     HittableList world;

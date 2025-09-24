@@ -14,13 +14,13 @@ using std::shared_ptr;
 class HittableList : public Hittable {
 public:
     HittableList() = default;
-    HittableList(shared_ptr<Hittable> object) { objs.push_back(object); }
+    explicit HittableList(shared_ptr<Hittable> object) { objs.push_back(object); }
 
     void clear() { objs.clear(); }
     void add(shared_ptr<Hittable> object) { objs.push_back(object); }
 
     // Returns true if ray hits any Hittable in the HittableList. Populates hit_record with record of the closest hit (lowest t) of the ray.
-    bool ray_hit(const Ray &r, const Interval<float> t, HitRecord &hit_record) const override {
+    bool ray_hit(const Ray& r, const Interval<float>& t, HitRecord& hit_record) const override {
         HitRecord rec;
         bool anything_hit = false;
         float closest_t = t.max();

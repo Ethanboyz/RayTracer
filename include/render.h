@@ -1,6 +1,8 @@
 #ifndef RENDER_H
 #define RENDER_H
 
+#include <iostream>
+#include <fstream>
 #include "hittable.h"
 
 class Renderer {
@@ -10,6 +12,7 @@ public:
 
     // Sequential ray generation and write to .ppm in P6 format
     void render(const HittableList& world, const Camera& camera) const {
+        // Center of first pixel (upper left) will be at the upperleft corner of viewport shifted halfway of a pixel delta
         const coord3 pixel_0_center = camera.viewport_upperleft_corner() + (0.5 * (camera.pixel_delta_u() + camera.pixel_delta_v()));
         std::vector<Color> pixel_colors;
         for (int y = 0; y < image_h; y++) {
