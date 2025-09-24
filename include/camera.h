@@ -26,14 +26,14 @@ public:
     constexpr coord3 position() const noexcept { return pos; }
     constexpr float focal_len() const noexcept { return fov; }
 
-    vec3 pixel_delta_u() const {
+    constexpr vec3 pixel_delta_u() const {
         return viewport_u / static_cast<float>(image_w);
     }
-    vec3 pixel_delta_v() const {
+    constexpr vec3 pixel_delta_v() const {
         return viewport_v / static_cast<float>(image_h);
     }
     // Position of upperleft corner of viewport (hardcoded straight down the Z axis)
-    coord3 viewport_upperleft_corner() const {
+    constexpr coord3 viewport_upperleft_corner() const {
         return pos + vec3{0.f, 0.f, -fov} - viewport_u / 2 - viewport_v / 2;
     }
 

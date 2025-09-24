@@ -3,6 +3,7 @@
 
 #include "ray.h"
 #include "vec3.h"
+#include "interval.h"
 
 // More to be added in the future
 class HitRecord {
@@ -57,7 +58,7 @@ public:
     virtual ~Hittable() = default;
 
     // If ray intersects, populates hit_record with Ray-Hittable intersect info
-    virtual bool ray_hit(const Ray& r, float min_t, float max_t, HitRecord& hit_record) const = 0;
+    virtual bool ray_hit(const Ray& r, Interval<float> t, HitRecord& hit_record) const = 0;
 };
 
 #endif

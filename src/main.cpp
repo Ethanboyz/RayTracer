@@ -14,7 +14,7 @@ using std::uint8_t;
 // Calculate color that should be written (depends on if/what the ray hits)
 inline Color ray_color(const Ray& r, const Hittable& world) {
     HitRecord hit_record;
-    if (!world.ray_hit(r, 0, std::numeric_limits<float>::max(), hit_record)) {   // min_t = 0 so camera effectively looks forwards (not also backwards)
+    if (!world.ray_hit(r, Interval(0.f, std::numeric_limits<float>::max()), hit_record)) {   // min_t = 0 so camera effectively looks forwards (not also backwards)
         // Background color light gray gradient dependent on y coord. -1 <= y <= 1, but 0 <= a <= 1 for color = (1 - a) * low_y_color + a * high_y_color
         const float a = 0.5f * (r.direction().y() + 1);
         constexpr auto lightgray{Color{0.9f, 0.9f, 0.9f}};

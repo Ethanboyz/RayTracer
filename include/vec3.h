@@ -19,7 +19,8 @@ public:
     // Constructors
     constexpr Vec3() : s{0.f, 0.f, 0.f} {}
     constexpr Vec3(const float x, const float y, const float z) : s{x, y, z} {
-        if (std::is_same_v<Tag, unit_tag> && std::abs(length_squared() - 1) < 1.0e-7) {  // No need to normalize if already length ≈ 1
+        // No need to normalize if already length ≈ 1
+        if (std::is_same_v<Tag, unit_tag> && std::abs(length_squared() - 1) < 1.0e-7) {
             normalize();
         }
     }

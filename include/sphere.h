@@ -14,7 +14,7 @@ public:
     constexpr float radius() const noexcept { return rad; }
 
     // Returns true and populates hit_record if sphere intersects with ray (min_t <= t <= max_t)
-    bool ray_hit(const Ray& r, const float min_t, const float max_t, HitRecord& hit_record) const override {
+    bool ray_hit(const Ray& r, const Interval<float> t, HitRecord& hit_record) const override {
         const float a = {r.direction().length_squared()};
         const float b = {dot(nounit(r.direction()), center_pos - r.origin())};
         const float c = {(center_pos - r.origin()).length_squared() - (rad * rad)};
@@ -22,17 +22,17 @@ public:
         if (det < 0) {
             return false;
         }
-        float t = (b - std::sqrt(det)) / a;
-        if (t < min_t || t > max_t) {
-            t = (b + std::sqrt(det)) / a;       // Still the quadratic formula, eval other root
-            if (t < min_t || t > max_t) {
+        float calculated_t = (b - std::sqrt(det)) / a;
+        if (calculated_t < t.min() || calculated_t > t.max()) {
+            calculated_t = (b + std::sqrt(det)) / a;       // Still the quadratic formula, eval other root
+            if (calculated_t < t.min() || calculated_t > t.max()) {
                 return false;
             }
         }
 
         // Initialize all HitRecord fields before returning
-        hit_record.point(r.position(t));
-        hit_record.t(t);
+        hit_record.point(r.position(calculated_t));
+        hit_record.t(calculated_t);
         hit_record.set_face_normal(r, unit(hit_record.point() - center_pos));
         return true;
     }
