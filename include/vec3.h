@@ -10,10 +10,10 @@ template<class Tag> inline constexpr bool dependent_false_v = false;
 struct any_tag {};      // Regular vec3
 struct unit_tag {};     // Unit vector version of vec3
 
-using coord3 = Vec3<any_tag>;
-using vec3 = Vec3<any_tag>;
-using Color = Vec3<any_tag>;
-using uvec3 = Vec3<unit_tag>;
+using coord3 = Vec3<any_tag>;       // 3D coordinates (functionally the same as vec3)
+using vec3 = Vec3<any_tag>;         // 3D vectors
+using Color = Vec3<any_tag>;        // R, G, B values (0-1)
+using uvec3 = Vec3<unit_tag>;       // 3D unit vectors (length ≈ 1)
 
 template <class Tag> class Vec3 {
 public:

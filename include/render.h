@@ -43,10 +43,8 @@ private:
             constexpr auto lightgray{Color{0.9f, 0.9f, 0.9f}};
             constexpr auto gray{Color{0.4f, 0.4f, 0.4f}};
             return (1 - a) * lightgray + a * gray;
-        } else {
-            // Colored sphere
-            return 0.5 * (nounit(hit_record.normal()) + Color{1, 1, 1}); // Prevent negative color components
         }
+        return hit_record.color();
     }
 
     // Output all image pixel data to a ppm file

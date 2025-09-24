@@ -7,7 +7,7 @@
 
 class Sphere : public Hittable {
 public:
-    Sphere(const coord3& center, const float radius) : center_pos{center}, rad{radius} {}
+    Sphere(const coord3& center, const float radius, const Color& color) : center_pos{center}, rad{radius}, col{color} {}
 
     // Accessors
     constexpr coord3 position() const noexcept { return center_pos; }
@@ -34,12 +34,14 @@ public:
         hit_record.point(r.position(calculated_t));
         hit_record.t(calculated_t);
         hit_record.set_face_normal(r, unit(hit_record.point() - center_pos));
+        hit_record.color(col);
         return true;
     }
 
 private:
     coord3 center_pos;
     float rad;
+    Color col;
 };
 
 #endif
