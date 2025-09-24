@@ -12,6 +12,7 @@ struct unit_tag {};     // Unit vector version of vec3
 
 using coord3 = Vec3<any_tag>;
 using vec3 = Vec3<any_tag>;
+using Color = Vec3<any_tag>;
 using uvec3 = Vec3<unit_tag>;
 
 template <class Tag> class Vec3 {
