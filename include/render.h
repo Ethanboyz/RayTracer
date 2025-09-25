@@ -44,7 +44,9 @@ private:
             constexpr auto gray{Color{0.4f, 0.4f, 0.4f}};
             return (1 - a) * lightgray + a * gray;
         }
-        return hit_record.color();
+        // Color hit object based on its stored materialistic properties
+        Material material{hit_record.material()};
+        return material.color();
     }
 
     // Output all image pixel data to a ppm file

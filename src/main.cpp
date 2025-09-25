@@ -19,14 +19,14 @@ int main() {
 
     // Setup the world and 3d objects
     HittableList world;
-    Color red = {1, 0, 0};
-    Color yellow = {1, 1, 0};
-    Color blue = {0, 0, 1};
-    Color green = {0, 1, 0};
-    world.add(make_shared<Sphere>(coord3{0, 0, -2}, 0.5f, red));            // Sphere in front of camera
-    world.add(make_shared<Sphere>(coord3{-1, 2, -5}, 0.5f, yellow));        // Sphere farther back
-    world.add(make_shared<Sphere>(coord3{3, 0.5f, -3}, 0.5f, blue));        // Sphere in front of camera
-    world.add(make_shared<Sphere>(coord3{0, -5001, -1}, 5000.f, green));    // Ground (giant sphere)
+    Material plastic_red = {{1, 0, 0}, 0.3, 0.1};
+    Material shiny_yellow = {{1, 1, 0}, 0.1, 0.9};
+    Material dull_blue = {{0, 0, 1}, 0.7, 0.f};
+    Material flat_green = {{0, 1, 0}, 0.5, 0.2};
+    world.add(make_shared<Sphere>(coord3{0, 0, -2}, 0.5f, plastic_red));            // Sphere in front of camera
+    world.add(make_shared<Sphere>(coord3{-1, 2, -5}, 0.5f, shiny_yellow));        // Sphere farther back
+    world.add(make_shared<Sphere>(coord3{3, 0.5f, -3}, 0.5f, dull_blue));        // Sphere in front of camera
+    world.add(make_shared<Sphere>(coord3{0, -5001, -1}, 5000.f, flat_green));    // Ground (giant sphere)
 
     const Renderer renderer{image_width, image_height};
     renderer.render(world, camera);

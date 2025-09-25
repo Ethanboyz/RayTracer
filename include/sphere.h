@@ -4,14 +4,16 @@
 #include "hittable.h"
 #include "ray.h"
 #include "vec3.h"
+#include "material.h"
 
 class Sphere : public Hittable {
 public:
-    Sphere(const coord3& center, const float radius, const Color& color) : center_pos{center}, rad{radius}, col{color} {}
+    Sphere(const coord3& center, const float radius, const Material& material) : center_pos{center}, rad{radius}, mat{material} {}
 
     // Accessors
     constexpr coord3 position() const noexcept { return center_pos; }
     constexpr float radius() const noexcept { return rad; }
+    constexpr Material material() const noexcept { return mat; }
 
     // Returns true and populates hit_record if sphere intersects with ray (min_t <= t <= max_t)
     bool ray_hit(const Ray& r, const Interval<float>& t, HitRecord& hit_record) const override {
@@ -34,14 +36,14 @@ public:
         hit_record.point(r.position(calculated_t));
         hit_record.t(calculated_t);
         hit_record.set_face_normal(r, unit(hit_record.point() - center_pos));
-        hit_record.color(col);
+        hit_record.material(mat);
         return true;
     }
 
 private:
     coord3 center_pos;
     float rad;
-    Color col;
+    Material mat;
 };
 
 #endif
