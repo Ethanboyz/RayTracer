@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include "hittable.h"
+#include "light_list.h"
 
 class Renderer {
 public:
@@ -11,7 +12,7 @@ public:
     Renderer(const int image_width, const int image_height) : image_w{image_width}, image_h{image_height} {}
 
     // Sequential ray generation and write to .ppm in P6 format
-    void render(const HittableList& world, const Camera& camera) const {
+    void render(const HittableList& world, const LightList& world_lights, const Camera& camera) const {
         // Center of first pixel (upper left) will be at the upperleft corner of viewport shifted halfway of a pixel delta
         const coord3 pixel_0_center = camera.viewport_upperleft_corner() + (0.5 * (camera.pixel_delta_u() + camera.pixel_delta_v()));
         std::vector<Color> pixel_colors;
@@ -21,7 +22,7 @@ public:
                 // Use pixel's and camera's location to generate a ray
                 coord3 pixel_center = pixel_0_center + camera.pixel_delta_u() * static_cast<float>(x) + camera.pixel_delta_v() * static_cast<float>(y);
                 Ray ray{camera.position(), unit(pixel_center - camera.position())};
-                pixel_colors.push_back(ray_color(ray, world));
+                pixel_colors.push_back(ray_color(ray, world, world_lights));
             }
         }
         // Done generating rays, write pixel colors to file
@@ -34,8 +35,8 @@ private:
     int image_w;
     int image_h;
 
-    // Calculate color that should be written (depends on if/what the ray hits)
-    static Color ray_color(const Ray& r, const Hittable& world) {
+    // Calculate color that should be written (depends on if/what the ray hits and world lights)
+    static Color ray_color(const Ray& r, const Hittable& world, const LightList& world_lights) {
         HitRecord hit_record;
         if (!world.ray_hit(r, Interval(0.f, std::numeric_limits<float>::max()), hit_record)) {   // min_t = 0 so camera effectively looks forwards (not also backwards)
             // Background color light gray gradient dependent on y coord. -1 <= y <= 1, but 0 <= a <= 1 for color = (1 - a) * low_y_color + a * high_y_color
@@ -44,9 +45,10 @@ private:
             constexpr auto gray{Color{0.4f, 0.4f, 0.4f}};
             return (1 - a) * lightgray + a * gray;
         }
-        // Color hit object based on its stored materialistic properties
-        Material material{hit_record.material()};
-        return material.color();
+        // Color hit object based on its stored materialistic properties and world lights
+        const Material material{hit_record.material()};
+        world_lights.light_intensity(hit_record);
+        return material.color() * (hit_record.light_intensity() * 2);
     }
 
     // Output all image pixel data to a ppm file

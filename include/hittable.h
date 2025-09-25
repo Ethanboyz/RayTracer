@@ -9,7 +9,7 @@
 // More to be added in the future
 class HitRecord {
 public:
-    HitRecord() : ray_t{0}, frnt_face{true}, mat{{0, 0, 0}, 0.f, 0.f} {}
+    constexpr HitRecord() : ray_t{0}, frnt_face{true}, mat{{0, 0, 0}, 0.f, 0.f}, light{0} {}
     HitRecord(
         const coord3& point,
         const uvec3& normal,
@@ -21,7 +21,8 @@ public:
         n{normal},
         ray_t{t},
         frnt_face{front_face},
-        mat{material} {}
+        mat{material},
+        light{0} {}
 
     // Accessors
     constexpr coord3 point() const noexcept { return p; }
@@ -29,12 +30,14 @@ public:
     constexpr float t() const noexcept { return ray_t; }
     constexpr float front_face() const noexcept { return frnt_face; }
     constexpr Material material() const noexcept { return mat; }
+    constexpr float light_intensity() const noexcept { return light; }
 
     constexpr void point(const coord3 point) noexcept { p = point; }
     constexpr void normal(const uvec3 normal) noexcept { n = normal; }
     constexpr void t(const float t) noexcept { ray_t = t; }
     constexpr void front_face(const bool front_face) noexcept { frnt_face = front_face; }
-    constexpr void material(const Material material) noexcept { mat = material; }
+    constexpr void material(const Material& material) noexcept { mat = material; }
+    constexpr void light_intensity(const float light_intensity) noexcept { light = light_intensity; }
 
     bool set_face_normal(const Ray& r, const uvec3& outward_normal) {
         if (dot(r.direction(), n) > 0.f) {
@@ -51,11 +54,12 @@ public:
     }
 
 private:
-    coord3 p;           // Coordinates of hit
-    uvec3 n;            // Normal of hit surface (never faces against direction of generated rays)
-    float ray_t;        // t-value of the ray where hit occurred
-    bool frnt_face;     // True if surface is facing towards the camera
-    Material mat;       // Material + color to be drawn
+    coord3 p;               // Coordinates of hit
+    uvec3 n;                // Normal of hit surface (never faces against direction of generated rays)
+    float ray_t;            // t-value of the ray where hit occurred
+    bool frnt_face;         // True if surface is facing towards the camera
+    Material mat;           // Determines the reflective and color properties to be drawn
+    float light;            // Intensity of light exposure (ranges from 0-1, 0.5 means the base color is drawn)
 };
 
 // Any sort of renderable object should be Hittable

@@ -13,7 +13,7 @@ using std::shared_ptr;
 // Replace list with something else like BVH
 class HittableList : public Hittable {
 public:
-    HittableList() = default;
+    constexpr HittableList() = default;
     explicit HittableList(shared_ptr<Hittable> object) { objs.push_back(object); }
 
     void clear() { objs.clear(); }

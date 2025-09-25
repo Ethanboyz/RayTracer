@@ -4,6 +4,7 @@
 #include "vec3.h"
 #include "sphere.h"
 #include "render.h"
+#include "light.h"
 using std::make_shared;
 using std::shared_ptr;
 using std::uint8_t;
@@ -19,6 +20,8 @@ int main() {
 
     // Setup the world and 3d objects
     HittableList world;
+    std::vector<Light> world_lights;
+
     Material plastic_red = {{1, 0, 0}, 0.3, 0.1};
     Material shiny_yellow = {{1, 1, 0}, 0.1, 0.9};
     Material dull_blue = {{0, 0, 1}, 0.7, 0.f};
