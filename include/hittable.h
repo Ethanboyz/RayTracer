@@ -59,7 +59,7 @@ private:
     float ray_t;            // t-value of the ray where hit occurred
     bool frnt_face;         // True if surface is facing towards the camera
     Material mat;           // Determines the reflective and color properties to be drawn
-    float light;            // Intensity of light exposure (ranges from 0-1, 0.5 means the base color is drawn)
+    float light;            // Intensity of light exposure (ranges from 0-1, 1 means the base color is drawn)
 };
 
 // Any sort of renderable object should be Hittable

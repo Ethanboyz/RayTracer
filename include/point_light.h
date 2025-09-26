@@ -17,7 +17,7 @@ public:
         const uvec3 N{hit_record.front_face() ? hit_record.normal() : -hit_record.normal()};    // Make sure N is the outward facing normal
         const float n_dot_l = dot(N, L);
         if (n_dot_l > 0) {
-            float added_light_intensity{iy * n_dot_l/(N.length() * L.length())};
+            float added_light_intensity{iy * n_dot_l / (N.length() * L.length())};
             added_light_intensity *= hit_record.material().diffuse();
             new_light_intensity += added_light_intensity;
         }

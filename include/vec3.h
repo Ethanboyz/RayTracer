@@ -42,7 +42,7 @@ public:
     constexpr float z() const noexcept { return s[2]; }
 
     // Operator overloading
-    Vec3 operator-() const noexcept {   // Unary '-' operator
+    constexpr Vec3 operator-() const noexcept {   // Unary '-' operator
         return Vec3{
             -s[0],
             -s[1],

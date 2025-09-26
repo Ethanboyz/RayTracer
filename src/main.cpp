@@ -37,7 +37,7 @@ int main() {
     world.add(make_shared<Sphere>(coord3{0, -5001, -1}, 5000.f, flat_green));    // Ground (giant sphere)
 
     //world_lights.add(make_shared<AmbientLight>(0.2f));
-    world_lights.add(make_shared<PointLight>(0.7f, coord3{0, 2, 1}));
+    world_lights.add(make_shared<PointLight>(10, coord3{0, 2, 2}));
 
     const Renderer renderer{image_width, image_height};
     renderer.render(world, world_lights, camera);

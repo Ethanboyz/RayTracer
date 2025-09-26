@@ -48,7 +48,7 @@ private:
         // Color hit object based on its stored materialistic properties and world lights
         const Material material{hit_record.material()};
         world_lights.light_intensity(hit_record);
-        return material.color() * (hit_record.light_intensity() * 2);
+        return material.color() * hit_record.light_intensity();
     }
 
     // Output all image pixel data to a ppm file
