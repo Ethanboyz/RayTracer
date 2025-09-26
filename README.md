@@ -20,6 +20,8 @@ completed render.
 - Ray generation (reverse ray tracing)
 - Sphere objects
   - Surface normals
+- Light sources:
+  - Ambient
 
 #### WIP:
 - BVH to replace list
