@@ -17,9 +17,11 @@ completed render.
 
 ## Progress
 #### Features Implemented:
-- Ray generation (reverse ray tracing)
+- Ray generation (backwards ray tracing)
 - Sphere objects
   - Surface normals
+- Materials:
+  - Colors
 - Light sources:
   - Ambient
 
