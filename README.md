@@ -51,7 +51,7 @@ completed render.
   - Performance benchmarking
 - [ ] Polish??
 
-#### Helpful Resources:
+## Sources:
+- https://gabrielgambetta.com/computer-graphics-from-scratch
 - https://raytracing.github.io/books/RayTracingInOneWeekend.html
 - https://scratchapixel.com/
-- https://gabrielgambetta.com/computer-graphics-from-scratch
