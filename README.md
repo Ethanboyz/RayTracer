@@ -22,7 +22,7 @@ completed render.
   - Surface normals
 - Materials:
   - Colors
-  - Diffuse
+  - Diffuse reflection
 - Light sources:
   - Ambient
   - Point
@@ -30,7 +30,6 @@ completed render.
 #### WIP:
 - BVH to replace list
 - Lights (directional)
-  - Diffuse
   - Specular
   - Shadows
   - Refractions + reflections
