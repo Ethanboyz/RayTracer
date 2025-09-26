@@ -22,12 +22,14 @@ completed render.
   - Surface normals
 - Materials:
   - Colors
+  - Diffuse
 - Light sources:
   - Ambient
+  - Point
 
 #### WIP:
 - BVH to replace list
-- Lights (directional, point lights)
+- Lights (directional)
   - Diffuse
   - Specular
   - Shadows
