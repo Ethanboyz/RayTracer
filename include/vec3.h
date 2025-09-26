@@ -2,6 +2,7 @@
 #define VEC3_H
 
 #include <cmath>
+#include <functional>
 #include <iostream>
 
 template <class Tag> class Vec3;
@@ -11,8 +12,8 @@ struct any_tag {};      // Regular vec3
 struct unit_tag {};     // Unit vector version of vec3
 
 using coord3 = Vec3<any_tag>;       // 3D coordinates (functionally the same as vec3)
-using vec3 = Vec3<any_tag>;         // 3D vectors
 using Color = Vec3<any_tag>;        // R, G, B values (0-1)
+using vec3 = Vec3<any_tag>;         // 3D vectors
 using uvec3 = Vec3<unit_tag>;       // 3D unit vectors (length ≈ 1)
 
 template <class Tag> class Vec3 {
@@ -111,9 +112,8 @@ public:
     constexpr friend vec3 operator-(const Vec3& u, const Vec3& v) noexcept {
         return vec3{u.s[0] - v.s[0], u.s[1] - v.s[1], u.s[2] - v.s[2]};
     }
-    constexpr friend float dot(const Vec3& u, const Vec3& v) {
-        return u.s[0] * v.s[0] + u.s[1] * v.s[1] + u.s[2] * v.s[2];
-    }
+    template<class A, class B>
+    constexpr friend float dot(const Vec3<A>& u, const Vec3<B>& v) noexcept;
 
     constexpr friend vec3 cross(const Vec3& u, const Vec3& v) noexcept {
         return vec3{
@@ -155,5 +155,10 @@ private:
         }
     }
 };
+
+template<class A, class B>
+constexpr float dot(const Vec3<A>& u, const Vec3<B>& v) noexcept {
+    return u.s[0] * v.s[0] + u.s[1] * v.s[1] + u.s[2] * v.s[2];
+}
 
 #endif
