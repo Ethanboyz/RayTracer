@@ -28,7 +28,7 @@ public:
     constexpr coord3 point() const noexcept { return p; }
     constexpr uvec3 normal() const noexcept { return n; }
     constexpr float t() const noexcept { return ray_t; }
-    constexpr float front_face() const noexcept { return frnt_face; }
+    constexpr bool front_face() const noexcept { return frnt_face; }            // True if surface is facing camera
     constexpr Material material() const noexcept { return mat; }
     constexpr float light_intensity() const noexcept { return light; }
 
@@ -55,7 +55,7 @@ public:
 
 private:
     coord3 p;               // Coordinates of hit
-    uvec3 n;                // Normal of hit surface (never faces against direction of generated rays)
+    uvec3 n;                // Normal of hit surface (never points away from the camera)
     float ray_t;            // t-value of the ray where hit occurred
     bool frnt_face;         // True if surface is facing towards the camera
     Material mat;           // Determines the reflective and color properties to be drawn

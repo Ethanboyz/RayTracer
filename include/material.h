@@ -6,7 +6,14 @@
 // Stores material properties of a surface, including its color and reflective properties
 class Material {
 public:
-    constexpr Material(const Color &color, const float diffuse, const float specular) : col{color}, dif{diffuse}, spec{specular} {}
+    constexpr Material(const Color &color, const float diffuse, const float specular) : col{color}, dif{diffuse}, spec{specular} {
+        // Diffuse + specular must be at max 1
+        if (dif + spec > 1) {
+            const float sum = dif + spec;
+            dif /= sum;
+            spec /= sum;
+        }
+    }
 
     // Accessors
     constexpr Color color() const noexcept { return col; }

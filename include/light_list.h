@@ -17,27 +17,12 @@ public:
     void clear() { lts.clear(); }
     void add(shared_ptr<Light> light) { lts.push_back(light); }
 
-    // Populate hit_record with the cumulative light intensity
+    // Populate hit_record with the cumulative light intensity from world lights
     constexpr void light_intensity(HitRecord& hit_record) const override {
-        float intensity = 0.f;
         for (const shared_ptr<Light>& light : lts) {
             // Diffuse materials lighting
-            if (light.type() == AMBIENT) {
-                intensity += light.intensity;
-            } else {
-                if (light.type == POINT) {
-                    L = light.position - point_of_hit;
-                }
-                if (light.type == DIRECTIONAL) {
-                    L = light.direction;
-                }
-                n_dot_l = dot(N, L);
-                if n_dot_l > 0 {
-                    i += light.intensity * n_dot_l/(length(N) * length(L));
-                }
-            }
+            light->light_intensity(hit_record);
         }
-        hit_record.light_intensity(intensity);
     };
 
 private:
