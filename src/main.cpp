@@ -32,12 +32,13 @@ int main() {
     Material dull_blue = {{0, 0, 1}, 0.7, 0.f};
     Material flat_green = {{0, 1, 0}, 0.5, 0.2};
     world.add(make_shared<Sphere>(coord3{0, 0, -2}, 0.5f, plastic_red));            // Sphere in front of camera
-    world.add(make_shared<Sphere>(coord3{-1, 2, -5}, 0.5f, shiny_yellow));        // Sphere farther back
-    world.add(make_shared<Sphere>(coord3{3, 0.5f, -3}, 0.5f, dull_blue));        // Sphere in front of camera
-    world.add(make_shared<Sphere>(coord3{0, -5001, -1}, 5000.f, flat_green));    // Ground (giant sphere)
+    world.add(make_shared<Sphere>(coord3{-1, 2, -5}, 0.5f, shiny_yellow));          // Sphere farther back
+    world.add(make_shared<Sphere>(coord3{3, 0.5f, -3}, 0.5f, dull_blue));           // Sphere in front of camera
+    world.add(make_shared<Sphere>(coord3{0, -5001, -1}, 5000.f, flat_green));       // Ground (giant sphere)
 
-    //world_lights.add(make_shared<AmbientLight>(0.2f));
-    world_lights.add(make_shared<PointLight>(3, coord3{0, 2, 2}));
+    world_lights.add(make_shared<AmbientLight>(0.2f));
+    //world_lights.add(make_shared<PointLight>(4, coord3{-1.5, 3, -4}));
+    world_lights.add(make_shared<DirectionalLight>(1, uvec3{0, 2, 4}));
 
     const Renderer renderer{image_width, image_height};
     renderer.render(world, world_lights, camera);
