@@ -3,9 +3,8 @@
 
 #include <vector>
 #include <memory>
-#include "sphere.h"
-#include "hittable.h"
-#include "interval.h"
+#include "rt/geom/hittable.hpp"
+#include "rt/math/interval.hpp"
 
 using std::make_shared;
 using std::shared_ptr;
@@ -37,20 +36,7 @@ public:
      * @param hit_record Updated with hit information if ray intersection occurs.
      * @return True if ray intersects any Hittable in the HittableList, false otherwise.
      */
-    bool ray_hit(const Ray& ray, const Interval<float>& t, HitRecord& hit_record) const override {
-        HitRecord rec;
-        bool anything_hit{false};
-        float closest_t{t.max()};
-
-        for (const shared_ptr<Hittable>& object : objects) {
-            if (object->ray_hit(ray, Interval(t.min(), closest_t), rec)) {
-                anything_hit = true;
-                closest_t = rec.t();
-                hit_record = rec;
-            }
-        }
-        return anything_hit;
-    }
+    bool ray_hit(const Ray& ray, const Interval<float>& t, HitRecord& hit_record) const override;
 
 private:
     std::vector<shared_ptr<Hittable>> objects;

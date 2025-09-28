@@ -1,15 +1,13 @@
 #include <memory>
-#include "camera.h"
-#include "hittable_list.h"
-#include "vec3.h"
-#include "sphere.h"
-#include "render.h"
+#include "rt/render/camera.hpp"
+#include "rt/geom/hittable_list.hpp"
+#include "rt/math/vec3.hpp"
+#include "rt/geom/sphere.hpp"
+#include "rt/render/render.hpp"
 
-// Later on, reorganize header and src files so different light classes can be all included once
-#include "light.h"
-#include "ambient_light.h"
-#include "point_light.h"
-#include "directional_light.h"
+#include "rt/lighting/ambient_light.hpp"
+#include "rt/lighting/point_light.hpp"
+#include "rt/lighting/directional_light.hpp"
 using std::make_shared;
 using std::shared_ptr;
 using std::uint8_t;
@@ -37,7 +35,7 @@ int main() {
     world.add(make_shared<Sphere>(coord3{0, -5001, -1}, 5000.f, flat_green));       // Ground (giant sphere)
 
     world_lights.add(make_shared<AmbientLight>(0.2f));
-    //world_lights.add(make_shared<PointLight>(4, coord3{-1.5, 3, -4}));
+    world_lights.add(make_shared<PointLight>(4, coord3{-1.5, 3, -4}));
     world_lights.add(make_shared<DirectionalLight>(1, uvec3{0, 2, 4}));
 
     const Renderer renderer{image_width, image_height};

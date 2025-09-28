@@ -1,6 +1,8 @@
 #ifndef LIGHT_H
 #define LIGHT_H
 
+#include "rt/geom/hittable.hpp"
+
 class Light {
 public:
     virtual ~Light() = default;

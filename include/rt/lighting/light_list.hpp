@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <memory>
-#include "light.h"
+#include "rt/lighting/light.hpp"
 
 using std::make_shared;
 using std::shared_ptr;
@@ -28,12 +28,7 @@ public:
      * Adds the light intensity caused by all the Lights in the current LightList to the HitRecord's light intensity.
      * @param hit_record Updated with the new light intensity after the current LightList is applied to it.
      */
-    void light_intensity(HitRecord& hit_record) const override {
-        for (const shared_ptr<Light>& light : lights) {
-            // Diffuse materials lighting
-            light->light_intensity(hit_record);
-        }
-    };
+    void light_intensity(HitRecord& hit_record) const override;
 
 private:
     std::vector<shared_ptr<Light>> lights;

@@ -6,7 +6,7 @@
 #include <iostream>
 
 template <class Tag> class Vec3;
-template<class Tag> inline constexpr bool dependent_false_v = false;
+template <class Tag> inline constexpr bool dependent_false_v = false;
 
 struct any_tag {};      // Regular vec3
 struct unit_tag {};     // Unit vector version of vec3

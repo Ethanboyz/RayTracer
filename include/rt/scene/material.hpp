@@ -1,7 +1,7 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
-#include "vec3.h"
+#include "rt/math/vec3.hpp"
 
 /**
  * @class Material

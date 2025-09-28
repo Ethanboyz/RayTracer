@@ -1,10 +1,10 @@
 #ifndef HITTABLE_H
 #define HITTABLE_H
 
-#include "ray.h"
-#include "vec3.h"
-#include "interval.h"
-#include "material.h"
+#include "rt/math/ray.hpp"
+#include "rt/math/vec3.hpp"
+#include "rt/math/interval.hpp"
+#include "rt/scene/material.hpp"
 
 /**
  * @class HitRecord
@@ -12,9 +12,7 @@
  */
 class HitRecord {
 public:
-    /**
-     * @brief Constructs a default HitRecord (should be reassigned).
-     */
+    /** @brief Constructs a default HitRecord (should be reassigned). */
     constexpr HitRecord() : ray_t_{0}, front_face_{true}, material_{{0, 0, 0}, 0.f, 0.f}, light_intensity_{0} {}
 
     /**
@@ -25,19 +23,7 @@ public:
      * @param front_face True if the surface's outward-facing face is towards the camera.
      * @param material Material of the hit surface.
      */
-    constexpr HitRecord(
-        const coord3& point,
-        const uvec3& normal,
-        const float t,
-        const bool front_face,
-        const Material& material
-    ) :
-        point_{point},
-        normal_{normal},
-        ray_t_{t},
-        front_face_{front_face},
-        material_{material},
-        light_intensity_{0} {}
+    constexpr HitRecord(const coord3& point, const uvec3& normal, const float t, const bool front_face, const Material& material);
 
     // Accessors
     /** @return Coordinates of the hit location. */
@@ -72,14 +58,7 @@ public:
      * @param normal Outward-facing normal of the hit surface.
      * @return True if the hit surface is facing towards the camera, false otherwise.
      */
-    bool set_face_normal(const Ray& ray, const uvec3& normal) {
-        normal_ = normal;
-        const float r_dot_n{dot(ray.direction(), normal)};
-
-        // Surface faces the camera when surface normal direction opposes ray direction
-        front_face_ = r_dot_n <= 0.f;
-        return r_dot_n <= 0.f;
-    }
+    bool set_face_normal(const Ray& ray, const uvec3& normal);
 
 private:
     coord3 point_;              // Coordinates of hit
