@@ -16,39 +16,44 @@ Running the executable in ./build/bin will create a new image.ppm file with the
 completed render.
 
 ## Progress
-#### Features Implemented:
-- Ray generation (backwards ray tracing)
-- Sphere objects
-  - Surface normals
-- Materials:
-  - Colors
-  - Diffuse reflection
-- Light sources:
-  - Ambient
-  - Point
+Below is a non-exhaustive list of small milestones I've implemented along with features I plan
+on cooking up.
 
-#### WIP:
-- BVH to replace list
-- Lights (directional)
-  - Specular
-  - Shadows
-  - Refractions + reflections
-- Antialiasing
-- Possible camera panning?
-  - Proper camera coord system (+world space transformations)
-- More...
-
-#### Broader Roadmap:
-- [ ] Baseline raytracing (WIP)
-- [ ] Procedural generation
-  - Heightmaps, noise functions
-- [ ] Volumetrics
-  - Clouds
-  - Water
+### Phase 1: Baseline Ray Tracing
+- [X] Ray generation (backwards ray tracing)
+- [X] Sphere objects
+    - [X] Surface normals
+- [X] Materials:
+    - [X] Colors
+    - [X] Diffuse reflection
+    - [ ] Specular reflection
+    - [ ] Refraction
+- [X] Light sources:
+    - [X] Ambient
+    - [X] Point
+    - [X] Directional
+- [ ] BVH to replace lists
+- [ ] Better lights
+  - [ ] Shadows
+  - [ ] Color attenuation
+  - [ ] Refractions + reflections
+- [ ] Antialiasing
+- [ ] Camera space
+  - [ ] Proper camera coord system (+world space transformations)
+  - [ ] Possible camera panning?
+- [ ] Texture mapping?
+- [ ] More...
+### Phase 2: Procedural Generation
+- [ ] Heightmaps & triangle meshes
+- [ ] Noise functions
+### Phase 3: Volumetrics
+- [ ] Clouds
+- [ ] Water
+### Phase 4: GPU Acceleration
 - [ ] CUDA/OpenMP port
-  - Sweet, sweet parallelism
-  - Performance benchmarking
-- [ ] Polish??
+  - [ ] Sweet, sweet parallelism
+  - [ ] Performance benchmarking
+### Phase 5: Polish??
 
 ## Sources:
 - https://gabrielgambetta.com/computer-graphics-from-scratch
