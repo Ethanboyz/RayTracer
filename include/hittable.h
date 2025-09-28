@@ -20,7 +20,7 @@ public:
     /**
      * @brief Constructs a HitRecord that stores the information of a ray hit.
      * @param point Coordinates of the hit location.
-     * @param normal Normal vector of the hit surface (currently always points towards the camera's direction, will change this to always outwards facing).
+     * @param normal Outward-facing normal vector of the hit surface.
      * @param t t-value where the ray hit the surface.
      * @param front_face True if the surface's outward-facing face is towards the camera.
      * @param material Material of the hit surface.
@@ -42,7 +42,7 @@ public:
     // Accessors
     /** @return Coordinates of the hit location. */
     [[nodiscard]] constexpr coord3 point() const noexcept { return point_; }
-    /** @return Normal vector of the hit surface. */
+    /** @return Outward-facing normal vector of the hit surface. */
     [[nodiscard]] constexpr uvec3 normal() const noexcept { return normal_; }
     /** @return t-value where the ray hit the surface. */
     [[nodiscard]] constexpr float t() const noexcept { return ray_t_; }
@@ -55,7 +55,7 @@ public:
 
     /** @param point Sets hit location coordinates. */
     constexpr void point(const coord3 point) noexcept { point_ = point; }
-    /** @param normal Sets normal vector. */
+    /** @param normal Sets outward-facing normal vector. */
     constexpr void normal(const uvec3 normal) noexcept { normal_ = normal; }
     /** @param t Sets the t-value of ray hit. */
     constexpr void t(const float t) noexcept { ray_t_ = t; }
@@ -67,27 +67,23 @@ public:
     constexpr void light_intensity(const float light_intensity) noexcept { light_intensity_ = light_intensity; }
 
     /**
-     * @brief Sets the normal of the HitRecord based on if the hit surface is outward-facing.
+     * @brief Sets the normal of the HitRecord and updates front_face state.
      * @param ray Generated ray from the camera.
-     * @param outward_normal Outward-facing normal of the hit surface.
+     * @param normal Outward-facing normal of the hit surface.
      * @return True if the hit surface is facing towards the camera, false otherwise.
      */
-    bool set_face_normal(const Ray& ray, const uvec3& outward_normal) {
-        if (dot(ray.direction(), normal_) > 0.f) {
-            // Ray is inside sphere, surface is facing away, flip normal
-            normal_ = -outward_normal;
-            front_face_ = false;
-            return false;
-        }
-        // Ray is outside sphere, surface is facing towards camera
-        normal_ = outward_normal;
-        front_face_ = true;
-        return true;
+    bool set_face_normal(const Ray& ray, const uvec3& normal) {
+        normal_ = normal;
+        const float r_dot_n = dot(ray.direction(), normal);
+
+        // Surface faces the camera when surface normal direction opposes ray direction
+        front_face_ = r_dot_n <= 0.f;
+        return r_dot_n <= 0.f;
     }
 
 private:
     coord3 point_;              // Coordinates of hit
-    uvec3 normal_;              // Normal of hit surface (never points away from the camera)
+    uvec3 normal_;              // Normal of hit surface (outwards-facing)
     float ray_t_;               // t-value of the ray where hit occurred
     bool front_face_;           // True if surface is facing towards the camera
     Material material_;         // Determines the reflective and color properties to be drawn

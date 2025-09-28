@@ -53,7 +53,7 @@ public:
             }
         }
 
-        // Initialize all HitRecord fields before returning
+        // Initialize all HitRecord fields before returning (
         hit_record.point(ray.position(calculated_t));
         hit_record.t(calculated_t);
         hit_record.set_face_normal(ray, unit(hit_record.point() - center_));

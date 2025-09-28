@@ -26,7 +26,7 @@ public:
 
         // Diffuse lighting
         const vec3 L = position_ - hit_record.point();                                          // L = vec3 from hit point to point light
-        const uvec3 N{hit_record.front_face() ? hit_record.normal() : -hit_record.normal()};    // Make sure N is the outward facing normal
+        const uvec3 N{hit_record.normal()};
 
         if (const float n_dot_l = dot(N, L); n_dot_l > 0) {
             float added_light_intensity{intensity_ * n_dot_l / L.length()};

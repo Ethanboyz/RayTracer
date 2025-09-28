@@ -17,32 +17,31 @@ public:
      * @param diffuse % of light that should be scattered uniformly upon reflection.
      * @param specular % of light that should be reflected specularly.
      */
-    constexpr Material(const Color &color, const float diffuse, const float specular) : col{color}, dif{diffuse}, spec{specular} {
-        const float sum = dif + spec;
-        if (sum > 1) {
-            dif /= sum;
-            spec /= sum;
+    constexpr Material(const Color &color, const float diffuse, const float specular) : color_{color}, diffuse_{diffuse}, specular_{specular} {
+        if (const float sum = diffuse_ + specular_; sum > 1) {
+            diffuse_ /= sum;
+            specular_ /= sum;
         }
     }
 
     // Accessors
     /** @return Base color of the Material. */
-    [[nodiscard]] constexpr Color color() const noexcept { return col; }
+    [[nodiscard]] constexpr Color color() const noexcept { return color_; }
     /** @return Diffuse reflective component of the Material (0.0-1.0). */
-    [[nodiscard]] constexpr float diffuse() const noexcept { return dif; }
+    [[nodiscard]] constexpr float diffuse() const noexcept { return diffuse_; }
     /** @return Specular reflective component of the Material (0.0-1.0). */
-    [[nodiscard]] constexpr float specular() const noexcept { return spec; }
+    [[nodiscard]] constexpr float specular() const noexcept { return specular_; }
 
     /** @param color Sets the base color of the current Material. */
-    constexpr void color(const Color& color) noexcept { col = color; }
+    constexpr void color(const Color& color) noexcept { color_ = color; }
     /** @param diffuse Sets the diffuse reflective component. */
-    constexpr void diffuse(const float diffuse) noexcept { dif = diffuse; }
+    constexpr void diffuse(const float diffuse) noexcept { diffuse_ = diffuse; }
     /** @param specular Sets the specular reflective component. */
-    constexpr void specular(const float specular) noexcept { spec = specular; }
+    constexpr void specular(const float specular) noexcept { specular_ = specular; }
 
 private:
-    Color col;              // Base color before any shading or effects
-    float dif, spec;        // Material reflective properties
+    Color color_;                   // Base color before any shading or effects
+    float diffuse_, specular_;      // Material reflective properties
 };
 
 #endif
