@@ -18,7 +18,7 @@ public:
      * @param specular % of light that should be reflected specularly.
      */
     constexpr Material(const Color &color, const float diffuse, const float specular) : color_{color}, diffuse_{diffuse}, specular_{specular} {
-        if (const float sum = diffuse_ + specular_; sum > 1) {
+        if (const float sum{diffuse_ + specular_}; sum > 1) {
             diffuse_ /= sum;
             specular_ /= sum;
         }

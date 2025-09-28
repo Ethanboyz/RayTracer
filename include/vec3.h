@@ -274,7 +274,7 @@ private:
 
     /** @brief Normalizes vectors. */
     void normalize() {
-        if (const float len = this->length(); len > 0) {
+        if (const float len{this->length()}; len > 0) {
             s[0] /= len;
             s[1] /= len;
             s[2] /= len;

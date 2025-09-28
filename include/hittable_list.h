@@ -39,8 +39,8 @@ public:
      */
     bool ray_hit(const Ray& ray, const Interval<float>& t, HitRecord& hit_record) const override {
         HitRecord rec;
-        bool anything_hit = false;
-        float closest_t = t.max();
+        bool anything_hit{false};
+        float closest_t{t.max()};
 
         for (const shared_ptr<Hittable>& object : objects) {
             if (object->ray_hit(ray, Interval(t.min(), closest_t), rec)) {

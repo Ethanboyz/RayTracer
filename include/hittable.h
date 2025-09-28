@@ -74,7 +74,7 @@ public:
      */
     bool set_face_normal(const Ray& ray, const uvec3& normal) {
         normal_ = normal;
-        const float r_dot_n = dot(ray.direction(), normal);
+        const float r_dot_n{dot(ray.direction(), normal)};
 
         // Surface faces the camera when surface normal direction opposes ray direction
         front_face_ = r_dot_n <= 0.f;

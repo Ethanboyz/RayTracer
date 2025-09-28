@@ -22,13 +22,13 @@ public:
      * @param hit_record Updated with the new light intensity after the current PointLight is applied to it.
      */
     constexpr void light_intensity(HitRecord& hit_record) const override {
-        float new_light_intensity = hit_record.light_intensity();
+        float new_light_intensity{hit_record.light_intensity()};
 
         // Diffuse lighting
-        const vec3 L = position_ - hit_record.point();                                          // L = vec3 from hit point to point light
+        const vec3 L{position_ - hit_record.point()};           // L = vec3 from hit point to point light
         const uvec3 N{hit_record.normal()};
 
-        if (const float n_dot_l = dot(N, L); n_dot_l > 0) {
+        if (const float n_dot_l{dot(N, L)}; n_dot_l > 0) {
             float added_light_intensity{intensity_ * n_dot_l / L.length()};
             added_light_intensity *= hit_record.material().diffuse();
             new_light_intensity += added_light_intensity;

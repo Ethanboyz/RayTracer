@@ -26,13 +26,13 @@ public:
      */
     void render(const HittableList& world, const LightList& world_lights, const Camera& camera) const {
         // Center of first pixel (upper left) will be at the upperleft corner of viewport shifted halfway of a pixel delta
-        const coord3 pixel_0_center = camera.viewport_upperleft_corner() + (0.5 * (camera.pixel_delta_u() + camera.pixel_delta_v()));
+        const coord3 pixel_0_center{camera.viewport_upperleft_corner() + 0.5 * (camera.pixel_delta_u() + camera.pixel_delta_v())};
         std::vector<Color> pixel_colors;
-        for (int y = 0; y < image_height_; y++) {
+        for (int y{}; y < image_height_; y++) {
             std::clog << "\rRay Progress: " << (static_cast<double>(y) / image_height_) * 100 << "% " << std::flush;
-            for (int x = 0; x < image_width_; x++) {
+            for (int x{}; x < image_width_; x++) {
                 // Use pixel's and camera's location to generate a ray
-                coord3 pixel_center = pixel_0_center + camera.pixel_delta_u() * static_cast<float>(x) + camera.pixel_delta_v() * static_cast<float>(y);
+                coord3 pixel_center{pixel_0_center + camera.pixel_delta_u() * static_cast<float>(x) + camera.pixel_delta_v() * static_cast<float>(y)};
                 Ray ray{camera.position(), unit(pixel_center - camera.position())};
                 pixel_colors.push_back(ray_color(ray, world, world_lights));
             }
@@ -60,7 +60,7 @@ private:
         // Minimum of t = 0 so camera effectively looks forwards (not also backwards)
         if (!world.ray_hit(ray, Interval(0.f, std::numeric_limits<float>::max()), hit_record)) {
             // Background color light gray gradient dependent on y coord. -1 <= y <= 1, but 0 <= a <= 1 for color = (1 - a) * low_y_color + a * high_y_color
-            const float a = 0.5f * (ray.direction().y() + 1);
+            const float a{0.5f * (ray.direction().y() + 1)};
             constexpr auto lightgray{Color{0.9f, 0.9f, 0.9f}};
             constexpr auto gray{Color{0.4f, 0.4f, 0.4f}};
             return (1 - a) * lightgray + a * gray;
@@ -88,9 +88,9 @@ private:
         std::vector<uint8_t> outbuf;
         outbuf.reserve(pixels.size() * 3);
         for (const Color& pixel : pixels) {  // 1 byte per color channel
-            const float r = pixel.x();
-            const float g = pixel.y();
-            const float b = pixel.z();
+            const float r{pixel.x()};
+            const float g{pixel.y()};
+            const float b{pixel.z()};
             outbuf.push_back(static_cast<uint8_t>(255.999f * r));
             outbuf.push_back(static_cast<uint8_t>(255.999f * g));
             outbuf.push_back(static_cast<uint8_t>(255.999f * b));
