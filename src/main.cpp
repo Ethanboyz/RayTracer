@@ -21,7 +21,7 @@ int main() {
     constexpr int image_height = static_cast<int>(static_cast<float>(image_width) / aspect_ratio);
     constexpr float viewport_height = 2.f;
 
-    const auto camera = Camera{vec3{0, 0, 0}, fov, aspect_ratio, image_height, viewport_height};
+    constexpr auto camera = Camera{vec3{0, 0, 0}, fov, aspect_ratio, image_height, viewport_height};
 
     // Setup the world and 3d objects
     HittableList world;
@@ -37,7 +37,7 @@ int main() {
     world.add(make_shared<Sphere>(coord3{0, -5001, -1}, 5000.f, flat_green));    // Ground (giant sphere)
 
     //world_lights.add(make_shared<AmbientLight>(0.2f));
-    world_lights.add(make_shared<PointLight>(10, coord3{0, 2, 2}));
+    world_lights.add(make_shared<PointLight>(3, coord3{0, 2, 2}));
 
     const Renderer renderer{image_width, image_height};
     renderer.render(world, world_lights, camera);

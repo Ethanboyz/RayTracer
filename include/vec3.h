@@ -16,32 +16,53 @@ using Color = Vec3<any_tag>;        // R, G, B values (0-1)
 using vec3 = Vec3<any_tag>;         // 3D vectors
 using uvec3 = Vec3<unit_tag>;       // 3D unit vectors (length ≈ 1)
 
+/**
+ * @class Vec3
+ * @brief Represents a 3D vector.
+ * @note Also used for coordinates and RGB colors.
+ * @tparam Tag Determines the type of vector (unit vector with asserted length ≈ 1 or regular vector).
+ */
 template <class Tag> class Vec3 {
 public:
-    // Constructors
+    /** @brief Constructs a 3D vector with all components initialized to 0. */
     constexpr Vec3() : s{0.f, 0.f, 0.f} {}
+
+    /**
+     * @brief Constructs a 3D vector with the specified scalar values.
+     * @param x First vector component.
+     * @param y Second vector component.
+     * @param z Third vector component.
+     */
     constexpr Vec3(const float x, const float y, const float z) : s{x, y, z} {
         // No need to normalize if already length ≈ 1
-        if (std::is_same_v<Tag, unit_tag> && std::abs(length_squared() - 1) < 1.0e-7) {
+        if (std::is_same_v<Tag, unit_tag> && std::abs(length_squared() - 1) < 1.0e-6) {
             normalize();
         }
     }
-    // Fail conversions between different Vec3 types, enforce use of unit() and nounit()
+    /** @brief Cannot perform conversions between Vec3 types */
     template<class T = Tag, std::enable_if_t<std::is_same_v<T, unit_tag>, int> = 0>
     constexpr explicit Vec3(const vec3&) : s{0.f, 0.f, 0.f} {
         static_assert(dependent_false_v<T>, "Cannot initialize uvec3 from vec3. Use unit(v) to create a unit vector uvec3 instead.");
     }
+    /** @brief Cannot perform conversions between Vec3 types */
     template<class T = Tag, std::enable_if_t<std::is_same_v<T, any_tag>, int> = 0>
     constexpr explicit Vec3(const uvec3&) : s{0.f, 0.f, 0.f} {
         static_assert(dependent_false_v<T>, "Cannot initialize vec3 from uvec3. Use nounit(v) to create a vector vec3 instead.");
     }
 
     // Accessors
-    constexpr float x() const noexcept { return s[0]; }
-    constexpr float y() const noexcept { return s[1]; }
-    constexpr float z() const noexcept { return s[2]; }
+    /** @return First vector component. */
+    [[nodiscard]] constexpr float x() const noexcept { return s[0]; }
+    /** @return Second vector component. */
+    [[nodiscard]] constexpr float y() const noexcept { return s[1]; }
+    /** @return Third vector component. */
+    [[nodiscard]] constexpr float z() const noexcept { return s[2]; }
 
     // Operator overloading
+    /**
+     * @brief Unary negation operation.
+     * @return Vec3 with all components negated.
+     */
     constexpr Vec3 operator-() const noexcept {   // Unary '-' operator
         return Vec3{
             -s[0],
@@ -50,7 +71,12 @@ public:
         };
     }
 
-    // Mutating operators can only work on regular vec3, should be disabled for uvec3
+    /**
+     * @brief Mutating vector-vector addition operation.
+     * @tparam T Only vec3 (non-unit vectors) can use mutating operators.
+     * @param other Rvalue of the += operation.
+     * @return Result of vector addition of lvalue on rvalue.
+     */
     template<class T = Tag, std::enable_if_t<std::is_same_v<T, any_tag>, int> = 0>
     constexpr Vec3& operator+=(const Vec3& other) noexcept {
         s[0] += other.s[0];
@@ -58,6 +84,13 @@ public:
         s[2] += other.s[2];
         return *this;
     }
+
+    /**
+     * @brief Mutating vector-vector subtraction operation.
+     * @tparam T Only vec3 (non-unit vectors) can use mutating operators.
+     * @param other Rvalue of the -= operation.
+     * @return Result of vector subtraction of rvalue subtracted from lvalue.
+     */
     template<class T = Tag, std::enable_if_t<std::is_same_v<T, any_tag>, int> = 0>
     constexpr Vec3& operator-=(const Vec3& other) noexcept {
         s[0] -= other.s[0];
@@ -65,6 +98,13 @@ public:
         s[2] -= other.s[2];
         return *this;
     }
+
+    /**
+     * @brief Mutating vector-scalar multiplication operation.
+     * @tparam T Only vec3 (non-unit vectors) can use mutating operators.
+     * @param t Rvalue of the *= operation (scalar to multiply the lvalue by).
+     * @return Result of multiplication of lvalue and rvalue.
+     */
     template<class T = Tag, std::enable_if_t<std::is_same_v<T, any_tag>, int> = 0>
     constexpr Vec3& operator*=(const float t) noexcept {
         s[0] *= t;
@@ -72,6 +112,13 @@ public:
         s[2] *= t;
         return *this;
     }
+
+    /**
+     * @brief Mutating vector-scalar division operation.
+     * @tparam T Only vec3 (non-unit vectors) can use mutating operators.
+     * @param t Rvalue of the /= operation (scalar to divide the lvalue by).
+     * @return Result of division of lvalue by rvalue.
+     */
     template<class T = Tag, std::enable_if_t<std::is_same_v<T, any_tag>, int> = 0>
     constexpr Vec3& operator/=(const float t) {
         s[0] /= t;
@@ -79,42 +126,99 @@ public:
         s[2] /= t;
         return *this;
     }
+
+    /** @brief Cannot perform mutating operations on uvec3 */
     template<class T = Tag, std::enable_if_t<std::is_same_v<T, unit_tag>, int> = 0>
     constexpr void operator+=(const Vec3& other) noexcept = delete;
+    /** @brief Cannot perform mutating operations on uvec3 */
     template<class T = Tag, std::enable_if_t<std::is_same_v<T, unit_tag>, int> = 0>
     constexpr void operator-=(const Vec3& other) noexcept = delete;
+    /** @brief Cannot perform mutating operations on uvec3 */
     template<class T = Tag, std::enable_if_t<std::is_same_v<T, unit_tag>, int> = 0>
     constexpr void operator*=(const Vec3& other) noexcept = delete;
+    /** @brief Cannot perform mutating operations on uvec3 */
     template<class T = Tag, std::enable_if_t<std::is_same_v<T, unit_tag>, int> = 0>
     constexpr void operator/=(const Vec3& other) noexcept = delete;
 
-    // In case of printing vectors
+    /**
+     * @brief Vector stream insertion operation.
+     * @note Formats vectors in [x, y, z] format.
+     * @param stream Lvalue of the << oepration (stream to insert vector into).
+     * @param v Rvalue of the << operation (vector to insert).
+     * @return Same stream used as the Lvalue of the << operation.
+     */
     constexpr friend std::ostream& operator<<(std::ostream& stream, const Vec3& v) noexcept {
         stream << "[" << v.s[0] << ", " << v.s[1] << ", " << v.s[2] << "]";
         return stream;
     }
 
     // Scalar-vector arithmetic
+    /**
+     * @brief Binary vector-scalar multiplication operation.
+     * @param v Left side of the operation.
+     * @param t Right side of the operation.
+     * @return Vector-scalar product.
+     */
     constexpr friend vec3 operator*(const Vec3& v, const float t) noexcept {
         return vec3{v.s[0] * t, v.s[1] * t, v.s[2] * t};
     }
+
+    /**
+     * @brief Binary scalar-vector multiplication operation.
+     * @param v Left side of the operation.
+     * @param t Right side of the operation.
+     * @return Scalar-vector product.
+     */
     constexpr friend vec3 operator*(const float t, const Vec3& v) noexcept {
         return v * t;
     }
+
+    /**
+     * @brief Binary vector-scalar division operation.
+     * @param v Left side of the operation.
+     * @param t Right side of the operation.
+     * @return Vector-scalar quotient.
+     */
     constexpr friend vec3 operator/(const Vec3& v, const float t) {
         return vec3{v.s[0] / t, v.s[1] / t, v.s[2] / t};
     }
 
     // Vector-vector arithmetic
+    /**
+     * @brief Binary vector-vector addition operation.
+     * @param u Left side of the operation.
+     * @param v Right side of the operation.
+     * @return Vector-vector sum.
+     */
     constexpr friend vec3 operator+(const Vec3& u, const Vec3& v) noexcept {
         return vec3{u.s[0] + v.s[0], u.s[1] + v.s[1], u.s[2] + v.s[2]};
     }
+
+    /**
+     * @brief Binary vector-vector subtraction operation.
+     * @param u Left side of the operation.
+     * @param v Right side of the operation.
+     * @return Vector-vector difference.
+     */
     constexpr friend vec3 operator-(const Vec3& u, const Vec3& v) noexcept {
         return vec3{u.s[0] - v.s[0], u.s[1] - v.s[1], u.s[2] - v.s[2]};
     }
+
+    /**
+     * @brief Vector-vector dot operation.
+     * @param u Left side of the operation.
+     * @param v Right side of the operation.
+     * @return Vector-vector dot product.
+     */
     template<class A, class B>
     constexpr friend float dot(const Vec3<A>& u, const Vec3<B>& v) noexcept;
 
+    /**
+     * @brief Vector-vector cross operation.
+     * @param u Left side of the operation.
+     * @param v Right side of the operation.
+     * @return Vector-vector cross product.
+     */
     constexpr friend vec3 cross(const Vec3& u, const Vec3& v) noexcept {
         return vec3{
             u.s[1] * v.s[2] - u.s[2] * v.s[1],
@@ -124,19 +228,41 @@ public:
     }
 
     // Misc
-    constexpr float length_squared() const noexcept {
+    /**
+     * @brief Calculates the squared length of the vector.
+     * @return Length of the vector, squared.
+     */
+    [[nodiscard]] constexpr float length_squared() const noexcept {
         return s[0] * s[0] + s[1] * s[1] + s[2] * s[2];
     }
-    constexpr float length() const noexcept {
+
+    /**
+     * @brief Calculates the length of the vector.
+     * @note More expensive operation than length_squared().
+     * @return Length of the vector.
+     */
+    [[nodiscard]] constexpr float length() const noexcept {
         return std::sqrt(this->length_squared());
     }
-    // Convert from vec3 to uvec3
+
+    /**
+     * @brief Constructs a new uvec3 based off the provided vec3.
+     * @note Should be used to convert vec3 to uvec3. The given vec3 is normalized and the result is returned.
+     * @param v vec3 to convert into uvec3.
+     * @return Normalized uvec3 created from the given vec3.
+     */
     template<class T = Tag, std::enable_if_t<std::is_same_v<T, any_tag>, int> = 0>
     constexpr friend uvec3 unit(const Vec3& v) noexcept {
         const Vec3 res = v / v.length();
         return uvec3{res.x(), res.y(), res.z()};
     }
-    // Convert from uvec3 to vec3
+
+    /**
+     * @brief Constructs a new vec3 based off the provided uvec3.
+     * @note Should be used to convert uvec3 to vec3. Everything but the new vector's type remains unchanged.
+     * @param v uvec3 to convert into vec3.
+     * @return vec3 created from the given uvec3.
+     */
     template<class T = Tag, std::enable_if_t<std::is_same_v<T, unit_tag>, int> = 0>
     constexpr friend vec3 nounit(const Vec3& v) noexcept {
         return vec3{v.x(), v.y(), v.z()};
@@ -146,9 +272,9 @@ private:
     // Scalar components
     float s[3];
 
+    /** @brief Normalizes vectors. */
     void normalize() {
-        const float len = this->length();
-        if (len > 0) {
+        if (const float len = this->length(); len > 0) {
             s[0] /= len;
             s[1] /= len;
             s[2] /= len;

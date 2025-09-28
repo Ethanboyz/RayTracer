@@ -5,8 +5,13 @@ class Light {
 public:
     virtual ~Light() = default;
 
-    // Adds to hit_record light_intensity with a brighter light_intensity depending on the current object's light properties
-    virtual constexpr void light_intensity(HitRecord& hit_record) const = 0;
+    /**
+     * @brief Calculates a new light intensity for the passed HitRecord.
+     *
+     * Adds the light intensity caused by the current light to the HitRecord's light intensity.
+     * @param hit_record updated with the new light intensity after the current Light is applied to it.
+     */
+    virtual void light_intensity(HitRecord& hit_record) const = 0;
 };
 
 #endif

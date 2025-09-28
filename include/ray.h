@@ -3,20 +3,33 @@
 
 #include "vec3.h"
 
+/**
+ * @class Ray
+ * @brief Implementation of a geometric ray type represented by a origin point and a direction.
+ */
 class Ray {
 public:
+    /**
+     * @brief Constructs a Ray positioned at the origin with no direction.
+     * @warning Rays with no direction are inherently useless.
+     */
     Ray() = default;
-    Ray(const coord3& position, const uvec3& direction) : orig{position}, dir{direction} {}
 
-    // Keep rays immutable
-    const constexpr coord3& origin() const noexcept { return orig; }
-    const constexpr uvec3& direction() const noexcept { return dir; }
+    /**
+     * @brief Constructs a Ray positioned at the specified coordinates extending out the direction.
+     * @param position Coordinates of the starting point.
+     * @param direction Direction the Ray extends towards.
+     */
+    Ray(const coord3& position, const uvec3& direction) : position_{position}, direction_{direction} {}
 
-    coord3 position(const float t) const noexcept { return coord3{orig + t * dir}; }
+    [[nodiscard]] const constexpr coord3& origin() const noexcept { return position_; }
+    [[nodiscard]] const constexpr uvec3& direction() const noexcept { return direction_; }
+
+    [[nodiscard]] coord3 position(const float t) const noexcept { return coord3{position_ + t * direction_}; }
 
 private:
-    coord3 orig;
-    uvec3 dir;
+    const coord3 position_;
+    const uvec3 direction_;
 };
 
 #endif

@@ -5,7 +5,7 @@
 #include "vec3.h"
 #include "light.h"
 
-class DirectionalLight : public Light {
+class DirectionalLight final : public Light {
 public:
     //constexpr DirectionalLight() : iy{0.f} {}
     //constexpr explicit DirectionalLight(const float intensity, const Ray direction) : iy{intensity}, pos_dir{direction}  {}
