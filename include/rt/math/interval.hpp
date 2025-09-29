@@ -36,11 +36,18 @@ public:
      */
     constexpr T range() const noexcept { return max_ - min_; }
 
-    // Returns true if x is within the interval range (inclusive)
+    /** @return True if x is within the interval range (inclusive). */
     constexpr bool inclusive_contains(const T x) const noexcept { return min_ <= x && x <= max_; }
 
-    // Returns true if x is within the interval range (exclusive)
+    /** @return True if x is within the interval range (exclusive). */
     constexpr bool exclusive_contains(const T x) const noexcept { return min_ < x && x < max_; }
+
+    /** @return x if within the interval, or the nearest Interval boundary otherwise. */
+    constexpr float clamp(const T x) const noexcept {
+        if (x < min_) return min_;
+        if (x > max_) return max_;
+        return x;
+    }
 
 private:
     T min_, max_;

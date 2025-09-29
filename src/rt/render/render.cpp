@@ -50,9 +50,10 @@ void Renderer::write_to_file(const std::string& filename, const std::vector<Colo
         const float r{pixel.x()};
         const float g{pixel.y()};
         const float b{pixel.z()};
-        outbuf.push_back(static_cast<uint8_t>(255.999f * r));
-        outbuf.push_back(static_cast<uint8_t>(255.999f * g));
-        outbuf.push_back(static_cast<uint8_t>(255.999f * b));
+        static constexpr Interval color_intensity{0.f, 0.999f};
+        outbuf.push_back(static_cast<uint8_t>(256 * color_intensity.clamp(r)));
+        outbuf.push_back(static_cast<uint8_t>(256 * color_intensity.clamp(g)));
+        outbuf.push_back(static_cast<uint8_t>(256 * color_intensity.clamp(b)));
     }
     out.write(reinterpret_cast<const char*>(outbuf.data()), static_cast<long>(outbuf.size()));
 }

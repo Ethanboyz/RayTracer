@@ -6,8 +6,7 @@ void AmbientLight::light_intensity(HitRecord& hit_record) const noexcept {
 
     // Diffuse + specular should sum to ~1
     new_light_intensity *= hit_record.material().diffuse() + hit_record.material().specular();
-    if (new_light_intensity > 1) {
-        new_light_intensity = 1;
-    }
+    static constexpr Interval interval{0.f, 1.f};
+    new_light_intensity = interval.clamp(new_light_intensity);
     hit_record.light_intensity(new_light_intensity);
 }

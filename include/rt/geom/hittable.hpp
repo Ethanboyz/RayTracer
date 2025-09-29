@@ -66,7 +66,7 @@ private:
     float ray_t_;               // t-value of the ray where hit occurred
     bool front_face_;           // True if surface is facing towards the camera
     Material material_;         // Determines the reflective and color properties to be drawn
-    float light_intensity_;     // Intensity of light exposure (ranges from 0-1, 1 means the base color is drawn)
+    float light_intensity_;     // Intensity of light exposure (1 means the base color is drawn)
 };
 
 /**
