@@ -1,16 +1,19 @@
 #include "rt/render/render.hpp"
+#include <random>
 
-void Renderer::render(const HittableList& world, const LightList& world_lights, const Camera& camera) const {
-    // Center of first pixel (upper left) will be at the upperleft corner of viewport shifted halfway of a pixel delta
-    const coord3 pixel_0_center{camera.viewport_upperleft_corner() + 0.5 * (camera.pixel_delta_u() + camera.pixel_delta_v())};
+void Renderer::render(const HittableList& world, const LightList& world_lights) const {
     std::vector<Color> pixel_colors;
     for (int y{}; y < image_height_; y++) {
-        std::clog << "\rRay Progress: " << (static_cast<double>(y) / image_height_) * 100 << "% " << std::flush;
+        std::clog << "\rRay Progress: " << static_cast<double>(y) / image_height_ * 100 << "% " << std::flush;
         for (int x{}; x < image_width_; x++) {
-            // Use pixel's and camera's location to generate a ray
-            coord3 pixel_center{pixel_0_center + camera.pixel_delta_u() * static_cast<float>(x) + camera.pixel_delta_v() * static_cast<float>(y)};
-            Ray ray{camera.position(), unit(pixel_center - camera.position())};
-            pixel_colors.push_back(ray_color(ray, world, world_lights));
+            // Use pixel's and camera's location to generate a bunch of rays in the pixel, then write the average of the ray colors
+            Color pixel_color{0, 0, 0};
+            for (int sample = 0; sample < camera_.num_samples(); sample++) {
+                Ray ray{generate_ray(x, y)};
+                pixel_color += ray_color(ray, world, world_lights);
+            }
+            pixel_color /= static_cast<float>(camera_.num_samples());
+            pixel_colors.push_back(pixel_color);
         }
     }
     // Done generating rays, write pixel colors to file
@@ -23,7 +26,7 @@ Color Renderer::ray_color(const Ray& ray, const Hittable& world, const LightList
     HitRecord hit_record;
 
     // Minimum of t = 0 so camera effectively looks forwards (not also backwards)
-    if (!world.ray_hit(ray, Interval(0.f, std::numeric_limits<float>::max()), hit_record)) {
+    if (!world.ray_hit(ray, Interval{0.f, std::numeric_limits<float>::max()}, hit_record)) {
         // Background color light gray gradient dependent on y coord. -1 <= y <= 1, but 0 <= a <= 1 for color = (1 - a) * low_y_color + a * high_y_color
         const float a{0.5f * (ray.direction().y() + 1)};
         constexpr auto lightgray{Color{0.9f, 0.9f, 0.9f}};
@@ -34,6 +37,21 @@ Color Renderer::ray_color(const Ray& ray, const Hittable& world, const LightList
     const Material material{hit_record.material()};
     world_lights.light_intensity(hit_record);
     return material.color() * hit_record.light_intensity();
+}
+
+Ray Renderer::generate_ray(const int x, const int y) const {
+    // Get a vector to a random point inside the pixel square centered at (i, j)
+    std::random_device rd;
+    static std::mt19937 engine{rd()};
+    static std::uniform_real_distribution<float> distribution(0, 1);
+    const float random_float{distribution(engine)};
+    const vec3 offset{random_float - 0.5f, random_float - 0.5f, 0};
+
+    const coord3 horizontal_offset{(static_cast<float>(x) + offset.x()) * camera_.pixel_delta_u()};
+    const coord3 vertical_offset{(static_cast<float>(y) + offset.y()) * camera_.pixel_delta_v()};
+    const coord3 pixel_sample{pixel_0_center_ + horizontal_offset + vertical_offset};
+
+    return {camera_.position(), unit(pixel_sample)};
 }
 
 void Renderer::write_to_file(const std::string& filename, const std::vector<Color>& pixels) const {

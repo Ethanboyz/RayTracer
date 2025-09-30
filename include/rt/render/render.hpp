@@ -1,7 +1,6 @@
 #ifndef RENDER_H
 #define RENDER_H
 
-#include <iostream>
 #include <fstream>
 #include "rt/geom/hittable.hpp"
 #include "rt/geom/hittable_list.hpp"
@@ -14,8 +13,18 @@
  */
 class Renderer {
 public:
-    Renderer() : image_width_{400}, image_height_{225} {}
-    Renderer(const int image_width, const int image_height) : image_width_{image_width}, image_height_{image_height} {}
+    /**
+     * @brief Constructs a Renderer which can generate a completed image of the world into an output .ppm file.
+     * @param camera
+     */
+    explicit Renderer(const Camera& camera)
+      : image_width_{camera.image_width()},
+        image_height_{camera.image_height()},
+
+        // Center of first pixel (upper left) will be at the upperleft corner of viewport shifted halfway of a pixel delta
+        pixel_0_center_{camera.viewport_upperleft_corner() + 0.5 * (camera.pixel_delta_u() + camera.pixel_delta_v())},
+
+        camera_(camera) {}
 
     /**
      * @brief Render visual output to a .ppm image file.
@@ -24,13 +33,14 @@ public:
      * to a .ppm in P6 (binary) format.
      * @param world All the Hittable objects to include in the render.
      * @param world_lights All the Light sources to include in the render.
-     * @param camera Renders will be created in the perspective of the camera.
      */
-    void render(const HittableList& world, const LightList& world_lights, const Camera& camera) const;
+    void render(const HittableList& world, const LightList& world_lights) const;
 
 private:
-    int image_width_;
-    int image_height_;
+    int image_width_;           // Number of rays to generate per row
+    int image_height_;          // Number of ray to generate per column
+    coord3 pixel_0_center_;     // Location of the first pixel (upperleft corner)
+    Camera camera_;             // Renders will be created in the perspective of the camera
 
     /**
      * @brief For a specific ray, calculates the color that should be written to the corresponding viewport pixel.
@@ -40,6 +50,14 @@ private:
      * @return The color that should be written to the ray's corresponding viewport pixel.
      */
     static Color ray_color(const Ray& ray, const Hittable& world, const LightList& world_lights);
+
+    /**
+     * @brief Creates a ray directed at a random point centered around a specified pixel.
+     * @param x Horizontal position of the pixel.
+     * @param y Vertical position of the pixel.
+     * @return Return a generated ray randomly sampled around the pixel location (i, j).
+     */
+    [[nodiscard]] Ray generate_ray(int x, int y) const;
 
     /**
      * @brief Outputs all image pixel data to a ppm file.

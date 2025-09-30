@@ -37,7 +37,7 @@ on cooking up.
   - [ ] Shadows
   - [ ] Color attenuation
   - [ ] Refractions + reflections
-- [ ] Antialiasing
+- [X] Antialiasing
 - [ ] Camera space
   - [ ] Proper camera coord system (+world space transformations)
   - [ ] Possible camera panning?

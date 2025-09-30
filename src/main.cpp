@@ -19,7 +19,7 @@ int main() {
     constexpr int image_height = static_cast<int>(static_cast<float>(image_width) / aspect_ratio);
     constexpr float viewport_height = 2.f;
 
-    constexpr auto camera = Camera{vec3{0, 0, 0}, fov, aspect_ratio, image_height, viewport_height};
+    constexpr auto camera = Camera{vec3{0, 0, 0}, fov, 10, aspect_ratio, image_height, viewport_height};
 
     // Setup the world and 3d objects
     HittableList world;
@@ -38,8 +38,8 @@ int main() {
     world_lights.add(make_shared<PointLight>(2, coord3{-1.5, 3, 0}));
     //world_lights.add(make_shared<DirectionalLight>(1, uvec3{0, 2, 4}));
 
-    const Renderer renderer{image_width, image_height};
-    renderer.render(world, world_lights, camera);
+    const Renderer renderer{camera};
+    renderer.render(world, world_lights);
 
     return 0;
 }
