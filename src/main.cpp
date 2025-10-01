@@ -14,12 +14,13 @@ using std::uint8_t;
 
 int main() {
     constexpr float fov = 1.f;
+    constexpr int num_samples = 10;
     constexpr float aspect_ratio = 16.f/9.f;
     constexpr int image_width = 1000;
     constexpr int image_height = static_cast<int>(static_cast<float>(image_width) / aspect_ratio);
     constexpr float viewport_height = 2.f;
 
-    constexpr auto camera = Camera{vec3{0, 0, 0}, fov, 10, aspect_ratio, image_height, viewport_height};
+    constexpr auto camera = Camera{vec3{0, 0, 0}, fov, num_samples, aspect_ratio, image_height, viewport_height};
 
     // Setup the world and 3d objects
     HittableList world;

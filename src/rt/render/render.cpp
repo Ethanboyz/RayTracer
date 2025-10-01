@@ -1,4 +1,5 @@
 #include "rt/render/render.hpp"
+#include "rt/utilities.hpp"
 #include <random>
 
 void Renderer::render(const HittableList& world, const LightList& world_lights) const {
@@ -41,10 +42,7 @@ Color Renderer::ray_color(const Ray& ray, const Hittable& world, const LightList
 
 Ray Renderer::generate_ray(const int x, const int y) const {
     // Get a vector to a random point inside the pixel square centered at (i, j)
-    std::random_device rd;
-    static std::mt19937 engine{rd()};
-    static std::uniform_real_distribution<float> distribution(0, 1);
-    const float random_float{distribution(engine)};
+    const float random_float{Utilities::random_float(Interval{0.f, 1.f})};
     const vec3 offset{random_float - 0.5f, random_float - 0.5f, 0};
 
     const coord3 horizontal_offset{(static_cast<float>(x) + offset.x()) * camera_.pixel_delta_u()};
