@@ -33,7 +33,7 @@ Color Renderer::ray_color(const Ray& ray, const int depth, const Hittable& world
         // Background color light gray gradient dependent on y coord. -1 <= y <= 1, but 0 <= a <= 1 for color = (1 - a) * low_y_color + a * high_y_color
         const float a{0.5f * (ray.direction().y() + 1)};
         constexpr auto white{Color{1.f, 1.f, 1.f}};
-        constexpr auto light_red{Color{1.f, 0.7f, 0.7f}};
+        constexpr auto light_red{Color{1.f, 0.6f, 0.6f}};
         return (1 - a) * white + a * light_red;
     }
 
@@ -68,9 +68,15 @@ void Renderer::write_to_file(const std::string& filename, const std::vector<Colo
     std::vector<uint8_t> outbuf;
     outbuf.reserve(pixels.size() * 3);
     for (const Color& pixel : pixels) {  // 1 byte per color channel
-        const float r{pixel.x()};
-        const float g{pixel.y()};
-        const float b{pixel.z()};
+        float r{pixel.x()};
+        float g{pixel.y()};
+        float b{pixel.z()};
+
+        // Gamma color correction (linear to gamma conversion)
+        constexpr float gamma{2.2f};
+        r = std::pow(std::abs(r), 1 / gamma);
+        g = std::pow(std::abs(g), 1 / gamma);
+        b = std::pow(std::abs(b), 1 / gamma);
         constexpr Interval color_intensity{0.f, 0.999f};
         outbuf.push_back(static_cast<uint8_t>(256 * color_intensity.clamp(r)));
         outbuf.push_back(static_cast<uint8_t>(256 * color_intensity.clamp(g)));
