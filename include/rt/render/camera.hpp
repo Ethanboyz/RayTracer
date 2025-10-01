@@ -60,7 +60,7 @@ private:
     vec3 viewport_u_;           // Viewport width vec3 representation
     vec3 viewport_v_;           // Viewport height vec3 representation
 
-    friend class Renderer;  // Only the renderer will need the pixel delta functions
+    friend class Renderer;      // Only the renderer will need the pixel delta functions
 
     /** @return Horizontal distance between each viewport pixel. */
     [[nodiscard]] constexpr vec3 pixel_delta_u() const {

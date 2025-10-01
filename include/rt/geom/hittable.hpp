@@ -13,7 +13,7 @@
 class HitRecord {
 public:
     /** @brief Constructs a default HitRecord (should be reassigned). */
-    constexpr HitRecord() : ray_t_{0}, front_face_{true}, material_{{0, 0, 0}, 0.f, 0.f}, light_intensity_{0} {}
+    constexpr HitRecord() : ray_t_{0}, front_face_{true}, material_{{0, 0, 0}, 0.f, 0.f, 0.f} {}
 
     /**
      * @brief Constructs a HitRecord that stores the information of a ray hit.
@@ -23,7 +23,7 @@ public:
      * @param front_face True if the surface's outward-facing face is towards the camera.
      * @param material Material of the hit surface.
      */
-    constexpr HitRecord(const coord3& point, const uvec3& normal, const float t, const bool front_face, const Material& material);
+    constexpr HitRecord(const coord3& point, const uvec3& normal, float t, bool front_face, const Material& material);
 
     // Accessors
     /** @return Coordinates of the hit location. */
@@ -36,8 +36,6 @@ public:
     [[nodiscard]] constexpr bool front_face() const noexcept { return front_face_; }
     /** @return Material of the hit surface. */
     [[nodiscard]] constexpr Material material() const noexcept { return material_; }
-    /** @return Light intensity of the hit location. */
-    [[nodiscard]] constexpr float light_intensity() const noexcept { return light_intensity_; }
 
     /** @param point Sets hit location coordinates. */
     constexpr void point(const coord3 point) noexcept { point_ = point; }
@@ -49,8 +47,6 @@ public:
     constexpr void front_face(const bool front_face) noexcept { front_face_ = front_face; }
     /** @param material Sets the material of the hit surface. */
     constexpr void material(const Material& material) noexcept { material_ = material; }
-    /** @param light_intensity Sets the light intensity at the hit location. */
-    constexpr void light_intensity(const float light_intensity) noexcept { light_intensity_ = light_intensity; }
 
     /**
      * @brief Sets the normal of the HitRecord and updates front_face state.
@@ -66,7 +62,6 @@ private:
     float ray_t_;               // t-value of the ray where hit occurred
     bool front_face_;           // True if surface is facing towards the camera
     Material material_;         // Determines the reflective and color properties to be drawn
-    float light_intensity_;     // Intensity of light exposure (1 means the base color is drawn)
 };
 
 /**

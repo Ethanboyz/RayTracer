@@ -5,8 +5,7 @@ constexpr HitRecord::HitRecord(const coord3& point, const uvec3& normal, const f
     normal_{normal},
     ray_t_{t},
     front_face_{front_face},
-    material_{material},
-    light_intensity_{0} {}
+    material_{material} {}
 
 bool HitRecord::set_face_normal(const Ray& ray, const uvec3& normal) {
     normal_ = normal;

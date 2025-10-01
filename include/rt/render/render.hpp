@@ -4,7 +4,6 @@
 #include <fstream>
 #include "rt/geom/hittable.hpp"
 #include "rt/geom/hittable_list.hpp"
-#include "rt/lighting/light_list.hpp"
 #include "rt/render/camera.hpp"
 
 /**
@@ -32,9 +31,8 @@ public:
      * Sequentially generates a backward-tracing ray for each viewport pixel and coloring the results
      * to a .ppm in P6 (binary) format.
      * @param world All the Hittable objects to include in the render.
-     * @param world_lights All the Light sources to include in the render.
      */
-    void render(const HittableList& world, const LightList& world_lights) const;
+    void render(const HittableList& world) const;
 
 private:
     int image_width_;           // Number of rays to generate per row
@@ -45,11 +43,11 @@ private:
     /**
      * @brief For a specific ray, calculates the color that should be written to the corresponding viewport pixel.
      * @param ray The ray in which coloring calculations will take place.
+     * @param depth Number of ray reflections until no more child rays can be generated.
      * @param world All the Hittable objects to include in the render.
-     * @param world_lights All the Light sources to include in the render.
      * @return The color that should be written to the ray's corresponding viewport pixel.
      */
-    static Color ray_color(const Ray& ray, const Hittable& world, const LightList& world_lights);
+    static Color ray_color(const Ray& ray, int depth, const Hittable& world);
 
     /**
      * @brief Creates a ray directed at a random point centered around a specified pixel.

@@ -9,10 +9,6 @@ add_executable(RayTracer
         src/rt/geom/hittable.cpp
         src/rt/geom/hittable_list.cpp
         src/rt/geom/sphere.cpp
-        src/rt/lighting/ambient_light.cpp
-        src/rt/lighting/directional_light.cpp
-        src/rt/lighting/light_list.cpp
-        src/rt/lighting/point_light.cpp
         src/rt/render/render.cpp
 )
 

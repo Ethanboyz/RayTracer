@@ -4,6 +4,8 @@
 #include <cmath>
 #include <functional>
 #include <iostream>
+#include "rt/math/interval.hpp"
+#include "rt/utilities.hpp"
 
 template <class Tag> class Vec3;
 template <class Tag> inline constexpr bool dependent_false_v = false;
@@ -26,6 +28,17 @@ template <class Tag> class Vec3 {
 public:
     /** @brief Constructs a 3D vector with all components initialized to 0. */
     constexpr Vec3() : s{0.f, 0.f, 0.f} {}
+
+    /**
+     * @brief Constructs a 3D vector with randomized components.
+     * @param range Components will have random values bound by this Interval.
+     */
+    constexpr explicit Vec3(const Interval<float>& range) : s{Utilities::random_float(range), Utilities::random_float(range), Utilities::random_float(range)} {
+        // No need to normalize if already length ≈ 1
+        if (std::is_same_v<Tag, unit_tag> && std::abs(length_squared() - 1) < 1.0e-6) {
+            normalize();
+        }
+    }
 
     /**
      * @brief Constructs a 3D vector with the specified scalar values.
