@@ -32,17 +32,18 @@ Color Renderer::ray_color(const Ray& ray, const int depth, const Hittable& world
     if (!world.ray_hit(ray, Interval{0.001f, std::numeric_limits<float>::max()}, hit_record)) {
         // Background color light gray gradient dependent on y coord. -1 <= y <= 1, but 0 <= a <= 1 for color = (1 - a) * low_y_color + a * high_y_color
         const float a{0.5f * (ray.direction().y() + 1)};
-        constexpr auto lightgray{Color{0.9f, 0.9f, 0.9f}};
-        constexpr auto gray{Color{0.4f, 0.4f, 0.4f}};
-        return (1 - a) * lightgray + a * gray;
+        constexpr auto white{Color{1.f, 1.f, 1.f}};
+        constexpr auto light_red{Color{1.f, 0.7f, 0.7f}};
+        return (1 - a) * white + a * light_red;
     }
 
-    // Generate new child rays in random directions outwards from the surface
-    uvec3 child_direction{{0.f, 0.1f}};
+    // Ray-object intersection, generate new child rays in random directions outwards from the surface
+    vec3 child_direction{{0.f, 0.1f}};
     if (dot(child_direction, hit_record.normal()) <= 0) {
         child_direction = -child_direction;
     }
-    return 0.5 * ray_color(Ray{hit_record.point(), child_direction}, depth - 1, world);
+    child_direction += hit_record.point();
+    return 0.5 * ray_color(Ray{hit_record.point(), unit(child_direction)}, depth - 1, world);
 }
 Ray Renderer::generate_ray(const int x, const int y) const {
     // Get a vector to a random point inside the pixel square centered at (i, j)
