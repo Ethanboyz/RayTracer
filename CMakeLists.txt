@@ -6,10 +6,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(RayTracer
         src/main.cpp
+        src/rt/utilities.cpp
         src/rt/geom/hittable.cpp
         src/rt/geom/hittable_list.cpp
         src/rt/geom/sphere.cpp
+        src/rt/math/vec3.cpp
         src/rt/render/render.cpp
+        src/rt/scene/material.cpp
 )
 
 # Include headers

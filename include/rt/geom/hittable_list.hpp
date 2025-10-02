@@ -4,7 +4,6 @@
 #include <vector>
 #include <memory>
 #include "rt/geom/hittable.hpp"
-#include "rt/math/interval.hpp"
 
 using std::make_shared;
 using std::shared_ptr;

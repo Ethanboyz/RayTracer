@@ -1,5 +1,8 @@
 #include "rt/render/render.hpp"
 #include "rt/utilities.hpp"
+#include "rt/math/ray.hpp"
+#include "rt/geom/hittable_list.hpp"
+#include "rt/math/vec3.hpp"
 
 void Renderer::render(const HittableList& world) const {
     std::vector<Color> pixel_colors;
@@ -10,7 +13,7 @@ void Renderer::render(const HittableList& world) const {
             Color pixel_color{0, 0, 0};
             for (int sample = 0; sample < camera_.num_samples(); sample++) {
                 Ray ray{generate_ray(x, y)};
-                pixel_color += ray_color(ray, 10, world);
+                pixel_color += ray_color(ray, 100, world);
             }
             pixel_color /= static_cast<float>(camera_.num_samples());
             pixel_colors.push_back(pixel_color);
@@ -38,16 +41,16 @@ Color Renderer::ray_color(const Ray& ray, const int depth, const Hittable& world
     }
 
     // Ray-object intersection, generate new child rays in random directions outwards from the surface
-    vec3 child_direction{{0.f, 0.1f}};
-    if (dot(child_direction, hit_record.normal()) <= 0) {
-        child_direction = -child_direction;
+    Color attenuation;
+    Ray scattered;
+    if (hit_record.material().scatter(ray, hit_record, attenuation, scattered)) {
+        return attenuation * ray_color(scattered, depth - 1, world);
     }
-    child_direction += hit_record.point();
-    return 0.5 * ray_color(Ray{hit_record.point(), unit(child_direction)}, depth - 1, world);
+    return {0, 0, 0};
 }
 Ray Renderer::generate_ray(const int x, const int y) const {
     // Get a vector to a random point inside the pixel square centered at (i, j)
-    const float random_float{Utilities::random_float(Interval{0.f, 1.f})};
+    const float random_float{Utilities::random_float()};
     const vec3 offset{random_float - 0.5f, random_float - 0.5f, 0};
 
     const coord3 horizontal_offset{(static_cast<float>(x) + offset.x()) * camera_.pixel_delta_u()};
@@ -74,9 +77,9 @@ void Renderer::write_to_file(const std::string& filename, const std::vector<Colo
 
         // Gamma color correction (linear to gamma conversion)
         constexpr float gamma{2.2f};
-        r = std::pow(std::abs(r), 1 / gamma);
-        g = std::pow(std::abs(g), 1 / gamma);
-        b = std::pow(std::abs(b), 1 / gamma);
+        r = std::pow(std::fabs(r), 1 / gamma);
+        g = std::pow(std::fabs(g), 1 / gamma);
+        b = std::pow(std::fabs(b), 1 / gamma);
         constexpr Interval color_intensity{0.f, 0.999f};
         outbuf.push_back(static_cast<uint8_t>(256 * color_intensity.clamp(r)));
         outbuf.push_back(static_cast<uint8_t>(256 * color_intensity.clamp(g)));

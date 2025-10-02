@@ -4,8 +4,9 @@
 #include <cmath>
 #include <functional>
 #include <iostream>
-#include "rt/math/interval.hpp"
 #include "rt/utilities.hpp"
+
+class HitRecord;
 
 template <class Tag> class Vec3;
 template <class Tag> inline constexpr bool dependent_false_v = false;
@@ -35,7 +36,7 @@ public:
      */
     constexpr explicit Vec3(const Interval<float>& range) : s{Utilities::random_float(range), Utilities::random_float(range), Utilities::random_float(range)} {
         // No need to normalize if already length ≈ 1
-        if (std::is_same_v<Tag, unit_tag> && std::abs(length_squared() - 1) < 1.0e-6) {
+        if (std::is_same_v<Tag, unit_tag> && std::fabs(length_squared() - 1) < 1.0e-6) {
             normalize();
         }
     }
@@ -48,7 +49,7 @@ public:
      */
     constexpr Vec3(const float x, const float y, const float z) : s{x, y, z} {
         // No need to normalize if already length ≈ 1
-        if (std::is_same_v<Tag, unit_tag> && std::abs(length_squared() - 1) < 1.0e-6) {
+        if (std::is_same_v<Tag, unit_tag> && std::fabs(length_squared() - 1) < 1.0e-6) {
             normalize();
         }
     }
@@ -86,29 +87,29 @@ public:
 
     /**
      * @brief Mutating vector-vector addition operation.
-     * @tparam T Only vec3 (non-unit vectors) can use mutating operators.
+     * @tparam T Only vec3 (non-unit vectors) can be the lvalue of mutating operators.
      * @param other Rvalue of the += operation.
      * @return Result of vector addition of lvalue on rvalue.
      */
-    template<class T = Tag, std::enable_if_t<std::is_same_v<T, any_tag>, int> = 0>
-    constexpr Vec3& operator+=(const Vec3& other) noexcept {
-        s[0] += other.s[0];
-        s[1] += other.s[1];
-        s[2] += other.s[2];
+    template<class T = Tag, class OtherTag, std::enable_if_t<std::is_same_v<T, any_tag>, int> = 0>
+    constexpr Vec3& operator+=(const Vec3<OtherTag>& other) noexcept {
+        s[0] += other.x();
+        s[1] += other.y();
+        s[2] += other.z();
         return *this;
     }
 
     /**
      * @brief Mutating vector-vector subtraction operation.
-     * @tparam T Only vec3 (non-unit vectors) can use mutating operators.
+     * @tparam T Only vec3 (non-unit vectors) can be the lvalue of mutating operators.
      * @param other Rvalue of the -= operation.
      * @return Result of vector subtraction of rvalue subtracted from lvalue.
      */
-    template<class T = Tag, std::enable_if_t<std::is_same_v<T, any_tag>, int> = 0>
-    constexpr Vec3& operator-=(const Vec3& other) noexcept {
-        s[0] -= other.s[0];
-        s[1] -= other.s[1];
-        s[2] -= other.s[2];
+    template<class T = Tag, class OtherTag, std::enable_if_t<std::is_same_v<T, any_tag>, int> = 0>
+    constexpr Vec3& operator-=(const Vec3<OtherTag>& other) noexcept {
+        s[0] -= other.x();
+        s[1] -= other.y();
+        s[2] -= other.z();
         return *this;
     }
 
@@ -127,6 +128,20 @@ public:
     }
 
     /**
+     * @brief Mutating vector-vector Hadamard product operation.
+     * @tparam T Only vec3 (non-unit vectors can use mutating operators).
+     * @param other Rvalue of the *= operation.
+     * @return Result of multiplying the ith vector components together for i = 1, 2, 3.
+     */
+    template<class T = Tag, class OtherTag, std::enable_if_t<std::is_same_v<T, any_tag>, int> = 0>
+    constexpr Vec3& operator*=(const Vec3<OtherTag>& other) noexcept {
+        s[0] *= other.x();
+        s[1] *= other.y();
+        s[2] *= other.z();
+        return *this;
+    }
+
+    /**
      * @brief Mutating vector-scalar division operation.
      * @tparam T Only vec3 (non-unit vectors) can use mutating operators.
      * @param t Rvalue of the /= operation (scalar to divide the lvalue by).
@@ -141,17 +156,20 @@ public:
     }
 
     /** @brief Cannot perform mutating operations on uvec3 */
-    template<class T = Tag, std::enable_if_t<std::is_same_v<T, unit_tag>, int> = 0>
-    constexpr void operator+=(const Vec3& other) noexcept = delete;
+    template<class T = Tag, class OtherTag, std::enable_if_t<std::is_same_v<T, unit_tag>, int> = 0>
+    constexpr void operator+=(const Vec3<OtherTag>& other) noexcept = delete;
+    /** @brief Cannot perform mutating operations on uvec3 */
+    template<class T = Tag, class OtherTag, std::enable_if_t<std::is_same_v<T, unit_tag>, int> = 0>
+    constexpr void operator-=(const Vec3<OtherTag>& other) noexcept = delete;
     /** @brief Cannot perform mutating operations on uvec3 */
     template<class T = Tag, std::enable_if_t<std::is_same_v<T, unit_tag>, int> = 0>
-    constexpr void operator-=(const Vec3& other) noexcept = delete;
+    constexpr void operator*=(float t) noexcept = delete;
+    /** @brief Cannot perform mutating operations on uvec3 */
+    template<class T = Tag, class OtherTag, std::enable_if_t<std::is_same_v<T, unit_tag>, int> = 0>
+    constexpr void operator*=(const Vec3<OtherTag>& other) noexcept = delete;
     /** @brief Cannot perform mutating operations on uvec3 */
     template<class T = Tag, std::enable_if_t<std::is_same_v<T, unit_tag>, int> = 0>
-    constexpr void operator*=(const Vec3& other) noexcept = delete;
-    /** @brief Cannot perform mutating operations on uvec3 */
-    template<class T = Tag, std::enable_if_t<std::is_same_v<T, unit_tag>, int> = 0>
-    constexpr void operator/=(const Vec3& other) noexcept = delete;
+    constexpr void operator/=(float t) noexcept = delete;
 
     /**
      * @brief Vector stream insertion operation.
@@ -218,6 +236,16 @@ public:
     }
 
     /**
+     * @brief Binary vector-vector Hadamard product operation.
+     * @param u Left side of the operation.
+     * @param v Right side of the operation.
+     * @return Vector-vector Hadamard product.
+     */
+    constexpr friend vec3 operator*(const Vec3& u, const Vec3& v) noexcept {
+        return {u.s[0] * v.s[0], u.s[1] * v.s[1], u.s[2] * v.s[2]};
+    }
+
+    /**
      * @brief Vector-vector dot operation.
      * @param u Left side of the operation.
      * @param v Right side of the operation.
@@ -241,10 +269,14 @@ public:
     }
 
     // Misc
-    /**
-     * @brief Calculates the squared length of the vector.
-     * @return Length of the vector, squared.
-     */
+    /** @return True if the vector is degenerate (all components are or near zero). */
+    template<class T = Tag, std::enable_if_t<std::is_same_v<T, any_tag>, int> = 0>
+    [[nodiscard]] constexpr bool degenerate() const noexcept {
+        constexpr float near_zero{1e-4};
+        return std::fabs(s[0]) < near_zero && std::fabs(s[1]) < near_zero && std::fabs(s[2]) < near_zero;
+    }
+
+    /** @return Length of the vector, squared. */
     [[nodiscard]] constexpr float length_squared() const noexcept {
         return s[0] * s[0] + s[1] * s[1] + s[2] * s[2];
     }
@@ -299,5 +331,24 @@ template<class A, class B>
 constexpr float dot(const Vec3<A>& u, const Vec3<B>& v) noexcept {
     return u.s[0] * v.s[0] + u.s[1] * v.s[1] + u.s[2] * v.s[2];
 }
+
+// Utilities
+/**
+ * @brief Generates a random direction unit vector, where the direction does not oppose the normal's direction (to trace ray scattering).
+ *
+ * Randomization is based off a non-uniform cosine-based distribution where directions closer to the normal
+ * are prioritized.
+ * @param normal Outward-facing normal vector (the direction represented by the returned unit vector will never oppose this).
+ * @return Randomly-generated unit vector that adheres to the above criteria.
+ */
+[[nodiscard]] uvec3 random_uvec3(const uvec3& normal);
+
+/**
+ * @brief Generates a direction unit vector of another vector, reflected (to trace ray reflection).
+ * @param v Vector to be reflected.
+ * @param normal Reflection will be in the direction of the normal.
+ * @return Reflected direction vector that adheres to the above criteria.
+ */
+[[nodiscard]] uvec3 reflect_uvec3(const vec3& v, const uvec3& normal);
 
 #endif

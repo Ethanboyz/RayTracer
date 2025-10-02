@@ -2,9 +2,11 @@
 #define RENDER_H
 
 #include <fstream>
-#include "rt/geom/hittable.hpp"
-#include "rt/geom/hittable_list.hpp"
 #include "rt/render/camera.hpp"
+class HitRecord;
+class Ray;
+class Hittable;
+class HittableList;
 
 /**
  * @class Renderer

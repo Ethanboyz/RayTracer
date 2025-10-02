@@ -13,23 +13,23 @@ public:
      * @brief Constructs a Ray positioned at the origin with no direction.
      * @warning Rays with no direction are inherently useless.
      */
-    Ray() = default;
+    constexpr Ray() = default;
 
     /**
      * @brief Constructs a Ray positioned at the specified coordinates extending out the direction.
      * @param position Coordinates of the starting point.
      * @param direction Direction the Ray extends towards.
      */
-    Ray(const coord3& position, const uvec3& direction) : position_{position}, direction_{direction} {}
+    constexpr Ray(const coord3& position, const uvec3& direction) : position_{position}, direction_{direction} {}
 
-    [[nodiscard]] const constexpr coord3& origin() const noexcept { return position_; }
-    [[nodiscard]] const constexpr uvec3& direction() const noexcept { return direction_; }
+    [[nodiscard]] constexpr coord3 origin() const noexcept { return position_; }
+    [[nodiscard]] constexpr uvec3 direction() const noexcept { return direction_; }
 
     [[nodiscard]] coord3 position(const float t) const noexcept { return coord3{position_ + t * direction_}; }
 
 private:
-    const coord3 position_;
-    const uvec3 direction_;
+    coord3 position_;
+    uvec3 direction_;
 };
 
 #endif

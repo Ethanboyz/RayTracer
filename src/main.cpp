@@ -22,9 +22,9 @@ int main() {
     // Setup the world and 3d objects
     HittableList world;
 
-    Material plastic_red = {{1, 0, 0}, 0.f, 0.3, 0.1};
-    Material shiny_yellow = {{1, 1, 0}, 0.f, 0.1, 0.9};
-    Material dull_blue = {{0, 0, 1}, 0.f, 0.7, 0.f};
+    Material plastic_red = {{1, 0, 0}, 0.f, 0.6, 0.1};
+    Material shiny_yellow = {{1, 1, 0}, 0.f, 1, 1};
+    Material dull_blue = {{0, 0, 1}, 0.f, 0.4, 0.f};
     Material flat_green = {{0, 1, 0}, 0.f, 0.5, 0.2};
     world.add(make_shared<Sphere>(coord3{0, 0, -2}, 0.5f, plastic_red));            // Sphere in front of camera
     world.add(make_shared<Sphere>(coord3{-1, 2, -5}, 0.5f, shiny_yellow));          // Sphere farther back

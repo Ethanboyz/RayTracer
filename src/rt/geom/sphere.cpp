@@ -1,4 +1,5 @@
 #include "rt/geom/sphere.hpp"
+#include "rt/math/ray.hpp"
 
 bool Sphere::ray_hit(const Ray& ray, const Interval<float>& t, HitRecord& hit_record) const {
     const float a{ray.direction().length_squared()};

@@ -3,8 +3,6 @@
 
 #include "hittable.hpp"
 #include "rt/math/ray.hpp"
-#include "rt/math/vec3.hpp"
-#include "rt/scene/material.hpp"
 
 /**
  * @class Sphere

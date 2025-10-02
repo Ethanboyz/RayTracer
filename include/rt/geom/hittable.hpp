@@ -1,10 +1,9 @@
 #ifndef HITTABLE_H
 #define HITTABLE_H
 
-#include "rt/math/ray.hpp"
-#include "rt/math/vec3.hpp"
-#include "rt/math/interval.hpp"
 #include "rt/scene/material.hpp"
+#include "rt/math/vec3.hpp"
+class Ray;
 
 /**
  * @class HitRecord
@@ -57,11 +56,11 @@ public:
     bool set_face_normal(const Ray& ray, const uvec3& normal);
 
 private:
-    coord3 point_;              // Coordinates of hit
-    uvec3 normal_;              // Normal of hit surface (outwards-facing)
-    float ray_t_;               // t-value of the ray where hit occurred
-    bool front_face_;           // True if surface is facing towards the camera
-    Material material_;         // Determines the reflective and color properties to be drawn
+    coord3 point_;                          // Coordinates of hit
+    uvec3 normal_;                          // Normal of hit surface (outwards-facing)
+    float ray_t_;                           // t-value of the ray where hit occurred
+    bool front_face_;                       // True if surface is facing towards the camera
+    Material material_;                     // Determines the reflective and color properties to be drawn
 };
 
 /**
@@ -70,6 +69,7 @@ private:
  */
 class Hittable {
 public:
+
     virtual ~Hittable() = default;
 
     /**
