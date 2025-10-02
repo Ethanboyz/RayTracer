@@ -1,3 +1,4 @@
+#include <thread>
 #include "rt/render/render.hpp"
 #include "rt/utilities.hpp"
 #include "rt/math/ray.hpp"
@@ -6,6 +7,7 @@
 
 void Renderer::render(const HittableList& world) const {
     std::vector<Color> pixel_colors;
+    std::clog << "This system can support " << std::thread::hardware_concurrency() << " threads, but multithreading is not implemented.\n" << std::flush;
     for (int y{}; y < image_height_; y++) {
         std::clog << "\rRay Progress: " << static_cast<double>(y) / image_height_ * 100 << "% " << std::flush;
         for (int x{}; x < image_width_; x++) {

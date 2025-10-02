@@ -4,7 +4,7 @@ This project is very young and under heavy development. There will be lots of ch
 and generally a lot of incompleteness.
 
 ## What is this project??
-Nothing more than a small undertaking to learn more about how GPUs work, expose myself to the
+Nothing more than a small PBR-style ray/path tracer undertaking to learn more about how GPUs work, expose myself to the
 math/theory behind raytracing, and test my linear algebra coursework in my free time.
 Right now, it simply outputs simple raytraced renders to a .ppm image file. More exciting
 stuff to come in the near future...
@@ -26,18 +26,17 @@ on cooking up.
 - [X] Materials:
     - [X] Colors
     - [X] Diffuse reflection
-    - [ ] Specular reflection
+    - [X] Specular reflection
     - [ ] Refraction
-- [X] Light sources:
-    - [X] Ambient
-    - [X] Point
-    - [X] Directional
+- [ ] Emissive objects
+- [ ] Directional/environmental light
 - [ ] BVH to replace lists
-- [ ] Better lights
-  - [ ] Shadows
-  - [ ] Color attenuation
+- [X] Better lights
+  - [X] Shadows
+  - [X] Color attenuation
   - [ ] Refractions + reflections
-- [X] Antialiasing
+- [X] Antialiasing (sampling)
+- [ ] Multithreaded primary ray generation
 - [ ] Camera space
   - [ ] Proper camera coord system (+world space transformations)
   - [ ] Possible camera panning?
