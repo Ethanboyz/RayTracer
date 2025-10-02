@@ -11,7 +11,7 @@ using std::uint8_t;
 
 int main() {
     constexpr float fov = 1.f;
-    constexpr int num_samples = 10;
+    constexpr int num_samples = 100;             // Increase for more samples = less noise but more compute
     constexpr float aspect_ratio = 16.f/9.f;
     constexpr int image_width = 1000;
     constexpr int image_height = static_cast<int>(static_cast<float>(image_width) / aspect_ratio);
@@ -27,7 +27,7 @@ int main() {
     Material dull_blue = {{0, 0, 1}, 0.f, 0.4, 0.f};
     Material flat_green = {{0, 1, 0}, 0.f, 0.5, 0.2};
     world.add(make_shared<Sphere>(coord3{0, 0, -2}, 0.5f, plastic_red));            // Sphere in front of camera
-    world.add(make_shared<Sphere>(coord3{-1, 2, -5}, 0.5f, shiny_yellow));          // Sphere farther back
+    world.add(make_shared<Sphere>(coord3{1, 0, -2}, 0.5f, shiny_yellow));          // Sphere farther back
     world.add(make_shared<Sphere>(coord3{3, 0.5f, -3}, 0.5f, dull_blue));           // Sphere in front of camera
     world.add(make_shared<Sphere>(coord3{0, -1001, -1}, 1000.f, flat_green));       // Ground (giant sphere)
 
