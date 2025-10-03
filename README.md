@@ -11,8 +11,8 @@ stuff to come in the near future...
 
 ## How to run
 Clone this repository in a new directory and run
-```mkdir build && cd build && cmake .. && cmake --build .```
-Running the executable in ./build/bin will create a new image.ppm file with the
+```mkdir build && cd build && cmake --preset release .. && cd release && cmake --build . && cd bin```.
+Running the executable will create a new image.ppm file with the
 completed render.
 
 ## Progress
