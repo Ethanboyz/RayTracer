@@ -27,14 +27,12 @@ on cooking up.
     - [X] Colors
     - [X] Diffuse reflection
     - [X] Specular reflection
-    - [ ] Refraction
+    - [X] Refraction + total internal reflections
+    - [X] Color attenuation
+- [X] Shadows (through global illumination)
 - [ ] Emissive objects
 - [ ] Directional/environmental light
 - [ ] BVH to replace lists
-- [X] Better lights
-  - [X] Shadows
-  - [X] Color attenuation
-  - [ ] Refractions + reflections
 - [X] Antialiasing (sampling)
 - [X] Multithreaded pixel processing
 - [ ] Camera space
