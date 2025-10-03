@@ -16,17 +16,15 @@ public:
      *
      * @note diffuse and specular should not sum up to be more than 1.
      * @param albedo Acts as the base color of the Material.
-     * @param reflectance % of rays that should be scattered/reflected in some way. 1-reflectance = chance of ray getting absorbed.
-     * @param shininess % of scattered rays that should be reflected specularly.
+     * @param reflectance Chance of rays that should be scattered/reflected in some way (0.0-1.0). 1-reflectance = chance of ray getting absorbed.
+     * @param shininess Chance of non-absorbed rays that should be reflected specularly (0.0-1.0).
      * @param emittance Light emission intensity of the Material.
      */
     constexpr Material(const Color &albedo, const float emittance, const float reflectance, const float shininess)
-        : albedo_{albedo}, emittance_{emittance}, reflectance_{reflectance}, shininess_{shininess} {
-        if (const float sum{reflectance_ + shininess_}; sum > 1) {
-            reflectance_ /= sum;
-            shininess_ /= sum;
-        }
-    }
+      : albedo_{albedo},
+        emittance_{emittance},
+        reflectance_{Interval{0.f, 1.f}.clamp(reflectance)},
+        shininess_{Interval{0.f, 1.f}.clamp(shininess)} {}
 
     // Accessors
     /** @return Base color of the Material. */
