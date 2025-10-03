@@ -1,6 +1,6 @@
 #include "rt/math/vec3.hpp"
 
-uvec3 random_uvec3(const uvec3& normal) {
+uvec3 scatter_uvec3(const uvec3& normal) {
     // Direction = random unit vector in the direction of the outward-facing normal (make sure it's not all near-zeros)
     const uvec3 scattered_direction{Interval{0.f, 1.f}};
 

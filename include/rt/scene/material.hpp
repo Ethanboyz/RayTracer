@@ -46,16 +46,17 @@ public:
     constexpr void shininess(const float shininess) noexcept { shininess_ = shininess; }
 
     /**
-     * @brief Determines if the current ray hitting the surface should continue as scattered child rays, outputting
-     * the next scattered ray and a color depending on the current Material.
+     * @brief Determines if the current ray hitting the surface should continue as a child ray, outputting
+     * the next ray and a color depending on the current Material.
      *
+     * Supports scattering, reflecting, and refraction of rays.
      * @param ray Parent ray hitting the surface.
      * @param hit_record HitRecord of the ray-object intersection.
      * @param attenuation Updated with the attenuation after the hit.
-     * @param scattered Updated with the child ray after this hit.
-     * @return True if a scattered child ray was generated as a result of this hit, false if the parent ray was absorbed.
+     * @param next Updated with the child ray after this hit.
+     * @return True if a child ray was generated as a result of this hit, false if the parent ray was absorbed.
      */
-    bool scatter(const Ray& ray, const HitRecord& hit_record, Color& attenuation, Ray& scattered) const;
+    bool bounce(const Ray& ray, const HitRecord& hit_record, Color& attenuation, Ray& next) const;
 
 private:
     Color albedo_;                  // Base color before any shading or effects

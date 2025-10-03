@@ -8,8 +8,6 @@
 void Renderer::render(const HittableList& world) const {
     const unsigned ray_threads{std::max(1u, std::thread::hardware_concurrency() - 1)};  // Reserve 1 thread for logging
     std::clog << "This system can support " << ray_threads + 1 << " threads.\n";
-    std::vector<std::jthread> threads;
-    threads.reserve(ray_threads);
 
     std::atomic<size_t> next{};     // Batched pixels needing work
     std::atomic<size_t> done{};     // Completed pixels
@@ -19,6 +17,9 @@ void Renderer::render(const HittableList& world) const {
 
     // Thread generation scope
     {
+        std::vector<std::jthread> threads;
+        threads.reserve(ray_threads);
+
         // Separate thread for logging progress
         std::jthread log_progress([&] {
             using namespace std::chrono_literals;
@@ -91,7 +92,7 @@ Color Renderer::ray_color(const Ray& ray, const int depth, const Hittable& world
     // Ray-object intersection, generate new child rays in random directions outwards from the surface
     Color attenuation;
     Ray scattered;
-    if (hit_record.material().scatter(ray, hit_record, attenuation, scattered)) {
+    if (hit_record.material().bounce(ray, hit_record, attenuation, scattered)) {
         return attenuation * ray_color(scattered, depth - 1, world);
     }
     return {0, 0, 0};

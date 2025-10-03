@@ -341,14 +341,24 @@ constexpr float dot(const Vec3<A>& u, const Vec3<B>& v) noexcept {
  * @param normal Outward-facing normal vector (the direction represented by the returned unit vector will never oppose this).
  * @return Randomly-generated unit vector that adheres to the above criteria.
  */
-[[nodiscard]] uvec3 random_uvec3(const uvec3& normal);
+[[nodiscard]] uvec3 scatter_uvec3(const uvec3& normal);
 
 /**
  * @brief Generates a direction unit vector of another vector, reflected (to trace ray reflection).
  * @param v Vector to be reflected.
- * @param normal Reflection will be in the direction of the normal.
+ * @param normal Reflection will be in the direction of the outward-facing normal.
  * @return Reflected direction vector that adheres to the above criteria.
  */
 [[nodiscard]] uvec3 reflect_uvec3(const vec3& v, const uvec3& normal);
+
+/**
+ * @brief Generates a direction unit vector of another vector, refracted (to trace ray reflection).
+ * @param v Vector to be reflected.
+ * @param normal Refraction will be in the opposite direction of the outward-facing normal.
+ * @param eta Refractive index of the incident medium (medium before ray-object intersect).
+ * @param eta_prime Refractive index of the new medium (medium after ray-object intersect).
+ * @return Reflected direction vector that adheres to the above criteria.
+ */
+[[nodiscard]] uvec3 refract_uvec3(const vec3& v, const uvec3& normal, float eta, float eta_prime);
 
 #endif
