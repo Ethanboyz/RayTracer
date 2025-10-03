@@ -1,0 +1,56 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 28,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "release",
+      "displayName": "Release (optimized)",
+      "binaryDir": "build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "ENABLE_ASAN": "OFF",
+        "ENABLE_TSAN": "OFF"
+      }
+    },
+    {
+      "name": "debug",
+      "displayName": "Debug",
+      "binaryDir": "build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "ENABLE_ASAN": "OFF",
+        "ENABLE_TSAN": "OFF"
+      }
+    },
+    {
+      "name": "asan",
+      "displayName": "Debug + Address/UB Sanitizers",
+      "inherits": "debug",
+      "binaryDir": "build/${presetName}",
+      "cacheVariables": {
+        "ENABLE_ASAN": "ON",
+        "ENABLE_TSAN": "OFF"
+      }
+    },
+    {
+      "name": "tsan",
+      "displayName": "Debug + Thread/UB Sanitizers",
+      "inherits": "debug",
+      "binaryDir": "build/${presetName}",
+      "cacheVariables": {
+        "ENABLE_ASAN": "OFF",
+        "ENABLE_TSAN": "ON"
+      }
+    }
+  ],
+  "buildPresets": [
+    { "name": "release", "configurePreset": "release" },
+    { "name": "debug", "configurePreset": "debug" },
+    { "name": "asan",  "configurePreset": "asan"  },
+    { "name": "tsan",  "configurePreset": "tsan"  }
+  ]
+}

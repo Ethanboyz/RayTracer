@@ -43,13 +43,22 @@ private:
     Camera camera_;             // Renders will be created in the perspective of the camera
 
     /**
-     * @brief For a specific ray, calculates the color that should be written to the corresponding viewport pixel.
+     * @brief For a specific pixel, calculates the color that should be written to the corresponding viewport pixel.
+     * @param x Horizontal coordinate of the pixel.
+     * @param y Vertical coordinate of the pixel.
+     * @param world All the Hittable objects to include in the render.
+     * @return The color that should be written to the viewport pixel.
+     */
+    [[nodiscard]] Color pixel_color(int x, int y, const HittableList& world) const;
+
+    /**
+     * @brief Calculates the color of a specific ray.
      * @param ray The ray in which coloring calculations will take place.
      * @param depth Number of ray reflections until no more child rays can be generated.
      * @param world All the Hittable objects to include in the render.
-     * @return The color that should be written to the ray's corresponding viewport pixel.
+     * @return The color that should be factored into the color of the ray's viewport pixel.
      */
-    static Color ray_color(const Ray& ray, int depth, const Hittable& world);
+    [[nodiscard]] Color ray_color(const Ray& ray, int depth, const Hittable& world) const;
 
     /**
      * @brief Creates a ray directed at a random point centered around a specified pixel.

@@ -6,28 +6,74 @@
 #include "rt/math/vec3.hpp"
 
 void Renderer::render(const HittableList& world) const {
-    std::vector<Color> pixel_colors;
-    std::clog << "This system can support " << std::thread::hardware_concurrency() << " threads, but multithreading is not implemented.\n" << std::flush;
-    for (int y{}; y < image_height_; y++) {
-        std::clog << "\rRay Progress: " << static_cast<double>(y) / image_height_ * 100 << "% " << std::flush;
-        for (int x{}; x < image_width_; x++) {
-            // Use pixel's and camera's location to generate a bunch of rays in the pixel, then write the average of the ray colors
-            Color pixel_color{0, 0, 0};
-            for (int sample = 0; sample < camera_.num_samples(); sample++) {
-                Ray ray{generate_ray(x, y)};
-                pixel_color += ray_color(ray, 100, world);
+    const unsigned ray_threads{std::max(1u, std::thread::hardware_concurrency() - 1)};  // Reserve 1 thread for logging
+    std::clog << "This system can support " << ray_threads + 1 << " threads.\n";
+    std::vector<std::jthread> threads;
+    threads.reserve(ray_threads);
+
+    std::atomic<size_t> next{};     // Batched pixels needing work
+    std::atomic<size_t> done{};     // Completed pixels
+
+    const size_t num_pixels = image_width_ * image_height_;
+    std::vector<Color> pixel_colors(num_pixels);
+
+    // Thread generation scope
+    {
+        // Separate thread for logging progress
+        std::jthread log_progress([&] {
+            using namespace std::chrono_literals;
+            while (true) {
+                const size_t completed{done.load(std::memory_order_relaxed)};
+                if (completed >= num_pixels) {
+                    break;
+                }
+                const double progress{num_pixels ? static_cast<double>(completed) * 100.0 / static_cast<double>(num_pixels) : 100.0};
+                std::clog << "\rRay Progress: " << progress << "% " << std::flush;
+                std::this_thread::sleep_for(200ms);
             }
-            pixel_color /= static_cast<float>(camera_.num_samples());
-            pixel_colors.push_back(pixel_color);
+            std::clog << "\rRay Progress: 100.0%            \n" << std::flush;
+        });
+
+        // Assign all available threads pixels to color
+        for (unsigned thread = 0; thread < ray_threads; thread++) {
+            threads.emplace_back([&] {
+                while (true) {
+                    // Each thread should be assigned 32 pixels at a time
+                    const size_t start{next.fetch_add(32, std::memory_order_relaxed)};
+                    if (start >= num_pixels) {
+                        break;
+                    }
+                    const size_t end{std::min(start + 32, num_pixels)};
+
+                    // Pixels are written from left to right, one row at a time
+                    for (size_t i = start; i < end; i++) {
+                        const int x{static_cast<int>(i) % image_width_};
+                        const int y{static_cast<int>(i) / image_width_};
+                        pixel_colors[i] = pixel_color(x, y, world);
+                    }
+
+                    // Keep track of the pixels finished
+                    done.fetch_add(end - start, std::memory_order_relaxed);
+                }
+            });
         }
     }
     // Done generating rays, write pixel colors to file
-    std::clog << "\rRay Progress: 100.0%                         \n" << std::flush;
     write_to_file("image.ppm", pixel_colors);
     std::clog << "\rWrote to image.ppm\n" << std::flush;
 }
 
-Color Renderer::ray_color(const Ray& ray, const int depth, const Hittable& world) {
+Color Renderer::pixel_color(const int x, const int y, const HittableList& world) const {
+    Color pixel_color{0, 0, 0};
+    for (int sample = 0; sample < camera_.num_samples(); sample++) {
+        Ray ray{generate_ray(x, y)};
+        pixel_color += ray_color(ray, 16, world);
+    }
+    pixel_color /= static_cast<float>(camera_.num_samples());
+    return pixel_color;
+}
+
+Color Renderer::ray_color(const Ray& ray, const int depth, const Hittable& world) const {
     HitRecord hit_record;
 
     if (depth <= 0) {

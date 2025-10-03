@@ -36,7 +36,7 @@ on cooking up.
   - [X] Color attenuation
   - [ ] Refractions + reflections
 - [X] Antialiasing (sampling)
-- [ ] Multithreaded primary ray generation
+- [X] Multithreaded pixel processing
 - [ ] Camera space
   - [ ] Proper camera coord system (+world space transformations)
   - [ ] Possible camera panning?
