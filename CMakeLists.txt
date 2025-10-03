@@ -20,7 +20,6 @@ set(SOURCES
         src/rt/geom/sphere.cpp
         src/rt/math/vec3.cpp
         src/rt/render/render.cpp
-        src/rt/scene/material.cpp
 )
 add_executable(RayTracer ${SOURCES})
 target_include_directories(RayTracer PUBLIC include)

@@ -81,19 +81,19 @@ Color Renderer::ray_color(const Ray& ray, const int depth, const Hittable& world
         return {0, 0, 0};
     }
     // Minimum of t = 0 so camera effectively looks forwards (not also backwards)
-    if (!world.ray_hit(ray, Interval{0.001f, std::numeric_limits<float>::max()}, hit_record)) {
+    if (!world.ray_hit(ray, Interval{0.0001f, std::numeric_limits<float>::max()}, hit_record)) {
         // Background color light gray gradient dependent on y coord. -1 <= y <= 1, but 0 <= a <= 1 for color = (1 - a) * low_y_color + a * high_y_color
         const float a{0.5f * (ray.direction().y() + 1)};
         constexpr auto white{Color{1.f, 1.f, 1.f}};
-        constexpr auto light_red{Color{1.f, 0.6f, 0.6f}};
+        constexpr auto light_red{Color{1.f, 0.4f, 0.4f}};
         return (1 - a) * white + a * light_red;
     }
 
     // Ray-object intersection, generate new child rays in random directions outwards from the surface
     Color attenuation;
-    Ray scattered;
-    if (hit_record.material().bounce(ray, hit_record, attenuation, scattered)) {
-        return attenuation * ray_color(scattered, depth - 1, world);
+    Ray next;
+    if (hit_record.bounce(ray, attenuation, next)) {
+        return attenuation * ray_color(next, depth - 1, world);
     }
     return {0, 0, 0};
 }

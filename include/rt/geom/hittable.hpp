@@ -12,7 +12,7 @@ class Ray;
 class HitRecord {
 public:
     /** @brief Constructs a default HitRecord (should be reassigned). */
-    constexpr HitRecord() : ray_t_{0}, front_face_{true}, material_{{0, 0, 0}, 0.f, 0.f, 0.f} {}
+    constexpr HitRecord() : ray_t_{0}, front_face_{true}, material_{{0, 0, 0}, 0, 0, 0, 0, 0} {}
 
     /**
      * @brief Constructs a HitRecord that stores the information of a ray hit.
@@ -54,6 +54,18 @@ public:
      * @return True if the hit surface is facing towards the camera, false otherwise.
      */
     bool set_face_normal(const Ray& ray, const uvec3& normal);
+
+    /**
+     * @brief Determines if the current ray hitting the surface should continue as a child ray, outputting
+     * the next ray and a color depending on the hit Material.
+     *
+     * Supports scattering, reflecting, and refraction of rays.
+     * @param ray Parent ray hitting the surface.
+     * @param attenuation Updated with the attenuation after the hit.
+     * @param next Updated with the child ray after this hit.
+     * @return True if a child ray was generated as a result of this hit, false if the parent ray was absorbed.
+     */
+    bool bounce(const Ray& ray, Color& attenuation, Ray& next) const;
 
 private:
     coord3 point_;                          // Coordinates of hit
