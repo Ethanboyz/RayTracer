@@ -27,7 +27,7 @@ on cooking up.
     - [X] Colors
     - [X] Diffuse reflection
     - [X] Specular reflection
-    - [X] Refraction + total internal reflections
+    - [X] Refraction + total internal reflections + Schlick's
     - [X] Color attenuation
 - [X] Shadows (through global illumination)
 - [ ] Emissive objects

@@ -11,7 +11,7 @@ using std::uint8_t;
 
 int main() {
     constexpr float fov = 1.f;
-    constexpr int num_samples = 10000;             // Increase for more samples = less noise but more compute
+    constexpr int num_samples = 500;             // Increase for more samples = less noise but more compute
     constexpr float aspect_ratio = 16.f/9.f;
     constexpr int image_width = 1000;
     constexpr int image_height = static_cast<int>(static_cast<float>(image_width) / aspect_ratio);

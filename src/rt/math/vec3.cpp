@@ -19,7 +19,7 @@ uvec3 refract_uvec3(const uvec3& v, const uvec3& normal, const float eta, const 
     const float k{1 - eta_ratio * eta_ratio * (1 - cos_theta * cos_theta)};
 
     // Schlick's approximation setup
-    const float r0{((eta - eta_prime) / (eta + eta_prime)) * ((eta - eta_prime) / (eta + eta_prime))};
+    const float r0{(eta - eta_prime) / (eta + eta_prime) * ((eta - eta_prime) / (eta + eta_prime))};
     const float reflectance{r0 + (1 - r0) * std::pow(1 - cos_theta, 5.f)};
 
     // Total internal reflection or specular reflection from Schlick's approximation
