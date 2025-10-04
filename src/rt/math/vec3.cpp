@@ -1,10 +1,10 @@
 #include "rt/math/vec3.hpp"
 
 uvec3 scatter_uvec3(const uvec3& normal) {
-    // Direction = random unit vector in the direction of the outward-facing normal (make sure it's not all near-zeros)
+    // Direction = random unit vector in the direction of the normal (make sure it's not all near-zeros)
     const uvec3 scattered_direction{Interval{0.f, 1.f}};
 
-    // Add by normal to ensure the scattered direction faces outward, randomized direction follows cos() distribution
+    // Add by normal to ensure the scattered direction doesn't immediately intersect, randomized direction follows cos() distribution
     return unit(scattered_direction + normal);
 }
 
@@ -25,4 +25,3 @@ uvec3 refract_uvec3(const uvec3& v, const uvec3& normal, const float eta, const 
     const float sqrt_k = std::sqrt(std::max(0.f, k));
     return unit(eta_ratio * v + (eta_ratio * cos_theta - sqrt_k) * normal);
 }
-

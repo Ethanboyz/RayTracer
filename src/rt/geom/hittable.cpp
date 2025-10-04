@@ -8,6 +8,15 @@ constexpr HitRecord::HitRecord(const coord3& point, const uvec3& normal, const f
     front_face_{front_face},
     material_{material} {}
 
+bool HitRecord::set_face_normal(const Ray& ray, const uvec3& normal) {
+    normal_ = normal;
+    const float r_dot_n{dot(ray.direction(), normal)};
+
+    // Surface faces the camera when surface normal direction opposes ray direction
+    front_face_ = r_dot_n <= 0.f;
+    return r_dot_n <= 0.f;
+}
+
 bool HitRecord::bounce(const Ray& ray, Color &attenuation, Ray &next) const {
     const float random{Utilities::random_float()};
     uvec3 n{normal_};
@@ -48,13 +57,4 @@ bool HitRecord::bounce(const Ray& ray, Color &attenuation, Ray &next) const {
     }
 
     return false;
-}
-
-bool HitRecord::set_face_normal(const Ray& ray, const uvec3& normal) {
-    normal_ = normal;
-    const float r_dot_n{dot(ray.direction(), normal)};
-
-    // Surface faces the camera when surface normal direction opposes ray direction
-    front_face_ = r_dot_n <= 0.f;
-    return r_dot_n <= 0.f;
 }

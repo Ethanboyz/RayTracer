@@ -11,7 +11,7 @@ using std::uint8_t;
 
 int main() {
     constexpr float fov = 1.f;
-    constexpr int num_samples = 100;             // Increase for more samples = less noise but more compute
+    constexpr int num_samples = 10000;             // Increase for more samples = less noise but more compute
     constexpr float aspect_ratio = 16.f/9.f;
     constexpr int image_width = 1000;
     constexpr int image_height = static_cast<int>(static_cast<float>(image_width) / aspect_ratio);
@@ -24,12 +24,12 @@ int main() {
 
     Material plastic_red = {{1, 0, 0}, 0, 0.6, 0, 0, 0};
     Material shiny = {{0.8, 0.8, 0.4}, 0, 1, 1, 0, 0};
-    Material glass_blue = {{0, 0, 1}, 0, 0, 0, 1, 1.5};
+    Material glass_blue = {{0, 0, 1}, 0, 0.4, 1, 0.6, 1.5};
     Material flat_green = {{0, 1, 0}, 0, 0.5, 0.2, 0, 0};
     world.add(make_shared<Sphere>(coord3{0, 0, -2}, 0.5, plastic_red));
     world.add(make_shared<Sphere>(coord3{1, 0, -2}, 0.5, shiny));
-    world.add(make_shared<Sphere>(coord3{-0.7, 0, -1.5}, 0.5, glass_blue));
-    //world.add(make_shared<Sphere>(coord3{-1.5, 0.5, -3}, 0.5, plastic_red));
+    world.add(make_shared<Sphere>(coord3{-1, 0, -2}, 0.5, glass_blue));
+    world.add(make_shared<Sphere>(coord3{-1.5, 0.5, -3}, 0.5, plastic_red));
     world.add(make_shared<Sphere>(coord3{0, -1001, -1}, 1000, flat_green));
 
     const Renderer renderer{camera};

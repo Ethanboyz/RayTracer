@@ -338,7 +338,9 @@ constexpr float dot(const Vec3<A>& u, const Vec3<B>& v) noexcept {
  *
  * Randomization is based off a non-uniform cosine-based distribution where directions closer to the normal
  * are prioritized.
- * @param normal Incident ray-facing normal vector (not to be confused with the outward-facing normal).
+ * @note Because scatter is only computed on incident rays from the outward-facing side, the incident and outward-facing
+ * normals are the same.
+ * @param normal Normal vector.
  * @return Randomly-generated unit vector that adheres to the above criteria.
  */
 [[nodiscard]] uvec3 scatter_uvec3(const uvec3& normal);
