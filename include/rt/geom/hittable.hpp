@@ -12,7 +12,7 @@ class Ray;
 class HitRecord {
 public:
     /** @brief Constructs a default HitRecord (should be reassigned). */
-    constexpr HitRecord() : ray_t_{0}, front_face_{true}, material_{{0, 0, 0}, 0, 0, 0, 0, 0} {}
+    constexpr HitRecord() : ray_t_{0}, front_face_{true}, material_{Material::create_reflective_material(Color{0, 0, 0}, Reflectance{0}, Shininess{0})} {}
 
     /**
      * @brief Constructs a HitRecord that stores the information of a ray hit.

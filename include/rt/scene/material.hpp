@@ -23,7 +23,7 @@ public:
      * @param reflectance Chance of rays that should be scattered/reflected in some way (0.0-1.0). Lower values = more rays getting absorbed.
      * @param shininess Chance of non-absorbed rays that should be reflected specularly (0.0-1.0). Lower values = more diffuse.
      */
-    static Material create_reflective_material(const Color& albedo, const float reflectance, const float shininess) {
+    constexpr static Material create_reflective_material(const Color& albedo, const float reflectance, const float shininess) noexcept {
         return Material{albedo, 0, reflectance, shininess, 0, 0};
     }
 
@@ -33,8 +33,8 @@ public:
      * @param refraction Chance of rays that should be refracted (0.0-1.0). Lower values = more opaque.
      * @param refraction_index Refraction index of the Material.
      */
-    static Material create_refractive_material(const Color& albedo, const float refraction, const float refraction_index) {
-        return Material{albedo, 0, 0, 0, refraction, refraction_index};
+    constexpr static Material create_refractive_material(const Color& albedo, const float refraction, const float refraction_index) noexcept {
+        return Material{albedo, 0, 1 - refraction, 0, refraction, refraction_index};
     }
 
     // Accessors
