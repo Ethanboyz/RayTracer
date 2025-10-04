@@ -1,4 +1,5 @@
 #include <thread>
+#include <format>
 #include "rt/render/render.hpp"
 #include "rt/utilities.hpp"
 #include "rt/math/ray.hpp"
@@ -24,18 +25,28 @@ void Renderer::render(const HittableList& world) const {
         threads.reserve(ray_threads);
 
         // Separate thread for logging progress
-        std::jthread log_progress([&] {
+        std::jthread log_progress([&]() {
             using namespace std::chrono_literals;
+
+            constexpr int bar_width = 80;
             while (true) {
-                const size_t completed{done.load(std::memory_order_relaxed)};
-                if (completed >= num_pixels) {
+                const size_t completed = done.load(std::memory_order_relaxed);
+                const double progress = (num_pixels == 0) ? 1.0 : std::min(static_cast<double>(completed) / static_cast<double>(num_pixels), 1.0);
+
+                if (progress >= 1.0) {
                     break;
                 }
-                const double progress{num_pixels ? static_cast<double>(completed) * 100.0 / static_cast<double>(num_pixels) : 100.0};
-                std::clog << "\rRay Progress: " << progress << "% " << std::flush;
-                std::this_thread::sleep_for(200ms);
+                const int filled_bar = static_cast<int>(std::clamp(progress, 0.0, 0.999) * (bar_width + 1));
+
+                std::string bar(bar_width, '.');
+                std::fill_n(bar.begin(), std::min<std::size_t>(filled_bar, bar.size()), '#');
+                const std::string line = std::format("[{}] {:6.2f}%", bar, progress * 100.0);
+                std::cout << "\x1b[2K\r" << line << std::flush;
+
+                std::this_thread::sleep_for(100ms);
             }
-            std::clog << "\rRay Progress: 100.0%            \n" << std::flush;
+            // Progress completed
+            std::cout << "\x1b[2K\r" << std::format("[{}] {:6.2f}%", std::string(bar_width, '#'), 100.0) << std::endl;
         });
 
         // Assign all available threads pixels to color
