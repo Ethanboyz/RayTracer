@@ -5,6 +5,9 @@
 #include "rt/geom/hittable_list.hpp"
 #include "rt/math/vec3.hpp"
 
+static constexpr int ASSIGN_PIXELS{32};     // Work (number of pixels) to assign at a time to a ray/worker thread
+static constexpr int RAY_DEPTH{16};         // Max number of ray bounces per ray
+
 void Renderer::render(const HittableList& world) const {
     const unsigned ray_threads{std::max(1u, std::thread::hardware_concurrency() - 1)};  // Reserve 1 thread for logging
     std::clog << "This system can support " << ray_threads + 1 << " threads.\n";
@@ -40,11 +43,11 @@ void Renderer::render(const HittableList& world) const {
             threads.emplace_back([&] {
                 while (true) {
                     // Each thread should be assigned 32 pixels at a time
-                    const size_t start{next.fetch_add(32, std::memory_order_relaxed)};
+                    const size_t start{next.fetch_add(ASSIGN_PIXELS, std::memory_order_relaxed)};
                     if (start >= num_pixels) {
                         break;
                     }
-                    const size_t end{std::min(start + 32, num_pixels)};
+                    const size_t end{std::min(start + ASSIGN_PIXELS, num_pixels)};
 
                     // Pixels are written from left to right, one row at a time
                     for (size_t i = start; i < end; i++) {
@@ -68,7 +71,7 @@ Color Renderer::pixel_color(const int x, const int y, const HittableList& world)
     Color pixel_color{0, 0, 0};
     for (int sample = 0; sample < camera_.num_samples(); sample++) {
         Ray ray{generate_ray(x, y)};
-        pixel_color += ray_color(ray, 16, world);
+        pixel_color += ray_color(ray, RAY_DEPTH, world);
     }
     pixel_color /= static_cast<float>(camera_.num_samples());
     return pixel_color;

@@ -43,7 +43,7 @@ bool HitRecord::bounce(const Ray& ray, Color &attenuation, Ray &next) const {
         float first_refractive_index;
         float second_refractive_index;
 
-        // Assume mediums can either be the material itself or the air (refraction index ≈ 1)
+        // Indices need to be inverted depending on if ray is inside or outside
         if (front_face_) {
             first_refractive_index = 1.f;
             second_refractive_index = material_.refraction_index();

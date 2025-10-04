@@ -22,13 +22,14 @@ int main() {
     // Setup the world and 3d objects
     HittableList world;
 
+    constexpr float world_medium{1};    // Refraction index of the medium all objects are in (i.e. air ≈ 1)
     Material plastic_red = {{1, 0, 0}, 0, 0.6, 0, 0, 0};
     Material shiny = {{0.8, 0.8, 0.4}, 0, 1, 1, 0, 0};
-    Material glass_blue = {{0, 0, 1}, 0, 0.4, 1, 0.6, 1.5};
+    Material glass_blue = {{0, 0, 1}, 0, 0, 0, 1, 1.5f / world_medium};
     Material flat_green = {{0, 1, 0}, 0, 0.5, 0.2, 0, 0};
     world.add(make_shared<Sphere>(coord3{0, 0, -2}, 0.5, plastic_red));
-    world.add(make_shared<Sphere>(coord3{1, 0, -2}, 0.5, shiny));
-    world.add(make_shared<Sphere>(coord3{-1, 0, -2}, 0.5, glass_blue));
+    world.add(make_shared<Sphere>(coord3{0.7, -0.2, -1.5}, 0.5, shiny));
+    world.add(make_shared<Sphere>(coord3{-0.7, -0.2, -1.5}, 0.5, glass_blue));
     world.add(make_shared<Sphere>(coord3{-1.5, 0.5, -3}, 0.5, plastic_red));
     world.add(make_shared<Sphere>(coord3{0, -1001, -1}, 1000, flat_green));
 

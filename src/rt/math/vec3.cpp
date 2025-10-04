@@ -18,8 +18,12 @@ uvec3 refract_uvec3(const uvec3& v, const uvec3& normal, const float eta, const 
     const float eta_ratio{eta / eta_prime};
     const float k{1 - eta_ratio * eta_ratio * (1 - cos_theta * cos_theta)};
 
-    if (k < 0.f) {
-        // Total internal reflection
+    // Schlick's approximation setup
+    const float r0{((eta - eta_prime) / (eta + eta_prime)) * ((eta - eta_prime) / (eta + eta_prime))};
+    const float reflectance{r0 + (1 - r0) * std::pow(1 - cos_theta, 5.f)};
+
+    // Total internal reflection or specular reflection from Schlick's approximation
+    if (k < 0.f || reflectance > Utilities::random_float()) {
         return reflect_uvec3(v, normal);
     }
     const float sqrt_k = std::sqrt(std::max(0.f, k));
