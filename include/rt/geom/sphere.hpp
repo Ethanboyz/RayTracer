@@ -2,7 +2,8 @@
 #define SPHERE_H
 
 #include "hittable.hpp"
-#include "rt/math/ray.hpp"
+
+using Radius = float;
 
 /**
  * @class Sphere

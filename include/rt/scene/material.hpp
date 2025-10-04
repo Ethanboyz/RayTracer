@@ -4,35 +4,37 @@
 #include "rt/math/vec3.hpp"
 class Ray;
 
+using Emittance = float;
+using Reflectance = float;
+using Shininess = float;
+using Refraction = float;
+using RefractionIndex = float;
+
 /**
  * @class Material
  * @brief Stores material properties of a surface (i.e. base color and reflective properties).
  */
 class Material {
 public:
+    // Named constructors
+    /**
+     * @brief Constructs a new opaque reflective Material with the specified properties.
+     * @param albedo Acts as the base color of the Material.
+     * @param reflectance Chance of rays that should be scattered/reflected in some way (0.0-1.0). Lower values = more rays getting absorbed.
+     * @param shininess Chance of non-absorbed rays that should be reflected specularly (0.0-1.0). Lower values = more diffuse.
+     */
+    static Material create_reflective_material(const Color& albedo, const float reflectance, const float shininess) {
+        return Material{albedo, 0, reflectance, shininess, 0, 0};
+    }
 
     /**
-     * @brief Constructs a new non-refractive Material with the specified properties.
-     *
-     * @note Reflectance and refraction should not sum up to be more than 1.
+     * @brief Constructs a new refractive Material with the specified properties.
      * @param albedo Acts as the base color of the Material.
-     * @param emittance Light emission intensity of the Material.
-     * @param reflectance Chance of rays that should be scattered/reflected in some way (0.0-1.0). 1 - reflectance = chance of ray getting absorbed.
-     * @param shininess Chance of non-absorbed rays that should be reflected specularly (0.0-1.0).
-     * @param refraction Chance of rays that should be refracted (0.0-1.0). 1 - refraction = chance of ray getting absorbed.
+     * @param refraction Chance of rays that should be refracted (0.0-1.0). Lower values = more opaque.
      * @param refraction_index Refraction index of the Material.
      */
-    constexpr Material(const Color &albedo, const float emittance, const float reflectance, const float shininess,  const float refraction, const float refraction_index)
-      : albedo_{albedo},
-        emittance_{emittance},
-        reflectance_{Interval{0.f, 1.f}.clamp(reflectance)},
-        shininess_{Interval{0.f, 1.f}.clamp(shininess)},
-        refraction_{Interval{0.f, 1.f}.clamp(refraction)},
-        refraction_index_{refraction_index} {
-        if (const float sum{reflectance + refraction}; sum > 1) {
-            reflectance_ /= sum;
-            refraction_ /= sum;
-        }
+    static Material create_refractive_material(const Color& albedo, const float refraction, const float refraction_index) {
+        return Material{albedo, 0, 0, 0, refraction, refraction_index};
     }
 
     // Accessors
@@ -67,6 +69,30 @@ private:
     float emittance_;                       // Light emission intensity
     float reflectance_, shininess_;         // Material reflective properties
     float refraction_, refraction_index_;   // Chance of refraction, refraction index
+
+    /**
+     * @brief Constructs a new Material with the specified properties.
+     *
+     * @note Reflectance and refraction should not sum up to be more than 1.
+     * @param albedo Acts as the base color of the Material.
+     * @param emittance Light emission intensity of the Material.
+     * @param reflectance Chance of rays that should be scattered/reflected in some way (0.0-1.0). Lower values = more rays getting absorbed.
+     * @param shininess Chance of non-absorbed rays that should be reflected specularly (0.0-1.0). Lower values = more diffuse.
+     * @param refraction Chance of rays that should be refracted (0.0-1.0). Lower values = more opaque.
+     * @param refraction_index Refraction index of the Material.
+     */
+    constexpr Material(const Color &albedo, const float emittance, const float reflectance, const float shininess,  const float refraction, const float refraction_index)
+      : albedo_{albedo},
+        emittance_{emittance},
+        reflectance_{Interval{0.f, 1.f}.clamp(reflectance)},
+        shininess_{Interval{0.f, 1.f}.clamp(shininess)},
+        refraction_{Interval{0.f, 1.f}.clamp(refraction)},
+        refraction_index_{refraction_index} {
+        if (const float sum{reflectance + refraction}; sum > 1) {
+            reflectance_ /= sum;
+            refraction_ /= sum;
+        }
+    }
 };
 
 #endif
