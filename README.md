@@ -36,6 +36,7 @@ on cooking up.
 - [X] Antialiasing (sampling)
 - [X] Multithreaded pixel processing
 - [X] Camera coordinate frame
+- [X] Defocus blur
 - [ ] Texture mapping?
 - [ ] More...
 ### Phase 2: Procedural Generation
