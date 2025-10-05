@@ -11,7 +11,7 @@ static constexpr int RAY_DEPTH{16};         // Max number of ray bounces per ray
 
 void Renderer::render(const HittableList& world) const {
     const unsigned ray_threads{std::max(1u, std::thread::hardware_concurrency() - 1)};  // Reserve 1 thread for logging
-    std::clog << "This system can support " << ray_threads + 1 << " threads.\n";
+    std::cout << "This system can support " << ray_threads + 1 << " threads." << std::endl;
 
     std::atomic<size_t> next{};     // Batched pixels needing work
     std::atomic<size_t> done{};     // Completed pixels
@@ -75,7 +75,7 @@ void Renderer::render(const HittableList& world) const {
     }
     // Done generating rays, write pixel colors to file
     write_to_file("image.ppm", pixel_colors);
-    std::clog << "\rWrote to image.ppm\n" << std::flush;
+    std::cout << "\rWrote to image.ppm" << std::endl;
 }
 
 Color Renderer::pixel_color(const int x, const int y, const HittableList& world) const {
@@ -99,7 +99,7 @@ Color Renderer::ray_color(const Ray& ray, const int depth, const Hittable& world
         // Background color light gray gradient dependent on y coord. -1 <= y <= 1, but 0 <= a <= 1 for color = (1 - a) * low_y_color + a * high_y_color
         const float a{0.5f * (ray.direction().y() + 1)};
         constexpr auto white{Color{1.f, 1.f, 1.f}};
-        constexpr auto light_red{Color{1.f, 0.4f, 0.4f}};
+        constexpr auto light_red{Color{0.5f, 0.7f, 1.f}};
         return (1 - a) * white + a * light_red;
     }
 
@@ -120,7 +120,7 @@ Ray Renderer::generate_ray(const int x, const int y) const {
     const coord3 vertical_offset{(static_cast<float>(y) + offset.y()) * camera_.pixel_delta_v()};
     const coord3 pixel_sample{pixel_0_center_ + horizontal_offset + vertical_offset};
 
-    return {camera_.position(), unit(pixel_sample)};
+    return {camera_.position(), unit(pixel_sample - camera_.position())};
 }
 
 void Renderer::write_to_file(const std::string& filename, const std::vector<Color>& pixels) const {

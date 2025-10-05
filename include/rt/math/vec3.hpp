@@ -318,7 +318,7 @@ private:
     float s[3];
 
     /** @brief Normalizes vectors. */
-    void normalize() {
+    constexpr void normalize() {
         if (const float len{this->length()}; len > 0) {
             s[0] /= len;
             s[1] /= len;
@@ -347,7 +347,7 @@ constexpr float dot(const Vec3<A>& u, const Vec3<B>& v) noexcept {
 
 /**
  * @brief Generates a direction unit vector of another vector, reflected (to trace ray reflection).
- * @param v Direction-vector to be reflected.
+ * @param v Direction vector to be reflected.
  * @param normal Incident ray-facing normal vector (not to be confused with the outward-facing normal).
  * @return Reflected direction vector that adheres to the above criteria.
  */
@@ -355,7 +355,7 @@ constexpr float dot(const Vec3<A>& u, const Vec3<B>& v) noexcept {
 
 /**
  * @brief Generates a direction unit vector of another vector, refracted (to trace ray refraction) or reflected if total internal reflection applies.
- * @param v Direction-vector to be refracted.
+ * @param v Direction vector to be refracted.
  * @param normal Incident ray-facing normal vector (not to be confused with the outward-facing normal).
  * @param eta Refractive index of the incident medium (medium before ray-object intersect).
  * @param eta_prime Refractive index of the new medium (medium after ray-object intersect).
