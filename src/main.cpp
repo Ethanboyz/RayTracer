@@ -10,15 +10,17 @@ using std::shared_ptr;
 using std::uint8_t;
 
 int main() {
-    constexpr int num_samples{1000};             // Increase for more samples = less noise but more compute
+    constexpr int num_samples{100};             // Increase for more samples = less noise but more compute
     constexpr float aspect_ratio{16.f/9.f};
-    constexpr int image_height{720};
+    constexpr int image_height{1080};
 
-    const Camera camera{
-        coord3{-1, 1, 1},
-        coord3{-0.5, 0, -1.5},
+    Camera camera{
+        coord3{-2, 2, 1},
+        coord3{0, 0, -2},
         uvec3{0, 1, 0},
-        90,
+        3.5,
+        50,
+        2,
         num_samples,
         aspect_ratio,
         image_height

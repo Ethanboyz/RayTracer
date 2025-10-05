@@ -111,6 +111,7 @@ Color Renderer::ray_color(const Ray& ray, const int depth, const Hittable& world
     }
     return {0, 0, 0};
 }
+
 Ray Renderer::generate_ray(const int x, const int y) const {
     // Get a vector to a random point inside the pixel square centered at (i, j)
     const float random_float{Utilities::random_float()};
@@ -120,7 +121,8 @@ Ray Renderer::generate_ray(const int x, const int y) const {
     const coord3 vertical_offset{(static_cast<float>(y) + offset.y()) * camera_.pixel_delta_v()};
     const coord3 pixel_sample{pixel_0_center_ + horizontal_offset + vertical_offset};
 
-    return {camera_.position(), unit(pixel_sample - camera_.position())};
+    const coord3 ray_origin{camera_.defocus_angle() <= 0 ? camera_.position() : camera_.defocus_disk_sample()};
+    return {ray_origin, unit(pixel_sample - ray_origin)};
 }
 
 void Renderer::write_to_file(const std::string& filename, const std::vector<Color>& pixels) const {

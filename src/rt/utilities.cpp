@@ -19,4 +19,8 @@ namespace Utilities {
         std::uniform_real_distribution distribution(range.min(), range.max());
         return distribution(engine);
     }
+
+    float degrees_to_radians(const float degrees) {
+        return degrees * static_cast<float>(M_PI / 180.f);
+    }
 }
