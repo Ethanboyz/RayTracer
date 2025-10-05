@@ -35,9 +35,7 @@ on cooking up.
 - [ ] BVH to replace lists
 - [X] Antialiasing (sampling)
 - [X] Multithreaded pixel processing
-- [ ] Camera space
-  - [ ] Proper camera coord system (+world space transformations)
-  - [ ] Possible camera panning?
+- [X] Camera coordinate frame
 - [ ] Texture mapping?
 - [ ] More...
 ### Phase 2: Procedural Generation

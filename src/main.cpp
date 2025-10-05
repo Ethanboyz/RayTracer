@@ -12,10 +12,9 @@ using std::uint8_t;
 int main() {
     constexpr int num_samples{1000};             // Increase for more samples = less noise but more compute
     constexpr float aspect_ratio{16.f/9.f};
-    constexpr int image_width{1000};
-    constexpr int image_height{static_cast<int>(static_cast<float>(image_width) / aspect_ratio)};
+    constexpr int image_height{720};
 
-    Camera camera{
+    const Camera camera{
         coord3{-1, 1, 1},
         coord3{-0.5, 0, -1.5},
         uvec3{0, 1, 0},

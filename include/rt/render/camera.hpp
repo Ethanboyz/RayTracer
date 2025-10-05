@@ -40,7 +40,7 @@ public:
     num_samples_        {num_samples},
     image_width_        {static_cast<int>(static_cast<float>(image_height) * aspect_ratio)},
     image_height_       {image_height},
-    viewport_height_    {2 * std::tan(static_cast<float>(vertical_fov_ * (M_PI / 180.0)) / 2)},    // 2 * tan(R/2) * focal_len
+    viewport_height_    {2 * std::tan(static_cast<float>(vertical_fov_ * (M_PI / 180.0)) / 2)},    // 2 * tan(R/2)
     viewport_width_     {viewport_height_ * (static_cast<float>(image_width_) / static_cast<float>(image_height_))},
     viewport_u_         {focal_len_ * viewport_width_ * u_},
     viewport_v_         {focal_len_ * viewport_height_ * -v_} {}
