@@ -20,12 +20,14 @@ public:
      * @param position Coordinates of the starting point.
      * @param direction Direction the Ray extends towards.
      */
-    constexpr Ray(const coord3& position, const uvec3& direction) : position_{position}, direction_{direction} {}
+    constexpr Ray(const coord3& position, const uvec3& direction) :
+        position_{position},
+        direction_{direction} {}
 
     [[nodiscard]] constexpr coord3 origin() const noexcept { return position_; }
     [[nodiscard]] constexpr uvec3 direction() const noexcept { return direction_; }
 
-    [[nodiscard]] coord3 position(const float t) const noexcept { return coord3{position_ + t * direction_}; }
+    [[nodiscard]] coord3 position(const float t) const noexcept { return {position_ + t * direction_}; }
 
 private:
     coord3 position_;

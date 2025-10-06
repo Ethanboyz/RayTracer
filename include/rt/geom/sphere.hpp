@@ -3,6 +3,8 @@
 
 #include "hittable.hpp"
 
+class Aabb;
+
 using Radius = float;
 
 /**
@@ -17,7 +19,10 @@ public:
      * @param radius Radius of the sphere.
      * @param material Material of the entire sphere.
      */
-    Sphere(const coord3& center, const float radius, const Material& material) : center_{center}, radius_{radius}, material_{material} {}
+    Sphere(const coord3& center, const float radius, const Material& material) :
+        center_{center},
+        radius_{radius},
+        material_{material} {}
 
     // Accessors
     /** @return Coordinate position of the Sphere's center. */
@@ -35,6 +40,12 @@ public:
      * @return True if ray intersects the current Sphere, false otherwise.
      */
     bool ray_hit(const Ray& ray, const Interval<float>& t, HitRecord& hit_record) const override;
+
+    /**
+     * @brief Calculates an aabb bounding box for the current Sphere.
+     * @return AABB that encompasses the current Sphere.
+     */
+    [[nodiscard]] Aabb bounding_box() const override;
 
 private:
     coord3 center_;         // Coordinate position of sphere's center

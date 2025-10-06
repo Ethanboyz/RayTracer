@@ -4,6 +4,7 @@
 #include "rt/scene/material.hpp"
 #include "rt/math/vec3.hpp"
 class Ray;
+class Aabb;
 
 /**
  * @class HitRecord
@@ -92,6 +93,12 @@ public:
      * @return True if ray intersects the current object, false otherwise.
      */
     virtual bool ray_hit(const Ray& ray, const Interval<float>& t, HitRecord& hit_record) const = 0;
+
+    /**
+     * @brief Calculates an aabb bounding box for the current object.
+     * @return AABB that encompasses the current object.
+     */
+    [[nodiscard]] virtual Aabb bounding_box() const = 0;
 };
 
 #endif

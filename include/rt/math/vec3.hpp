@@ -35,7 +35,8 @@ public:
      * @brief Constructs a 3D vector with randomized components.
      * @param range Components will have random values bound by this Interval.
      */
-    constexpr explicit Vec3(const Interval<float>& range) : s{Utilities::random_float(range), Utilities::random_float(range), Utilities::random_float(range)} {
+    constexpr explicit Vec3(const Interval<float>& range) :
+        s{Utilities::random_float(range), Utilities::random_float(range), Utilities::random_float(range)} {
         // No need to normalize if already length ≈ 1
         if (std::is_same_v<Tag, unit_tag> && std::fabs(length_squared() - 1) < 1.0e-6) {
             normalize();

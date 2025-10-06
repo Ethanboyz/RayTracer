@@ -13,6 +13,18 @@ class Ray;
  */
 class Aabb {
 public:
+    /** @brief Constructs a new effectively empty axis-aligned bounding box.*/
+    constexpr Aabb() :
+        x_{Interval<float>{1, 0}},
+        y_{Interval<float>{1, 0}},
+        z_{Interval<float>{1, 0}} {}
+
+    /** @brief Constructs a new axis-aligned bounding box that encloses two other aabb's. */
+    constexpr Aabb(const Aabb& box_a, const Aabb& box_b) :
+        x_{Interval{box_a.x(), box_b.x()}},
+        y_{Interval{box_a.y(), box_b.y()}},
+        z_{Interval{box_a.z(), box_b.z()}} {}
+
     /**
      * @brief Constructs a new axis-aligned bounding box within the specified x, y, z boundaries.
      * @param x X-axis boundary of the bounding box.
@@ -21,13 +33,14 @@ public:
      */
     constexpr Aabb(const Interval<float>& x, const Interval<float>& y, const Interval<float>& z) : x_{x}, y_{y}, z_{z} {}
 
+
     // Accessors
     /** @return X-axis range that bounds the aabb. */
-    constexpr Interval<float> x() const noexcept { return x_; }
+    [[nodiscard]] constexpr Interval<float> x() const noexcept { return x_; }
     /** @return Y-axis range that bounds the aabb. */
-    constexpr Interval<float> y() const noexcept { return y_; }
+    [[nodiscard]] constexpr Interval<float> y() const noexcept { return y_; }
     /** @return Z-axis range that bounds the aabb. */
-    constexpr Interval<float> z() const noexcept { return z_; }
+    [[nodiscard]] constexpr Interval<float> z() const noexcept { return z_; }
 
     /**
      * @brief Subscript operation for read-only access of elements.

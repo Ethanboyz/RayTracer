@@ -33,24 +33,24 @@ public:
         const float aspect_ratio,
         const int image_height
     ) :
-    position_           {position},
-    look_at_            {look_at},
-    up_                 {up},
-    w_                  {unit(position - look_at)},
-    u_                  {unit(cross(up, w_))},
-    v_                  {unit(cross(w_, u_))},
-    focus_distance_     {focus_distance},
-    vertical_fov_       {vertical_fov},
-    defocus_angle_      {defocus_angle},
-    defocus_disk_u_     {u_ * focus_distance_ * std::tan(Utilities::degrees_to_radians(defocus_angle_ / 2))},   // u_ * defocus disk radius
-    defocus_disk_v_     {v_ * focus_distance_ * std::tan(Utilities::degrees_to_radians(defocus_angle_ / 2))},   // v_ * defocus disk radius
-    num_samples_        {num_samples},
-    image_width_        {static_cast<int>(static_cast<float>(image_height) * aspect_ratio)},
-    image_height_       {image_height},
-    viewport_height_    {2 * std::tan(Utilities::degrees_to_radians(vertical_fov_) / 2)},
-    viewport_width_     {viewport_height_ * (static_cast<float>(image_width_) / static_cast<float>(image_height_))},
-    viewport_u_         {focus_distance_ * viewport_width_ * u_},
-    viewport_v_         {focus_distance_ * viewport_height_ * -v_} {}
+        position_           {position},
+        look_at_            {look_at},
+        up_                 {up},
+        w_                  {unit(position - look_at)},
+        u_                  {unit(cross(up, w_))},
+        v_                  {unit(cross(w_, u_))},
+        focus_distance_     {focus_distance},
+        vertical_fov_       {vertical_fov},
+        defocus_angle_      {defocus_angle},
+        defocus_disk_u_     {u_ * focus_distance_ * std::tan(Utilities::degrees_to_radians(defocus_angle_ / 2))},   // u_ * defocus disk radius
+        defocus_disk_v_     {v_ * focus_distance_ * std::tan(Utilities::degrees_to_radians(defocus_angle_ / 2))},   // v_ * defocus disk radius
+        num_samples_        {num_samples},
+        image_width_        {static_cast<int>(static_cast<float>(image_height) * aspect_ratio)},
+        image_height_       {image_height},
+        viewport_height_    {2 * std::tan(Utilities::degrees_to_radians(vertical_fov_) / 2)},
+        viewport_width_     {viewport_height_ * (static_cast<float>(image_width_) / static_cast<float>(image_height_))},
+        viewport_u_         {focus_distance_ * viewport_width_ * u_},
+        viewport_v_         {focus_distance_ * viewport_height_ * -v_} {}
 
     // Accessors
     /** @return Coordinate position of the camera. */

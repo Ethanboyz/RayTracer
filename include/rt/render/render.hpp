@@ -18,8 +18,8 @@ public:
      * @brief Constructs a Renderer which can generate a completed image of the world into an output .ppm file.
      * @param camera
      */
-    explicit Renderer(const Camera& camera)
-      : image_width_{camera.image_width()},
+    explicit Renderer(const Camera& camera) :
+        image_width_{camera.image_width()},
         image_height_{camera.image_height()},
 
         // Center of first pixel (upper left) will be at the upperleft corner of viewport shifted halfway of a pixel delta

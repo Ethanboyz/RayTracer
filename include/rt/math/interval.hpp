@@ -14,7 +14,9 @@ class Interval {
     static_assert(std::is_arithmetic_v<T> && !std::is_same_v<T, bool>, "Intervals must be numerical.");
 public:
     /** @brief Constructs an Interval from the lowest possible to highest possible value, effectively an infinite interval. */
-    constexpr Interval() : min_{std::numeric_limits<T>::lowest()}, max_{std::numeric_limits<T>::max()} {}
+    constexpr Interval() :
+        min_{std::numeric_limits<T>::lowest()},
+        max_{std::numeric_limits<T>::max()} {}
 
     /**
      * @brief Constructs an Interval from min to max.
@@ -22,6 +24,11 @@ public:
      * @param max Interval upper bound.
      */
     constexpr Interval(const T min, const T max) : min_{min}, max_{max} {}
+
+    /** @brief Constructs an Interval that encloses two other Intervals. */
+    constexpr Interval(const Interval& a, const Interval& b)
+      : min_{a.min() <= b.min() ? a.min() : b.min()},
+        max_{a.max() >= b.max() ? a.max() : b.max()} {}
 
     // Accessors
     /** @return Lower bound of current Interval. */
@@ -47,13 +54,11 @@ public:
     constexpr bool exclusive_contains(const T x) const noexcept { return min_ < x && x < max_; }
 
     /** @return x if within the interval, or the nearest Interval boundary otherwise. */
-    constexpr float clamp(const T x) const noexcept {
+    constexpr T clamp(const T x) const noexcept {
         if (x < min_) return min_;
         if (x > max_) return max_;
         return x;
     }
-
-
 
 private:
     T min_, max_;

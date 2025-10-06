@@ -81,8 +81,8 @@ private:
      * @param refraction Chance of rays that should be refracted (0.0-1.0). Lower values = more opaque.
      * @param refraction_index Refraction index of the Material.
      */
-    constexpr Material(const Color &albedo, const float emittance, const float reflectance, const float shininess,  const float refraction, const float refraction_index)
-      : albedo_{albedo},
+    constexpr Material(const Color &albedo, const float emittance, const float reflectance, const float shininess,  const float refraction, const float refraction_index) :
+        albedo_{albedo},
         emittance_{emittance},
         reflectance_{Interval{0.f, 1.f}.clamp(reflectance)},
         shininess_{Interval{0.f, 1.f}.clamp(shininess)},
