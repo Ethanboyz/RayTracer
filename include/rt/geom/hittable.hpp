@@ -77,7 +77,7 @@ private:
 
 /**
  * @class Hittable
- * @brief Defines the properties of any object that can intersect a ray upon rendering.
+ * @brief Defines the properties of any rendered object that can intersect a ray.
  */
 class Hittable {
 public:

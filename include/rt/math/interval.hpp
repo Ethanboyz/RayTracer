@@ -28,6 +28,10 @@ public:
     constexpr T min() const noexcept { return min_; }
     /** @return Upper bound of current Interval. */
     constexpr T max() const noexcept { return max_; }
+    /** @param min Sets lower bound of current Interval. */
+    constexpr void min(const T& min) noexcept { min_ = min; }
+    /** @param max Sets upper bound of current Interval. */
+    constexpr void max(const T& max) noexcept { max_ = max; }
 
     /**
      * @brief Calculates the range of the current Interval.
@@ -48,6 +52,8 @@ public:
         if (x > max_) return max_;
         return x;
     }
+
+
 
 private:
     T min_, max_;

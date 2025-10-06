@@ -1,6 +1,7 @@
 #ifndef VEC3_H
 #define VEC3_H
 
+#include <cassert>
 #include <cmath>
 #include <functional>
 #include <iostream>
@@ -87,7 +88,7 @@ public:
 
     /**
      * @brief Mutating vector-vector addition operation.
-     * @tparam T Only vec3 (non-unit vectors) can be the lvalue of mutating operators.
+     * @note Only vec3 (non-unit vectors) can be the lvalue of mutating operators.
      * @param other Rvalue of the += operation.
      * @return Result of vector addition of lvalue on rvalue.
      */
@@ -101,7 +102,7 @@ public:
 
     /**
      * @brief Mutating vector-vector subtraction operation.
-     * @tparam T Only vec3 (non-unit vectors) can be the lvalue of mutating operators.
+     * @note Only vec3 (non-unit vectors) can be the lvalue of mutating operators.
      * @param other Rvalue of the -= operation.
      * @return Result of vector subtraction of rvalue subtracted from lvalue.
      */
@@ -115,7 +116,7 @@ public:
 
     /**
      * @brief Mutating vector-scalar multiplication operation.
-     * @tparam T Only vec3 (non-unit vectors) can use mutating operators.
+     * @note Only vec3 (non-unit vectors) can use mutating operators.
      * @param t Rvalue of the *= operation (scalar to multiply the lvalue by).
      * @return Result of multiplication of lvalue and rvalue.
      */
@@ -129,7 +130,7 @@ public:
 
     /**
      * @brief Mutating vector-vector Hadamard product operation.
-     * @tparam T Only vec3 (non-unit vectors can use mutating operators).
+     * @note Only vec3 (non-unit vectors can use mutating operators).
      * @param other Rvalue of the *= operation.
      * @return Result of multiplying the ith vector components together for i = 1, 2, 3.
      */
@@ -143,7 +144,7 @@ public:
 
     /**
      * @brief Mutating vector-scalar division operation.
-     * @tparam T Only vec3 (non-unit vectors) can use mutating operators.
+     * @note Only vec3 (non-unit vectors) can use mutating operators.
      * @param t Rvalue of the /= operation (scalar to divide the lvalue by).
      * @return Result of division of lvalue by rvalue.
      */
@@ -153,6 +154,31 @@ public:
         s[1] /= t;
         s[2] /= t;
         return *this;
+    }
+
+    /**
+     * @brief Subscript operation for modification of elements.
+     * @param i Index of vector.
+     * @return Vector component from the corresponding i.
+     */
+    template<class T = Tag, std::enable_if_t<std::is_same_v<T, any_tag>, int> = 0>
+    constexpr float& operator[](const std::size_t i) {
+        if (i >= 3) {
+            throw std::out_of_range("Index out of bounds for Vec3");
+        }
+        return s[i];
+    }
+
+    /**
+     * @brief Subscript operation for read-only access of elements.
+     * @param i Index of vector.
+     * @return Vector component from the corresponding i.
+     */
+    constexpr const float& operator[](const std::size_t i) const {
+        if (i >= 3) {
+            throw std::out_of_range("Index out of bounds for Vec3");
+        }
+        return s[i];
     }
 
     /** @brief Cannot perform mutating operations on uvec3 */

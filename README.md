@@ -50,8 +50,3 @@ on cooking up.
   - [ ] Sweet, sweet parallelism
   - [ ] Performance benchmarking
 ### Phase 5: Polish??
-
-## Sources:
-- https://gabrielgambetta.com/computer-graphics-from-scratch
-- https://raytracing.github.io/books/RayTracingInOneWeekend.html
-- https://scratchapixel.com/
