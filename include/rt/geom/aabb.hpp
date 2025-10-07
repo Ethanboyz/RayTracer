@@ -15,15 +15,21 @@ class Aabb {
 public:
     /** @brief Constructs a new effectively empty axis-aligned bounding box.*/
     constexpr Aabb() :
-        x_{Interval<float>{1, 0}},
-        y_{Interval<float>{1, 0}},
-        z_{Interval<float>{1, 0}} {}
+        x_{Interval{-INFINITY, INFINITY}},
+        y_{Interval{-INFINITY, INFINITY}},
+        z_{Interval{-INFINITY, INFINITY}} {}
 
     /** @brief Constructs a new axis-aligned bounding box that encloses two other aabb's. */
     constexpr Aabb(const Aabb& box_a, const Aabb& box_b) :
         x_{Interval{box_a.x(), box_b.x()}},
         y_{Interval{box_a.y(), box_b.y()}},
         z_{Interval{box_a.z(), box_b.z()}} {}
+
+    /** @brief Constructs a new axis-aligned bounding box that encloses two points. */
+    constexpr Aabb(const coord3& a, const coord3& b) :
+        x_{a[0] <= b[0] ? Interval{a[0], b[0]} : Interval{b[0], a[0]}},
+        y_{a[1] <= b[1] ? Interval{a[1], b[1]} : Interval{b[1], a[1]}},
+        z_{a[2] <= b[2] ? Interval{a[2], b[2]} : Interval{b[2], a[2]}} {}
 
     /**
      * @brief Constructs a new axis-aligned bounding box within the specified x, y, z boundaries.
@@ -33,7 +39,6 @@ public:
      */
     constexpr Aabb(const Interval<float>& x, const Interval<float>& y, const Interval<float>& z) : x_{x}, y_{y}, z_{z} {}
 
-
     // Accessors
     /** @return X-axis range that bounds the aabb. */
     [[nodiscard]] constexpr Interval<float> x() const noexcept { return x_; }
@@ -42,6 +47,7 @@ public:
     /** @return Z-axis range that bounds the aabb. */
     [[nodiscard]] constexpr Interval<float> z() const noexcept { return z_; }
 
+    // Operator overloads
     /**
      * @brief Subscript operation for read-only access of elements.
      * @param i Index of aabb.
@@ -70,13 +76,33 @@ public:
         return z_;
     }
 
+    /** @return Center coordinate of the Aabb. */
+    [[nodiscard]] constexpr coord3 centroid() const noexcept {
+        const coord3 sum{x_.min() + x_.max(), y_.min() + y_.max(), z_.min() + z_.max()};
+        return sum * 0.5f;
+    }
+
+    /** @return Surface area of the Aabb. */
+    [[nodiscard]] constexpr float surface_area() const noexcept {
+        const float x_len{std::fabs(x_.range())};
+        const float y_len{std::fabs(y_.range())};
+        const float z_len{std::fabs(z_.range())};
+        return 2.f * x_len * y_len + y_len * z_len + x_len * z_len;
+    }
+
     /**
-     *
-     * @param ray Checked for intersections with the current aabb object.
+     * @brief Checks for Ray intersections with the current Aabb.
+     * @param ray Checked for intersections with the current Aabb object.
      * @param t Intersections only count if they occur in the specified t Interval.
      * @return True if ray intersects the current aabb, false otherwise.
      */
-    bool ray_hit(const Ray& ray, Interval<float>& t) const;
+    [[nodiscard]] bool ray_hit(const Ray& ray, const Interval<float>& t) const;
+
+    /** @return True if the Aabb is degenerate (no volume). */
+    [[nodiscard]] constexpr bool degenerate() const {
+        constexpr float near_zero{1e-4};
+        return std::fabs(x_.range()) < near_zero || std::fabs(y_.range()) < near_zero || std::fabs(z_.range()) < near_zero;
+    }
 private:
     Interval<float> x_, y_, z_;
 };

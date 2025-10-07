@@ -18,9 +18,9 @@ int main() {
         coord3{-2, 2, 1},
         coord3{0, 0, -2},
         uvec3{0, 1, 0},
-        3.5,
+        3.4,
         50,
-        2,
+        5,
         num_samples,
         aspect_ratio,
         image_height
@@ -36,7 +36,7 @@ int main() {
     Material glass_blue {Material::create_refractive_material(Color{0.0, 0.0, 1.0}, Refraction{0.7}, RefractionIndex{1.5f / world_medium})};
 
     world.add(make_shared<Sphere>(coord3{0.0, 0.0, -2.0},   Radius{0.5}, smooth_red));
-    world.add(make_shared<Sphere>(coord3{0.7, -0.2, -1.5},  Radius{0.5}, shiny));
+    world.add(make_shared<Sphere>(coord3{0.7, -0.2, -1.0},  Radius{0.5}, shiny));
     world.add(make_shared<Sphere>(coord3{-1.5, 0.5, -3.0},  Radius{0.5}, smooth_red));
     world.add(make_shared<Sphere>(coord3{0.0, -901, -1.0},  Radius{900}, flat_green));
     world.add(make_shared<Sphere>(coord3{-0.7, -0.2, -1.5}, Radius{0.5}, glass_blue));

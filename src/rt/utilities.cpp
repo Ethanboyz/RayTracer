@@ -11,7 +11,7 @@ namespace Utilities {
         return distribution(engine);
     }
 
-    float random_float(const Interval<float> range) {
+    float random_float(const Interval<float>& range) {
         thread_local std::mt19937 engine{[] {
             std::random_device rd;
             return std::mt19937(rd());

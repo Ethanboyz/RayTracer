@@ -23,11 +23,18 @@ public:
     /** @brief Clears the HittableList of all stored objects. */
     void clear() { objects_.clear(); }
 
+    /** @return Number of objects in the HittableList. */
+    [[nodiscard]] size_t size() const { return objects_.size(); }
+
+    /** @return Reference to vector of pointers to objects in the HittableList. */
+    [[nodiscard]] std::vector<shared_ptr<Hittable>>& objects() { return objects_; }
+
     /**
      * @brief Adds a new Hittable to the current HittableList.
      * @param object Hittable object to be added.
      */
     void add(shared_ptr<Hittable> object);
+
 
     /** @return Aabb that encompasses the objects in the HittableList. */
     [[nodiscard]] Aabb bounding_box() const override { return bbox_; }

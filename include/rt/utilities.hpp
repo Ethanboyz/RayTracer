@@ -8,7 +8,7 @@ namespace Utilities {
     float random_float();
 
     /** @return Random value between the bounds of the specified Interval range. */
-    float random_float(Interval<float> range);
+    float random_float(const Interval<float>& range);
 
     /** @brief Convert degrees to radians. */
     float degrees_to_radians(float degrees);

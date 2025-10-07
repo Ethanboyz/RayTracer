@@ -6,7 +6,7 @@ void HittableList::add(shared_ptr<Hittable> object) {
     bbox_ = Aabb{bbox_, object->bounding_box()};
 }
 
-bool HittableList::ray_hit(const Ray &ray, const Interval<float> &t, HitRecord &hit_record) const {
+bool HittableList::ray_hit(const Ray& ray, const Interval<float>& t, HitRecord& hit_record) const {
     HitRecord rec;
     bool anything_hit{false};
     float closest_t{t.max()};

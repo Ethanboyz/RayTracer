@@ -15,8 +15,8 @@ class Interval {
 public:
     /** @brief Constructs an Interval from the lowest possible to highest possible value, effectively an infinite interval. */
     constexpr Interval() :
-        min_{std::numeric_limits<T>::lowest()},
-        max_{std::numeric_limits<T>::max()} {}
+        min_{-INFINITY},
+        max_{INFINITY} {}
 
     /**
      * @brief Constructs an Interval from min to max.
