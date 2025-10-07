@@ -1,4 +1,7 @@
+#include <chrono>
 #include <memory>
+
+#include "rt/geom/aabb_tree_node.hpp"
 #include "rt/render/camera.hpp"
 #include "rt/geom/hittable_list.hpp"
 #include "rt/math/vec3.hpp"
@@ -10,6 +13,7 @@ using std::shared_ptr;
 using std::uint8_t;
 
 int main() {
+    auto start{std::chrono::steady_clock::now()};
     constexpr int num_samples{100};             // Increase for more samples = less noise but more compute
     constexpr float aspect_ratio{16.f/9.f};
     constexpr int image_height{1080};
@@ -44,5 +48,8 @@ int main() {
     const Renderer renderer{camera};
     renderer.render(world);
 
+    auto end{std::chrono::steady_clock::now()};
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    std::cout << "Execution time: " << duration.count() << " ms" << std::endl;
     return 0;
 }
