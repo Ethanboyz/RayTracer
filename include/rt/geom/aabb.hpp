@@ -1,8 +1,10 @@
 #ifndef AABB_H
 #define AABB_H
 
+#include <cmath>
 #include <stdexcept>
 #include "rt/math/interval.hpp"
+#include "rt/math/vec3.hpp"
 
 class HitRecord;
 class Ray;
@@ -14,10 +16,7 @@ class Ray;
 class Aabb {
 public:
     /** @brief Constructs a new effectively empty axis-aligned bounding box.*/
-    constexpr Aabb() :
-        x_{Interval{-INFINITY, INFINITY}},
-        y_{Interval{-INFINITY, INFINITY}},
-        z_{Interval{-INFINITY, INFINITY}} {}
+    constexpr Aabb() = default;
 
     /** @brief Constructs a new axis-aligned bounding box that encloses two other aabb's. */
     constexpr Aabb(const Aabb& box_a, const Aabb& box_b) :
@@ -84,9 +83,12 @@ public:
 
     /** @return Surface area of the Aabb. */
     [[nodiscard]] constexpr float surface_area() const noexcept {
-        const float x_len{std::fabs(x_.range())};
-        const float y_len{std::fabs(y_.range())};
-        const float z_len{std::fabs(z_.range())};
+        if (x_.is_empty() || y_.is_empty() || z_.is_empty()) {
+            return 0;
+        }
+        const float x_len{x_.range()};
+        const float y_len{y_.range()};
+        const float z_len{z_.range()};
         return 2.f * x_len * y_len + y_len * z_len + x_len * z_len;
     }
 
@@ -96,12 +98,14 @@ public:
      * @param t Intersections only count if they occur in the specified t Interval.
      * @return True if ray intersects the current aabb, false otherwise.
      */
-    [[nodiscard]] bool ray_hit(const Ray& ray, const Interval<float>& t) const;
+    [[nodiscard]] bool ray_hit(const Ray& ray, Interval<float> t) const;
 
-    /** @return True if the Aabb is degenerate (no volume). */
-    [[nodiscard]] constexpr bool degenerate() const {
+    /** @return True if the Aabb is degenerate (no volume) or "empty." */
+    [[nodiscard]] constexpr bool is_degenerate() const {
+        if (x_.is_empty() || y_.is_empty() || z_.is_empty()) { return true; }
+
         constexpr float near_zero{1e-4};
-        return std::fabs(x_.range()) < near_zero || std::fabs(y_.range()) < near_zero || std::fabs(z_.range()) < near_zero;
+        return x_.range() < near_zero || y_.range() < near_zero || z_.range() < near_zero;
     }
 private:
     Interval<float> x_, y_, z_;

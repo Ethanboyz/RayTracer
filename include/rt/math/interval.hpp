@@ -13,10 +13,8 @@ template<class T>
 class Interval {
     static_assert(std::is_arithmetic_v<T> && !std::is_same_v<T, bool>, "Intervals must be numerical.");
 public:
-    /** @brief Constructs an Interval from the lowest possible to highest possible value, effectively an infinite interval. */
-    constexpr Interval() :
-        min_{-INFINITY},
-        max_{INFINITY} {}
+    /** @brief Constructs an effectively empty Interval. */
+    constexpr Interval() : min_{1e-6}, max_{-1e-6} {}
 
     /**
      * @brief Constructs an Interval from min to max.
@@ -32,9 +30,9 @@ public:
 
     // Accessors
     /** @return Lower bound of current Interval. */
-    constexpr T min() const noexcept { return min_; }
+    [[nodiscard]] constexpr T min() const noexcept { return min_; }
     /** @return Upper bound of current Interval. */
-    constexpr T max() const noexcept { return max_; }
+    [[nodiscard]] constexpr T max() const noexcept { return max_; }
     /** @param min Sets lower bound of current Interval. */
     constexpr void min(const T& min) noexcept { min_ = min; }
     /** @param max Sets upper bound of current Interval. */
@@ -45,16 +43,19 @@ public:
      * @warning Can return negative values if min is greater than max.
      * @return upper bound - lower bound.
      */
-    constexpr T range() const noexcept { return max_ - min_; }
+    [[nodiscard]] constexpr T range() const noexcept { return max_ - min_; }
+
+    /** @return True if the Interval's min bound is strictly larger than the max bound */
+    [[nodiscard]] constexpr bool is_empty() const noexcept {return min_ > max_; }
 
     /** @return True if x is within the interval range (inclusive). */
-    constexpr bool inclusive_contains(const T x) const noexcept { return min_ <= x && x <= max_; }
+    [[nodiscard]] constexpr bool inclusive_contains(const T x) const noexcept { return min_ <= x && x <= max_; }
 
     /** @return True if x is within the interval range (exclusive). */
-    constexpr bool exclusive_contains(const T x) const noexcept { return min_ < x && x < max_; }
+    [[nodiscard]] constexpr bool exclusive_contains(const T x) const noexcept { return min_ < x && x < max_; }
 
     /** @return x if within the interval, or the nearest Interval boundary otherwise. */
-    constexpr T clamp(const T x) const noexcept {
+    [[nodiscard]] constexpr T clamp(const T x) const noexcept {
         if (x < min_) return min_;
         if (x > max_) return max_;
         return x;

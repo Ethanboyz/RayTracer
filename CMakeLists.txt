@@ -15,6 +15,7 @@ endif()
 set(SOURCES
         src/main.cpp
         src/rt/utilities.cpp
+        src/rt/geom/aabb.cpp
         src/rt/geom/hittable.cpp
         src/rt/geom/hittable_list.cpp
         src/rt/geom/sphere.cpp

@@ -9,6 +9,7 @@
 static constexpr int ASSIGN_PIXELS{32};     // Work (number of pixels) to assign at a time to a ray/worker thread
 static constexpr int RAY_DEPTH{16};         // Max number of ray bounces per ray
 
+// Multithreaded pixel handling
 void Renderer::render(const HittableList& world) const {
     const unsigned ray_threads{std::max(1u, std::thread::hardware_concurrency() - 1)};  // Reserve 1 thread for logging
     std::cout << "This system can support " << ray_threads + 1 << " threads." << std::endl;

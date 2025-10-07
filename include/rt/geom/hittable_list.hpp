@@ -20,6 +20,9 @@ public:
     /** @brief Constructs an empty HittableList. */
     constexpr HittableList() = default;
 
+    /** @brief Constructs a HittableList with the given object. */
+    explicit HittableList(const shared_ptr<Hittable>& object) { add(object); }
+
     /** @brief Clears the HittableList of all stored objects. */
     void clear() { objects_.clear(); }
 
@@ -34,7 +37,6 @@ public:
      * @param object Hittable object to be added.
      */
     void add(shared_ptr<Hittable> object);
-
 
     /** @return Aabb that encompasses the objects in the HittableList. */
     [[nodiscard]] Aabb bounding_box() const override { return bbox_; }

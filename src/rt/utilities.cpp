@@ -20,6 +20,10 @@ namespace Utilities {
         return distribution(engine);
     }
 
+    int random_int(const Interval<int>& range) {
+        return static_cast<int>(random_float(Interval{static_cast<float>(range.min()), static_cast<float>(range.max() + 1)}));
+    }
+
     float degrees_to_radians(const float degrees) {
         return degrees * static_cast<float>(M_PI / 180.f);
     }

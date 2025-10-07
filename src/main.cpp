@@ -1,7 +1,8 @@
 #include <chrono>
 #include <memory>
+#include <thread>
 
-#include "rt/geom/aabb_tree_node.hpp"
+#include "rt/geom/bvh.hpp"
 #include "rt/render/camera.hpp"
 #include "rt/geom/hittable_list.hpp"
 #include "rt/math/vec3.hpp"
@@ -14,16 +15,16 @@ using std::uint8_t;
 
 int main() {
     auto start{std::chrono::steady_clock::now()};
-    constexpr int num_samples{100};             // Increase for more samples = less noise but more compute
+    constexpr int num_samples{1};             // Increase for more samples = less noise but more compute
     constexpr float aspect_ratio{16.f/9.f};
     constexpr int image_height{1080};
 
     Camera camera{
-        coord3{-2, 2, 1},
-        coord3{0, 0, -2},
+        coord3{15, 10, 15},
+        coord3{10, 1, 10},
         uvec3{0, 1, 0},
-        3.4,
-        50,
+        10,
+        90,
         5,
         num_samples,
         aspect_ratio,
@@ -42,14 +43,26 @@ int main() {
     world.add(make_shared<Sphere>(coord3{0.0, 0.0, -2.0},   Radius{0.5}, smooth_red));
     world.add(make_shared<Sphere>(coord3{0.7, -0.2, -1.0},  Radius{0.5}, shiny));
     world.add(make_shared<Sphere>(coord3{-1.5, 0.5, -3.0},  Radius{0.5}, smooth_red));
-    world.add(make_shared<Sphere>(coord3{0.0, -901, -1.0},  Radius{900}, flat_green));
     world.add(make_shared<Sphere>(coord3{-0.7, -0.2, -1.5}, Radius{0.5}, glass_blue));
 
+    for (int i = -20; i < 20; i += 1) {
+        for (int j = -20; j < 20; j += 1) {
+            auto sphere{make_shared<Sphere>(coord3{static_cast<float>(j), -0.2, static_cast<float>(i)}, Radius{0.5}, glass_blue)};
+            world.add(sphere);
+        }
+    }
+
+    using namespace std::chrono_literals;
     const Renderer renderer{camera};
+    world = HittableList(make_shared<Bvh>(world));
+    auto checkpoint{std::chrono::steady_clock::now()};
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(checkpoint - start);
+    std::cout << "Setup time: " << duration.count() << " ms" << std::endl;
+
     renderer.render(world);
 
     auto end{std::chrono::steady_clock::now()};
-    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-    std::cout << "Execution time: " << duration.count() << " ms" << std::endl;
+    duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - checkpoint);
+    std::cout << "Render time: " << duration.count() << " ms" << std::endl;
     return 0;
 }
