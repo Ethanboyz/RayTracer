@@ -12,10 +12,11 @@
 using std::make_shared;
 using std::shared_ptr;
 using std::uint8_t;
+using namespace std::chrono_literals;
 
 int main() {
     auto start{std::chrono::steady_clock::now()};
-    constexpr int num_samples{1};             // Increase for more samples = less noise but more compute
+    constexpr int num_samples{10};             // Increase for more samples = less noise but more compute
     constexpr float aspect_ratio{16.f/9.f};
     constexpr int image_height{1080};
 
@@ -23,7 +24,7 @@ int main() {
         coord3{15, 10, 15},
         coord3{10, 1, 10},
         uvec3{0, 1, 0},
-        10,
+        15,
         90,
         5,
         num_samples,
@@ -37,7 +38,6 @@ int main() {
 
     Material smooth_red {Material::create_reflective_material(Color{1.0, 0.0, 0.0}, Reflectance{0.6}, Shininess{0.0})};
     Material shiny      {Material::create_reflective_material(Color{0.8, 0.8, 0.4}, Reflectance{1.0}, Shininess{0.7})};
-    Material flat_green {Material::create_reflective_material(Color{0.0, 1.0, 0.0}, Reflectance{0.5}, Shininess{0.2})};
     Material glass_blue {Material::create_refractive_material(Color{0.0, 0.0, 1.0}, Refraction{0.7}, RefractionIndex{1.5f / world_medium})};
 
     world.add(make_shared<Sphere>(coord3{0.0, 0.0, -2.0},   Radius{0.5}, smooth_red));
@@ -52,9 +52,8 @@ int main() {
         }
     }
 
-    using namespace std::chrono_literals;
     const Renderer renderer{camera};
-    world = HittableList(make_shared<Bvh>(world));
+    world = HittableList(make_shared<Bvh>(world));          // Put objects into the BVH
     auto checkpoint{std::chrono::steady_clock::now()};
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(checkpoint - start);
     std::cout << "Setup time: " << duration.count() << " ms" << std::endl;

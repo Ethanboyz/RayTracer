@@ -35,13 +35,16 @@ public:
      * @param end End index of objects.
      */
     Bvh(std::vector<shared_ptr<Hittable>>& primitives, size_t start, size_t end) {
-        const int axis{random_int(Interval{0, 2})};
+        bbox_ = Aabb{};
+        for (size_t primitive_index = start; primitive_index < end; primitive_index++) {
+            bbox_ = Aabb{bbox_, primitives[primitive_index]->bounding_box()};
+        }
+        const int axis{bbox_.longest_axis()};
         const auto comparator{axis == 0 ? box_x_compare :
                                         axis == 1 ? box_y_compare :
                                         box_z_compare};
 
-        const size_t range{end - start};
-        if (range == 1) {
+        if (const size_t range{end - start}; range == 1) {
             left_ = primitives[start];
             right_ = primitives[start];
         } else if (range == 2) {

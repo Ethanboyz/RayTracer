@@ -75,6 +75,14 @@ public:
         return z_;
     }
 
+    /** @return Longest axis of the aabb (x-axis = 0, y-axis = 1, z-axis = 2) */
+    [[nodiscard]] constexpr int longest_axis() const noexcept {
+        if (x_.range() > y_.range()) {
+            return x_.range() > z_.range() ? 0 : 2;
+        }
+        return y_.range() > z_.range() ? 1 : 2;
+    }
+
     /** @return Center coordinate of the Aabb. */
     [[nodiscard]] constexpr coord3 centroid() const noexcept {
         const coord3 sum{x_.min() + x_.max(), y_.min() + y_.max(), z_.min() + z_.max()};
