@@ -32,18 +32,6 @@ public:
     constexpr Vec3() : s{0.f, 0.f, 0.f} {}
 
     /**
-     * @brief Constructs a 3D vector with randomized components.
-     * @param range Components will have random values bound by this Interval.
-     */
-    constexpr explicit Vec3(const Interval<float>& range) :
-        s{Utilities::random_float(range), Utilities::random_float(range), Utilities::random_float(range)} {
-        // No need to normalize if already length ≈ 1
-        if (std::is_same_v<Tag, unit_tag> && std::fabs(length_squared() - 1) < 1.0e-6) {
-            normalize();
-        }
-    }
-
-    /**
      * @brief Constructs a 3D vector with the specified scalar values.
      * @param x First vector component.
      * @param y Second vector component.
@@ -361,9 +349,9 @@ constexpr float dot(const Vec3<A>& u, const Vec3<B>& v) noexcept {
 
 // Utilities
 /**
- * @brief Generates a random direction unit vector, where the direction does not oppose the normal's direction (to trace ray scattering).
+ * @brief Generates a random direction unit vector to trace ray scattering.
  *
- * Randomization is based off a non-uniform cosine-based distribution where directions closer to the normal
+ * Randomization is cosine-weighted where directions closer to the normal
  * are prioritized.
  * @note Because scatter is only computed on incident rays from the outward-facing side, the incident and outward-facing
  * normals are the same.

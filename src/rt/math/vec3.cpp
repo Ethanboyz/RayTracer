@@ -1,11 +1,18 @@
 #include "rt/math/vec3.hpp"
 
 uvec3 scatter_uvec3(const uvec3& normal) {
-    // Direction = random unit vector in the direction of the normal (make sure it's not all near-zeros)
-    const uvec3 scattered_direction{Interval{0.f, 1.f}};
-
-    // Add by normal to ensure the scattered direction doesn't immediately intersect, randomized direction follows cos() distribution
-    return unit(scattered_direction + normal);
+    vec3 p;
+    while (true) {
+        p = {Utilities::random_float({-1, 1}), Utilities::random_float({-1, 1}), Utilities::random_float({-1, 1})};
+        if (dot(p, p) < 1.f) {
+            break;
+        }
+    }
+    vec3 result{p + nounit(normal)};
+    if (result.degenerate()) {
+        result = nounit(normal);
+    }
+    return unit(result);
 }
 
 uvec3 reflect_uvec3(const uvec3& v, const uvec3& normal) {

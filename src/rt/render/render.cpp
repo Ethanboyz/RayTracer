@@ -98,12 +98,12 @@ Color Renderer::ray_color(const Ray& ray, const int depth, const Hittable& world
     // Minimum of t = 0 so camera effectively looks forwards (not also backwards)
     if (!world.ray_hit(ray, Interval{0.001f, std::numeric_limits<float>::max()}, hit_record)) {
         // Background color dark
-        return Color{0.0, 0.0, 0.0};
+        return Color{0, 0, 0};
     }
 
     // Ray-object intersection, generate new child rays in random directions outwards from the surface
     const Color color_from_emission{hit_record.emitted()};
-    Color attenuation;
+    Color attenuation{};
     Ray next;
     if (!hit_record.bounce(ray, attenuation, next)) {
         return color_from_emission;
@@ -114,8 +114,9 @@ Color Renderer::ray_color(const Ray& ray, const int depth, const Hittable& world
 
 Ray Renderer::generate_ray(const int x, const int y) const {
     // Get a vector to a random point inside the pixel square centered at (i, j)
-    const float random_float{Utilities::random_float()};
-    const vec3 offset{random_float - 0.5f, random_float - 0.5f, 0};
+    const float random_x{Utilities::random_float()};
+    const float random_y{Utilities::random_float()};
+    const vec3 offset{random_x - 0.5f, random_y - 0.5f, 0};
 
     const coord3 horizontal_offset{(static_cast<float>(x) + offset.x()) * camera_.pixel_delta_u()};
     const coord3 vertical_offset{(static_cast<float>(y) + offset.y()) * camera_.pixel_delta_v()};

@@ -20,6 +20,15 @@ namespace Utilities {
         return distribution(engine);
     }
 
+    float random_normal_float(const Interval<float>& range) {
+        thread_local std::mt19937 engine{[] {
+            std::random_device rd;
+            return std::mt19937(rd());
+        }()};
+        std::normal_distribution distribution(range.min(), range.max());
+        return distribution(engine);
+    }
+
     int random_int(const Interval<int>& range) {
         return static_cast<int>(random_float(Interval{static_cast<float>(range.min()), static_cast<float>(range.max() + 1)}));
     }
