@@ -68,6 +68,12 @@ public:
      */
     bool bounce(const Ray& ray, Color& attenuation, Ray& next) const;
 
+    /**
+     * @brief Determines the color of the emitted light from the hit surface.
+     * @return Color of the emitted light (black if the hit Material doesn't emit anything).
+     */
+    [[nodiscard]] Color emitted() const;
+
 private:
     coord3 point_;                          // Coordinates of hit
     uvec3 normal_;                          // Normal of hit surface (outwards-facing)

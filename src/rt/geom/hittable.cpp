@@ -55,6 +55,9 @@ bool HitRecord::bounce(const Ray& ray, Color &attenuation, Ray &next) const {
         attenuation = Color{1, 1, 1};
         return true;
     }
-
     return false;
+}
+
+Color HitRecord::emitted() const {
+    return material_.albedo() * material_.emittance();
 }

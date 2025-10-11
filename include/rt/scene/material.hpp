@@ -24,7 +24,7 @@ public:
      * @param shininess Chance of non-absorbed rays that should be reflected specularly (0.0-1.0). Lower values = more diffuse.
      */
     constexpr static Material create_reflective_material(const Color& albedo, const float reflectance, const float shininess) noexcept {
-        return Material{albedo, 0, reflectance, shininess, 0, 0};
+        return Material{albedo, Emittance{0}, reflectance, shininess, Refraction{0}, RefractionIndex{0}};
     }
 
     /**
@@ -34,14 +34,23 @@ public:
      * @param refraction_index Refraction index of the Material.
      */
     constexpr static Material create_refractive_material(const Color& albedo, const float refraction, const float refraction_index) noexcept {
-        return Material{albedo, 0, 1 - refraction, 0, refraction, refraction_index};
+        return Material{albedo, Emittance{0}, Reflectance{1 - refraction}, Shininess{0}, refraction, refraction_index};
+    }
+
+    /**
+     * @brief Constructs a new light source Material.
+     * @param color Color of the emitted light.
+     * @param emittance Intensity of the emitted light.
+     */
+    constexpr static Material create_light(const Color& color, const float emittance) noexcept {
+        return Material{color, emittance, Reflectance{0}, Shininess{0}, Refraction{0}, RefractionIndex{0}};
     }
 
     // Accessors
     /** @return Base color of the Material. */
     [[nodiscard]] constexpr Color albedo() const noexcept { return albedo_; }
     /** @return Emittance of the Material. */
-    [[nodiscard]] constexpr float emittance() const noexcept { return shininess_; }
+    [[nodiscard]] constexpr float emittance() const noexcept { return emittance_; }
     /** @return Reflectance reflective component of the Material (0.0-1.0). */
     [[nodiscard]] constexpr float reflectance() const noexcept { return reflectance_; }
     /** @return Shininess reflective component of the Material (0.0-1.0). */
@@ -81,7 +90,7 @@ private:
      * @param refraction Chance of rays that should be refracted (0.0-1.0). Lower values = more opaque.
      * @param refraction_index Refraction index of the Material.
      */
-    constexpr Material(const Color &albedo, const float emittance, const float reflectance, const float shininess,  const float refraction, const float refraction_index) :
+    constexpr Material(const Color& albedo, const float emittance, const float reflectance, const float shininess,  const float refraction, const float refraction_index) :
         albedo_{albedo},
         emittance_{emittance},
         reflectance_{Interval{0.f, 1.f}.clamp(reflectance)},

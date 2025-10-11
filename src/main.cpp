@@ -16,17 +16,17 @@ using namespace std::chrono_literals;
 
 int main() {
     auto start{std::chrono::steady_clock::now()};
-    constexpr int num_samples{10};             // Increase for more samples = less noise but more compute
+    constexpr int num_samples{10000};             // Increase for more samples = less noise but more compute
     constexpr float aspect_ratio{16.f/9.f};
     constexpr int image_height{1080};
 
     Camera camera{
-        coord3{15, 10, 15},
-        coord3{10, 1, 10},
+        coord3{2, 2, -1},
+        coord3{0, 0, -1.7},
         uvec3{0, 1, 0},
-        15,
+        3,
         90,
-        5,
+        2,
         num_samples,
         aspect_ratio,
         image_height
@@ -36,21 +36,19 @@ int main() {
     HittableList world;
     constexpr float world_medium{1};    // Refraction index of the medium all objects are in (i.e. air ≈ 1)
 
+    Material light      {Material::create_light(Color{1.0, 1.0, 1.0}, Emittance{10.0})};
+
     Material smooth_red {Material::create_reflective_material(Color{1.0, 0.0, 0.0}, Reflectance{0.6}, Shininess{0.0})};
     Material shiny      {Material::create_reflective_material(Color{0.8, 0.8, 0.4}, Reflectance{1.0}, Shininess{0.7})};
     Material glass_blue {Material::create_refractive_material(Color{0.0, 0.0, 1.0}, Refraction{0.7}, RefractionIndex{1.5f / world_medium})};
+    Material green      {Material::create_reflective_material(Color{0.0, 1.0, 0.0}, Reflectance{1.0}, Shininess{0.0})};
 
+    world.add(make_shared<Sphere>(coord3{0.0, 2.0, -1.5},   Radius{0.5}, light));
     world.add(make_shared<Sphere>(coord3{0.0, 0.0, -2.0},   Radius{0.5}, smooth_red));
-    world.add(make_shared<Sphere>(coord3{0.7, -0.2, -1.0},  Radius{0.5}, shiny));
+    world.add(make_shared<Sphere>(coord3{0.7, -0.2, -0.5},  Radius{0.5}, shiny));
     world.add(make_shared<Sphere>(coord3{-1.5, 0.5, -3.0},  Radius{0.5}, smooth_red));
     world.add(make_shared<Sphere>(coord3{-0.7, -0.2, -1.5}, Radius{0.5}, glass_blue));
-
-    for (int i = -20; i < 20; i += 1) {
-        for (int j = -20; j < 20; j += 1) {
-            auto sphere{make_shared<Sphere>(coord3{static_cast<float>(j), -0.2, static_cast<float>(i)}, Radius{0.5}, glass_blue)};
-            world.add(sphere);
-        }
-    }
+    world.add(make_shared<Sphere>(coord3{0.0, -501, 0.0},   Radius{500}, green));
 
     const Renderer renderer{camera};
     world = HittableList(make_shared<Bvh>(world));          // Put objects into the BVH
