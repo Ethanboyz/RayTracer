@@ -1,18 +1,20 @@
 #include "rt/math/vec3.hpp"
 
 uvec3 scatter_uvec3(const uvec3& normal) {
-    vec3 p;
-    while (true) {
-        p = {Utilities::random_float({-1, 1}), Utilities::random_float({-1, 1}), Utilities::random_float({-1, 1})};
-        if (dot(p, p) < 1.f) {
-            break;
-        }
-    }
-    vec3 result{p + nounit(normal)};
-    if (result.degenerate()) {
-        result = nounit(normal);
-    }
-    return unit(result);
+    // Random point on a unit disk converted to polar coords distributed uniformly by area
+    const float r{std::sqrt(Utilities::random_float())};
+    const float phi{2.f * static_cast<float>(M_PI) * Utilities::random_float()};
+    const float x{r * std::cos(phi)};
+    const float y{r * std::sin(phi)};
+    const float z{std::sqrt(std::max(0.f, 1.f - r * r))};
+
+    // Orthonormal basis forms temp coord frame at the hit point
+    const uvec3 w{normal};
+    const uvec3 a{(std::fabs(w.x()) > 0.9f) ? uvec3{0,1,0} : uvec3{1,0,0}};
+    const uvec3 v{unit(cross(w, a))};
+    const uvec3 u{unit(cross(v, w))};
+
+    return unit(u*x + v*y + w*z);
 }
 
 uvec3 reflect_uvec3(const uvec3& v, const uvec3& normal) {

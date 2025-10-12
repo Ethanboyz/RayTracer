@@ -10,9 +10,6 @@ namespace Utilities {
     /** @return Random value between the bounds of the specified Interval range from a continuous uniform distribution. */
     float random_float(const Interval<float>& range);
 
-    /** @return Random value between the bounds of the specified Interval range from a normal (Gaussian) distribution. */
-    float random_normal_float(const Interval<float>& range);
-
     /** @return Random value between the bounds of the specified Interval range. */
     int random_int(const Interval<int>& range);
 

@@ -16,7 +16,7 @@ using namespace std::chrono_literals;
 
 int main() {
     auto start{std::chrono::steady_clock::now()};
-    constexpr int num_samples{50};             // Increase for more samples = less noise but more compute
+    constexpr int num_samples{10000};             // Increase for more samples = less noise but more compute
     constexpr float aspect_ratio{16.f/9.f};
     constexpr int image_height{1080};
 
@@ -26,7 +26,7 @@ int main() {
         uvec3{0, 1, 0},
         3,
         90,
-        2,
+        5,
         num_samples,
         aspect_ratio,
         image_height
@@ -45,10 +45,10 @@ int main() {
 
     world.add(make_shared<Sphere>(coord3{-1.2, 0.0, 0.7},   Radius{0.5}, light));
     world.add(make_shared<Sphere>(coord3{-2.0, 0.0, 2.5},   Radius{0.5}, smooth_red));
-    world.add(make_shared<Sphere>(coord3{0.7, -0.2, -0.5},  Radius{0.5}, shiny));
-    world.add(make_shared<Sphere>(coord3{-1.5, 0.5, -3.0},  Radius{0.5}, smooth_red));
-    world.add(make_shared<Sphere>(coord3{-0.7, -0.2, -1.5}, Radius{0.5}, glass_blue));
-    world.add(make_shared<Sphere>(coord3{0.0, -500.5, 0.0},   Radius{500}, green));
+    world.add(make_shared<Sphere>(coord3{1.0, 0.0, 2.0},  Radius{0.5}, shiny));
+    world.add(make_shared<Sphere>(coord3{-1.5, 0.0, -3.0},  Radius{0.5}, smooth_red));
+    world.add(make_shared<Sphere>(coord3{-0.7, 0.0, -1.5}, Radius{0.5}, glass_blue));
+    world.add(make_shared<Sphere>(coord3{0.0, -500.5, 0.0}, Radius{500}, green));
 
     const Renderer renderer{camera};
     world = HittableList(make_shared<Bvh>(world));          // Put objects into the BVH
