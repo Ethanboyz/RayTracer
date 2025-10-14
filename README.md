@@ -24,15 +24,14 @@ on cooking up.
 - [X] Sphere objects
     - [X] Surface normals
 - [X] Materials:
-    - [X] Colors
+    - [X] Color attenuation
     - [X] Diffuse reflection
     - [X] Specular reflection
     - [X] Refraction + total internal reflections + Schlick's
-    - [X] Color attenuation
 - [X] Shadows (through global illumination)
-- [ ] Emissive objects
+- [X] Emissive objects
 - [ ] Directional/environmental light
-- [ ] BVH to replace lists
+- [X] BVH to replace lists
 - [X] Antialiasing (sampling)
 - [X] Multithreaded pixel processing
 - [X] Camera coordinate frame
@@ -40,13 +39,18 @@ on cooking up.
 - [ ] Texture mapping?
 - [ ] More...
 ### Phase 2: Procedural Generation
-- [ ] Heightmaps & triangle meshes
-- [ ] Noise functions
+- [ ] Triangle meshes
+- [ ] Heightmaps & noise functions
 ### Phase 3: Volumetrics
 - [ ] Clouds
 - [ ] Water
 ### Phase 4: GPU Acceleration
-- [ ] CUDA/OpenMP port
-  - [ ] Sweet, sweet parallelism
-  - [ ] Performance benchmarking
+- [ ] CUDA port
+    - [ ] GPU-based materials system
+    - [ ] Faster BVH constructor
+    - [ ] Performance benchmarking
 ### Phase 5: Polish??
+- [ ] Config GUI
+- [ ] Denoising
+- [ ] Debug visualizations
+- [ ] Spectral rendering
