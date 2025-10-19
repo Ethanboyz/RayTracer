@@ -3,6 +3,7 @@
 
 #include "rt/scene/material.hpp"
 #include "rt/math/vec3.hpp"
+#include "rt/math/interval.hpp"
 class Ray;
 class Aabb;
 

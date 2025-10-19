@@ -39,7 +39,8 @@ on cooking up.
 - [ ] Texture mapping?
 - [ ] More...
 ### Phase 2: Procedural Generation
-- [ ] Triangle meshes
+- [X] Triangles
+- [ ] Meshes
 - [ ] Heightmaps & noise functions
 ### Phase 3: Volumetrics
 - [ ] Clouds

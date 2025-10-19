@@ -3,6 +3,7 @@
 
 #include <cassert>
 #include "rt/math/vec3.hpp"
+#include "rt/utilities.hpp"
 
 /**
  * @class Camera

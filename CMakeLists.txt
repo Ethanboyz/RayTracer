@@ -19,6 +19,7 @@ set(SOURCES
         src/rt/geom/hittable.cpp
         src/rt/geom/hittable_list.cpp
         src/rt/geom/sphere.cpp
+        src/rt/geom/triangle.cpp
         src/rt/math/vec3.cpp
         src/rt/render/render.cpp
 )

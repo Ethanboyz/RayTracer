@@ -51,6 +51,12 @@ public:
     /** @return True if x is within the interval range (inclusive). */
     [[nodiscard]] constexpr bool inclusive_contains(const T x) const noexcept { return min_ <= x && x <= max_; }
 
+    /** @return True if x is within the interval range (inclusive) with epsilon tolerance. */
+    [[nodiscard]] constexpr bool inclusive_contains(const T x, float epsilon) const noexcept {
+        epsilon = std::fmin(std::fabs(epsilon), range());
+        return min_ <= x + std::fabs(epsilon) && x <= max_ - std::fabs(epsilon);
+    }
+
     /** @return True if x is within the interval range (exclusive). */
     [[nodiscard]] constexpr bool exclusive_contains(const T x) const noexcept { return min_ < x && x < max_; }
 

@@ -1,4 +1,5 @@
 #include "rt/math/vec3.hpp"
+#include "rt/utilities.hpp"
 
 uvec3 scatter_uvec3(const uvec3& normal) {
     // Random point on a unit disk converted to polar coords distributed uniformly by area

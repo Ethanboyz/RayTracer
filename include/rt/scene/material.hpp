@@ -2,6 +2,8 @@
 #define MATERIAL_H
 
 #include "rt/math/vec3.hpp"
+#include "rt/math/interval.hpp"
+
 class Ray;
 
 using Emittance = float;

@@ -1,11 +1,9 @@
 #ifndef VEC3_H
 #define VEC3_H
 
-#include <cassert>
 #include <cmath>
 #include <functional>
 #include <iostream>
-#include "rt/utilities.hpp"
 
 class HitRecord;
 

@@ -1,7 +1,9 @@
 #ifndef SPHERE_H
 #define SPHERE_H
 
-#include "hittable.hpp"
+#include "rt/geom/hittable.hpp"
+#include "rt/geom/aabb.hpp"
+#include "rt/math/interval.hpp"
 
 class Aabb;
 
@@ -22,7 +24,12 @@ public:
     Sphere(const coord3& center, const float radius, const Material& material) :
         center_{center},
         radius_{radius},
-        material_{material} {}
+        material_{material},
+        bbox_{Aabb{
+            Interval{center_.x() - radius_, center_.x() + radius_},
+            Interval{center_.y() - radius_, center_.y() + radius_},
+            Interval{center_.z() - radius_, center_.z() + radius_}
+        }} {}
 
     // Accessors
     /** @return Coordinate position of the Sphere's center. */
@@ -45,12 +52,13 @@ public:
      * @brief Calculates an aabb bounding box for the current Sphere.
      * @return AABB that encompasses the current Sphere.
      */
-    [[nodiscard]] Aabb bounding_box() const override;
+    [[nodiscard]] Aabb bounding_box() const override { return bbox_; };
 
 private:
     coord3 center_;         // Coordinate position of sphere's center
     float radius_;          // Sphere's radius
     Material material_;     // Material of sphere
+    Aabb bbox_;             // Minimum-sized axis-aligned bounding box
 };
 
 #endif

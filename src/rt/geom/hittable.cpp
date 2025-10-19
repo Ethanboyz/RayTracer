@@ -1,5 +1,6 @@
 #include "rt/geom/hittable.hpp"
 #include "rt/math/ray.hpp"
+#include "rt/utilities.hpp"
 
 constexpr HitRecord::HitRecord(const coord3& point, const uvec3& normal, const float t, const bool front_face, const Material& material)
   : point_{point},

@@ -7,6 +7,7 @@
 #include "rt/geom/hittable_list.hpp"
 #include "rt/math/vec3.hpp"
 #include "rt/geom/sphere.hpp"
+#include "rt/geom/triangle.hpp"
 #include "rt/render/render.hpp"
 
 using std::make_shared;
@@ -21,8 +22,8 @@ int main() {
     constexpr int image_height{1080};
 
     Camera camera{
-        coord3{2, 2, -1.5},
-        coord3{-1, 0, 0.5},
+        coord3{2, 2, -1},
+        coord3{-1, 0, 0},
         uvec3{0, 1, 0},
         3,
         90,
@@ -49,6 +50,11 @@ int main() {
     world.add(make_shared<Sphere>(coord3{-1.5, 0.0, -3.0},  Radius{0.5}, smooth_red));
     world.add(make_shared<Sphere>(coord3{-0.7, 0.0, -1.5}, Radius{0.5}, glass_blue));
     world.add(make_shared<Sphere>(coord3{0.0, -500.5, 0.0}, Radius{500}, green));
+
+    constexpr coord3 vertex_a{0.0, 0, 0.0};
+    constexpr coord3 vertex_b{1.0, 0, 0.0};
+    constexpr coord3 vertex_c{1.0, 0, 2.0};
+    world.add(make_shared<Triangle>(vertex_a, vertex_b, vertex_c, smooth_red));
 
     const Renderer renderer{camera};
     world = HittableList(make_shared<Bvh>(world));          // Put objects into the BVH

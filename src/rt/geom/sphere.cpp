@@ -20,17 +20,10 @@ bool Sphere::ray_hit(const Ray& ray, const Interval<float>& t, HitRecord& hit_re
         }
     }
 
-    // Initialize all HitRecord fields before returning (light_intensity is set elsewhere)
+    // Initialize all HitRecord fields before returning
     hit_record.point(ray.position(calculated_t));
     hit_record.t(calculated_t);
     hit_record.set_face_normal(ray, unit(hit_record.point() - center_));
     hit_record.material(material_);
     return true;
-}
-
-Aabb Sphere::bounding_box() const {
-    const Interval x{center_.x() - radius_, center_.x() + radius_};
-    const Interval y{center_.y() - radius_, center_.y() + radius_};
-    const Interval z{center_.z() - radius_, center_.z() + radius_};
-    return Aabb{x, y, z};
 }
