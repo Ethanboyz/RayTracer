@@ -6,8 +6,9 @@
 #include "rt/geom/hittable_list.hpp"
 #include "rt/math/vec3.hpp"
 
-static constexpr int ASSIGN_PIXELS{32};     // Work (number of pixels) to assign at a time to a ray/worker thread
-static constexpr int RAY_DEPTH{16};         // Max number of ray bounces per ray
+static constexpr int ASSIGN_PIXELS{32};                       // Work (number of pixels) to assign at a time to a ray/worker thread
+static constexpr int RAY_DEPTH{16};                           // Max number of ray bounces per ray
+static constexpr Color BACKGROUND_COLOR{0.01, 0.01, 0.01};       // Effective ambient color
 
 // Multithreaded pixel handling
 void Renderer::render(const HittableList& world) const {
@@ -97,8 +98,7 @@ Color Renderer::ray_color(const Ray& ray, const int depth, const Hittable& world
     }
     // Minimum of t = 0 so camera effectively looks forwards (not also backwards)
     if (!world.ray_hit(ray, Interval{0.001f, std::numeric_limits<float>::max()}, hit_record)) {
-        // Background color dark
-        return Color{0, 0, 0};
+        return BACKGROUND_COLOR;
     }
 
     // Ray-object intersection, generate new child rays in random directions outwards from the surface

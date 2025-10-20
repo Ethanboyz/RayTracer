@@ -17,17 +17,17 @@ using namespace std::chrono_literals;
 
 int main() {
     auto start{std::chrono::steady_clock::now()};
-    constexpr int num_samples{10000};             // Increase for more samples = less noise but more compute
+    constexpr int num_samples{100};             // Increase for more samples = less noise but more compute
     constexpr float aspect_ratio{16.f/9.f};
     constexpr int image_height{1080};
 
     Camera camera{
-        coord3{2, 2, -1},
+        coord3{2, 1, 0},
         coord3{-1, 0, 0},
         uvec3{0, 1, 0},
-        3,
+        2.1,
         90,
-        5,
+        2,
         num_samples,
         aspect_ratio,
         image_height
@@ -40,21 +40,29 @@ int main() {
     Material light      {Material::create_light(Color{1.0, 1.0, 1.0}, Emittance{10.0})};
 
     Material smooth_red {Material::create_reflective_material(Color{1.0, 0.0, 0.0}, Reflectance{0.6}, Shininess{0.0})};
-    Material shiny      {Material::create_reflective_material(Color{0.8, 0.8, 0.4}, Reflectance{1.0}, Shininess{0.7})};
+    Material shiny      {Material::create_reflective_material(Color{0.9, 0.9, 0.9}, Reflectance{1.0}, Shininess{0.9})};
     Material glass_blue {Material::create_refractive_material(Color{0.0, 0.0, 1.0}, Refraction{0.7}, RefractionIndex{1.5f / world_medium})};
     Material green      {Material::create_reflective_material(Color{0.0, 1.0, 0.0}, Reflectance{1.0}, Shininess{0.0})};
 
-    world.add(make_shared<Sphere>(coord3{-1.2, 0.0, 0.7},   Radius{0.5}, light));
-    world.add(make_shared<Sphere>(coord3{-2.0, 0.0, 2.5},   Radius{0.5}, smooth_red));
-    world.add(make_shared<Sphere>(coord3{1.0, 0.0, 2.0},  Radius{0.5}, shiny));
-    world.add(make_shared<Sphere>(coord3{-1.5, 0.0, -3.0},  Radius{0.5}, smooth_red));
-    world.add(make_shared<Sphere>(coord3{-0.7, 0.0, -1.5}, Radius{0.5}, glass_blue));
-    world.add(make_shared<Sphere>(coord3{0.0, -500.5, 0.0}, Radius{500}, green));
+    world.add(make_shared<Sphere>(coord3{0.5, 0.5, 0.5},   Radius{0.1}, light));
+    world.add(make_shared<Sphere>(coord3{-2.0, 0.5, 2.5},   Radius{0.5}, smooth_red));
+    world.add(make_shared<Sphere>(coord3{-1.5, 0.5, -3.0},  Radius{0.5}, smooth_red));
+    world.add(make_shared<Sphere>(coord3{-0.7, 0.5, -1.5}, Radius{0.5}, glass_blue));
+    world.add(make_shared<Sphere>(coord3{0.0, -500, 0.0}, Radius{500}, green));
 
-    constexpr coord3 vertex_a{0.0, 0, 0.0};
-    constexpr coord3 vertex_b{1.0, 0, 0.0};
-    constexpr coord3 vertex_c{1.0, 0, 2.0};
+    coord3 vertex_a{1.0, 1.0, -0.5};
+    coord3 vertex_b{1.0, 0.0, -0.5};
+    coord3 vertex_c{1.0, 0.0, 1.5};
+    //world.add(make_shared<Triangle>(vertex_a, vertex_b, vertex_c, smooth_red));
     world.add(make_shared<Triangle>(vertex_a, vertex_b, vertex_c, smooth_red));
+
+    // Mirror
+    vertex_a = {0.0, 1.0, -0.5};
+    vertex_b = {0.0, 0.0, -0.5};
+    vertex_c = {0.0, 0.0, 1.5};
+    world.add(make_shared<Triangle>(vertex_a, vertex_b, vertex_c, shiny));
+    vertex_b = {0.0, 1.0, 1.5};
+    world.add(make_shared<Triangle>(vertex_a, vertex_b, vertex_c, shiny));
 
     const Renderer renderer{camera};
     world = HittableList(make_shared<Bvh>(world));          // Put objects into the BVH
