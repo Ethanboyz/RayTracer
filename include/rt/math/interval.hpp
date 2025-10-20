@@ -1,7 +1,6 @@
 #ifndef INTERVAL_H
 #define INTERVAL_H
 
-#include <limits>
 #include <type_traits>
 
 /**

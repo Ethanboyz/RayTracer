@@ -44,16 +44,15 @@ int main() {
     Material glass_blue {Material::create_refractive_material(Color{0.0, 0.0, 1.0}, Refraction{0.7}, RefractionIndex{1.5f / world_medium})};
     Material green      {Material::create_reflective_material(Color{0.0, 1.0, 0.0}, Reflectance{1.0}, Shininess{0.0})};
 
-    world.add(make_shared<Sphere>(coord3{0.5, 0.5, 0.5},   Radius{0.1}, light));
+    world.add(make_shared<Sphere>(coord3{0.5, 0.5, 0.5},    Radius{0.1}, light));
     world.add(make_shared<Sphere>(coord3{-2.0, 0.5, 2.5},   Radius{0.5}, smooth_red));
     world.add(make_shared<Sphere>(coord3{-1.5, 0.5, -3.0},  Radius{0.5}, smooth_red));
-    world.add(make_shared<Sphere>(coord3{-0.7, 0.5, -1.5}, Radius{0.5}, glass_blue));
-    world.add(make_shared<Sphere>(coord3{0.0, -500, 0.0}, Radius{500}, green));
+    world.add(make_shared<Sphere>(coord3{-0.7, 0.5, -1.5},  Radius{0.5}, glass_blue));
+    world.add(make_shared<Sphere>(coord3{0.0, -500, 0.0},   Radius{500}, green));
 
     coord3 vertex_a{1.0, 1.0, -0.5};
     coord3 vertex_b{1.0, 0.0, -0.5};
     coord3 vertex_c{1.0, 0.0, 1.5};
-    //world.add(make_shared<Triangle>(vertex_a, vertex_b, vertex_c, smooth_red));
     world.add(make_shared<Triangle>(vertex_a, vertex_b, vertex_c, smooth_red));
 
     // Mirror

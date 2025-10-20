@@ -8,8 +8,7 @@ bool Triangle::ray_hit(const Ray& ray, const Interval<float>& t, HitRecord& hit_
     const float det{dot(ab, ray_cross_ac)};
 
     // Ray parallel to triangle = never intersects
-    constexpr float epsilon{1e-6};
-    if (std::fabs(det) < epsilon) {
+    if (std::fabs(det) < 1e-8) {
         return false;
     }
 
@@ -17,16 +16,16 @@ bool Triangle::ray_hit(const Ray& ray, const Interval<float>& t, HitRecord& hit_
     const vec3 r{ray.origin() - a_};
 
     const float u{inv_det * dot(r, ray_cross_ac)};
-    if (constexpr Interval interval{0.f, 1.f}; !interval.inclusive_contains(u, epsilon)) {
+    if (constexpr Interval interval{0.f, 1.f}; !interval.inclusive_contains(u, 1e-6)) {
         return false;
     }
     const vec3 r_cross_ab{cross(r, ab)};
-    if (const float v{inv_det * dot(ray.direction(), r_cross_ab)}; v < -epsilon || u + v > 1 + epsilon) {
+    if (const float v{inv_det * dot(ray.direction(), r_cross_ab)}; v < -1e-6 || u + v > 1 + 1e-6) {
         return false;
     }
 
     const float ray_t{inv_det * dot(ac, r_cross_ab)};
-    if (!t.inclusive_contains(ray_t, epsilon)) {
+    if (!t.inclusive_contains(ray_t, 1e-4)) {
         return false;
     }
     // Initialize all HitRecord fields before returning
