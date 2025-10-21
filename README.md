@@ -30,7 +30,7 @@ on cooking up.
     - [X] Refraction + total internal reflections + Schlick's
 - [X] Shadows (through global illumination)
 - [X] Emissive objects
-- [ ] Directional/environmental light
+- [ ] Better directional/environmental light
 - [X] BVH to replace lists
 - [X] Antialiasing (sampling)
 - [X] Multithreaded pixel processing
@@ -40,8 +40,11 @@ on cooking up.
 - [ ] More...
 ### Phase 2: Procedural Generation
 - [X] Triangles
-- [ ] Meshes
-- [ ] Heightmaps & noise functions
+- [ ] Base terrain heightfields
+  - [ ] Noise functions
+  - [ ] Erosion?
+- [ ] Triangle meshes
+  - [ ] Instancing?
 ### Phase 3: Volumetrics
 - [ ] Clouds
 - [ ] Water

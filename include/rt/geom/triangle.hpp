@@ -7,12 +7,13 @@
 using std::fmin;
 using std::fmax;
 
+/**
+ * @class Triangle
+ * @brief Triangle object.
+ */
 class Triangle final : public Hittable {
 public:
-    /**
-     * @brief Constructs a new Triangle with the specified vertices a, b, c.
-     * @note The outside of the Triangle will be on the face where the vertices are in counter-clockwise order, from a to c.
-     */
+    /** @brief Constructs a new double-sided Triangle with the specified vertices a, b, c. */
     constexpr Triangle(const coord3& a, const coord3& b, const coord3& c, const Material& material) :
         a_{a},
         b_{b},

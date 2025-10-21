@@ -36,7 +36,7 @@ public:
      * @brief Adds a new Hittable to the current HittableList.
      * @param object Hittable object to be added.
      */
-    void add(shared_ptr<Hittable> object);
+    void add(const shared_ptr<Hittable>& object);
 
     /** @return Aabb that encompasses the objects in the HittableList. */
     [[nodiscard]] Aabb bounding_box() const override { return bbox_; }

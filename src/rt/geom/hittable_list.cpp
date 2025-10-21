@@ -1,7 +1,7 @@
 #include "rt/geom/hittable_list.hpp"
 
 // Add object to vector of objects, then add it's bounding box to list's bounding box
-void HittableList::add(shared_ptr<Hittable> object) {
+void HittableList::add(const shared_ptr<Hittable>& object) {
     objects_.push_back(object);
     bbox_ = Aabb{bbox_, object->bounding_box()};
 }
