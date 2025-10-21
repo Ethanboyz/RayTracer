@@ -8,7 +8,7 @@
 
 static constexpr int ASSIGN_PIXELS{32};                       // Work (number of pixels) to assign at a time to a ray/worker thread
 static constexpr int RAY_DEPTH{16};                           // Max number of ray bounces per ray
-static constexpr Color BACKGROUND_COLOR{0.01, 0.01, 0.01};       // Effective ambient color
+static constexpr Color BACKGROUND_COLOR{0.04, 0.04, 0.04};       // Effective ambient color
 
 // Multithreaded pixel handling
 void Renderer::render(const HittableList& world) const {
