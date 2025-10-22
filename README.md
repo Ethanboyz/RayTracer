@@ -22,9 +22,9 @@ on cooking up.
 ### Phase 1: Baseline Ray Tracing
 - [X] Ray generation (backwards ray tracing)
 - [X] Sphere objects
-    - [X] Surface normals
+ - [X] Surface normals
 - [X] Materials:
-    - [X] Color attenuation
+  - [X] Color attenuation
     - [X] Diffuse reflection
     - [X] Specular reflection
     - [X] Refraction + total internal reflections + Schlick's
@@ -32,6 +32,7 @@ on cooking up.
 - [X] Emissive objects
 - [ ] Better directional/environmental light
 - [X] BVH to replace lists
+  - [ ] SAH object splitting
 - [X] Antialiasing (sampling)
 - [X] Multithreaded pixel processing
 - [X] Camera coordinate frame
@@ -40,10 +41,13 @@ on cooking up.
 - [ ] More...
 ### Phase 2: Procedural Generation
 - [X] Triangles
-- [ ] Base terrain heightfields
+- [X] Base terrain heightmaps
+  - [X] Triangle mesh construction
   - [ ] Noise functions
+    - [ ] Perlin
+    - [ ] Fractal
+    - [ ] Simplex
   - [ ] Erosion?
-- [ ] Triangle meshes
   - [ ] Instancing?
 ### Phase 3: Volumetrics
 - [ ] Clouds
