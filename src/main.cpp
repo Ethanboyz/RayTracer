@@ -1,7 +1,7 @@
 #include <chrono>
 #include <memory>
 #include <thread>
-
+#include <random>
 #include "rt/geom/bvh.hpp"
 #include "rt/render/camera.hpp"
 #include "rt/geom/hittable_list.hpp"
@@ -33,6 +33,10 @@ int main() {
         aspect_ratio,
         image_height
     };
+    std::random_device rd;
+    uint64_t seed{rd()};
+    Utilities::seed_random_generator(seed);
+    std::cout << "Seed: " << seed << std::endl;
 
     // Setup the world and 3d objects
     HittableList world;

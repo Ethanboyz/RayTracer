@@ -2,26 +2,18 @@
 #include "rt/utilities.hpp"
 
 namespace Utilities {
+    static thread_local std::mt19937_64 engine{};
+    void seed_random_generator(const uint64_t seed) {
+        engine.seed(seed);
+    }
+
     float random_float() {
-        thread_local std::mt19937 engine{[] {
-            std::random_device rd;
-            return std::mt19937(rd());
-        }()};
-        std::uniform_real_distribution distribution(0.f, 1.f);
+        thread_local std::uniform_real_distribution distribution(0.f, 1.f);
         return distribution(engine);
     }
 
     float random_float(const Interval<float>& range) {
-        thread_local std::mt19937 engine{[] {
-            std::random_device rd;
-            return std::mt19937(rd());
-        }()};
-        std::uniform_real_distribution distribution(range.min(), range.max());
-        return distribution(engine);
-    }
-
-    int random_int(const Interval<int>& range) {
-        return static_cast<int>(random_float(Interval{static_cast<float>(range.min()), static_cast<float>(range.max() + 1)}));
+        return range.min() + (range.max() - range.min()) * random_float();
     }
 
     float degrees_to_radians(const float degrees) {
