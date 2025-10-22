@@ -18,7 +18,7 @@ using namespace std::chrono_literals;
 
 int main() {
     auto start{std::chrono::steady_clock::now()};
-    constexpr int num_samples{10000};             // Increase for more samples = less noise but more compute
+    constexpr int num_samples{50};             // Increase for more samples = less noise but more compute
     constexpr float aspect_ratio{16.f/9.f};
     constexpr int image_height{1080};
 
@@ -49,8 +49,8 @@ int main() {
     world.add(make_shared<Sphere>(coord3{0, 1, 0},  Radius{1}, glass_blue));
 
     // Ground
-    Heightmap map{{-10, -1, -10}, 20, 20};
-    for (std::vector ground_triangles{map.construct_map(green)}; shared_ptr triangle : ground_triangles) {
+    Heightmap map{{-10, -1, -10}, 0.2, 100, 100};
+    for (std::vector ground_triangles{map.construct_map(green)}; const shared_ptr<Triangle>& triangle : ground_triangles) {
         world.add(triangle);
     }
 

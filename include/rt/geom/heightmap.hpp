@@ -8,6 +8,7 @@
 class Triangle;
 
 using std::shared_ptr;
+using std::function;
 
 /**
  * @class Heightmap
@@ -17,12 +18,19 @@ class Heightmap {
 public:
     /**
      * @brief Constructs a new Heightmap represented by a flat 2D grid of vertex heights.
-     * @param corner Corner coordinates, where the first vertex will be. Coordinates should consist of whole numbers.
-     * @param length Length of the Heightmap grid.
-     * @param width Width of the Heightmap grid.
+     * @param corner Corner coordinates, where the first vertex will be.
+     * @param grid_square_length Length of each grid square in the Heightmap.
+     * @param length Length of the Heightmap grid, in number of grid squares.
+     * @param width Width of the Heightmap grid, in number of grid squares.
      */
-    constexpr Heightmap(const coord3& corner, const int length, const int width) :
-        corner_{coord3{truncf(corner.x()), truncf(corner.y()), truncf(corner.z())}},
+    Heightmap(
+        const coord3& corner,
+        const float grid_square_length,
+        const int length,
+        const int width
+        ) :
+        corner_{coord3{corner.x(), corner.y(), corner.z()}},
+        grid_square_len_{grid_square_length},
         length_{std::max(1, length)},
         width_{std::max(1, width)} {
         vertices_heights_.resize(length_ * width_);
@@ -41,8 +49,9 @@ public:
      */
     [[nodiscard]] std::vector<shared_ptr<Triangle>> construct_map(const Material& material) const;
 private:
-    coord3 corner_;
-    int length_, width_;
+    coord3 corner_;                         // Location of first grid square
+    float grid_square_len_;                 // Length of each grid square
+    int length_, width_;                    // Num of grid squares per length/width
     std::vector<float> vertices_heights_;   // Vertices stored effectively in "heightmap-space" (relative to heightmap grid)
 
     /** @return Height value (0.0-1.0) of a specified x and y-coordinate pair in heightmap-space. */

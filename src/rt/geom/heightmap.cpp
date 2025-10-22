@@ -8,11 +8,13 @@ std::vector<shared_ptr<Triangle>> Heightmap::construct_map(const Material& mater
     std::vector<shared_ptr<Triangle>> triangles;
     int vertex = 0;
     // Iterate through each vertex one width at a time (each iterated vertex is the upper left corner of a quad)
-    for (int z = 0; z < length_ - 1; z += 1) {
-        for (int x = 0; x < width_ - 1; x += 1) {
+    for (int z = 0; z < length_ - 1; z++) {
+        for (int x = 0; x < width_ - 1; x++) {
             // Construct two triangles that make up the grid square
-            const float left_x{x + corner_.x()}, right_x{x + corner_.x() + 1};
-            const float up_z{z + corner_.z()}, low_z{z + corner_.z() + 1};
+            const float left_x{grid_square_len_ * static_cast<float>(x) + corner_.x()};
+            const float right_x{grid_square_len_ * static_cast<float>(x + 1) + corner_.x()};
+            const float up_z{grid_square_len_ * static_cast<float>(z) + corner_.z()};
+            const float low_z{grid_square_len_ * static_cast<float>(z + 1) + corner_.z()};
 
             const coord3 up_left{left_x, vertices_heights_[vertex], up_z};
             const coord3 up_right{right_x, vertices_heights_[vertex + 1], up_z};
