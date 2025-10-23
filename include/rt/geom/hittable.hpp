@@ -89,7 +89,6 @@ private:
  */
 class Hittable {
 public:
-
     virtual ~Hittable() = default;
 
     /**

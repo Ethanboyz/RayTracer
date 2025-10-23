@@ -23,6 +23,8 @@ set(SOURCES
         src/rt/geom/triangle.cpp
         src/rt/math/vec3.cpp
         src/rt/render/render.cpp
+
+        src/terrain/noise/opensimplex2s.cpp
 )
 add_executable(RayTracer ${SOURCES})
 target_include_directories(RayTracer PUBLIC include)

@@ -1,12 +1,14 @@
 #ifndef RENDER_H
 #define RENDER_H
 
-#include <fstream>
 #include "rt/render/camera.hpp"
+class OpenSimplex2S;
 class HitRecord;
 class Ray;
 class Hittable;
 class HittableList;
+
+using std::function;
 
 /**
  * @class Renderer
@@ -35,6 +37,15 @@ public:
      * @param world All the Hittable objects to include in the render.
      */
     void render(const HittableList& world) const;
+
+    /**
+     * @brief Render noise map to a .ppm image file.
+     *
+     * Sequentially shades a noise map for each pixel, where lighter grayscales represent higher noise output.
+     * @param simplex Noise to be mapped.
+     * @param freq Noise map frequency, increase to get more noise features per render.
+     */
+    void render(const OpenSimplex2S &simplex, int freq) const;
 
 private:
     int image_width_;           // Number of rays to generate per row
@@ -72,8 +83,9 @@ private:
      * @brief Outputs all image pixel data to a ppm file.
      * @param filename The name of the file containing the completed render.
      * @param pixels All the colored pixels to be written to the image file.
+     * @param gamma Set to true for linear to gamma conversion.
      */
-    void write_to_file(const std::string& filename, const std::vector<Color>& pixels) const;
+    void write_to_file(const std::string& filename, const std::vector<Color>& pixels, bool gamma) const;
 };
 
 #endif

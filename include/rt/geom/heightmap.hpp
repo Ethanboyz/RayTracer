@@ -3,7 +3,6 @@
 
 #include <memory>
 #include "hittable.hpp"
-#include "rt/utilities.hpp"
 
 class Triangle;
 
@@ -18,12 +17,14 @@ class Heightmap {
 public:
     /**
      * @brief Constructs a new Heightmap represented by a flat 2D grid of vertex heights.
+     * @param noise Noise function that will determine the procedural pattern of heights in the Heightmap.
      * @param corner Corner coordinates, where the first vertex will be.
      * @param grid_square_length Length of each grid square in the Heightmap.
      * @param length Length of the Heightmap grid, in number of grid squares.
      * @param width Width of the Heightmap grid, in number of grid squares.
      */
-    Heightmap(
+    constexpr Heightmap(
+        const function<double(double, double)>& noise,
         const coord3& corner,
         const float grid_square_length,
         const int length,
@@ -53,11 +54,6 @@ private:
     float grid_square_len_;                 // Length of each grid square
     int length_, width_;                    // Num of grid squares per length/width
     std::vector<float> vertices_heights_;   // Vertices stored effectively in "heightmap-space" (relative to heightmap grid)
-
-    /** @return Height value (0.0-1.0) of a specified x and y-coordinate pair in heightmap-space. */
-    static float noise([[maybe_unused]] const int x, [[maybe_unused]] const int z) {
-        return Utilities::random_float();
-    }
 };
 
 #endif

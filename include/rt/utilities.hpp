@@ -2,6 +2,7 @@
 #define UTILITIES_H
 
 #include "math/interval.hpp"
+#include <cstdint>
 
 namespace Utilities {
     /** @brief Seed the random value generator for when the random_float() functions are called. */

@@ -1,16 +1,18 @@
 #include <thread>
 #include <format>
+#include <fstream>
 #include "rt/render/render.hpp"
 #include "rt/utilities.hpp"
 #include "rt/math/ray.hpp"
 #include "rt/geom/hittable_list.hpp"
 #include "rt/math/vec3.hpp"
+#include "terrain/noise/opensimplex2s.hpp"
 
-static constexpr int ASSIGN_PIXELS{32};                       // Work (number of pixels) to assign at a time to a ray/worker thread
-static constexpr int RAY_DEPTH{8};                           // Max number of ray bounces per ray
-static constexpr Color BACKGROUND_COLOR{0.04, 0.04, 0.04};       // Effective ambient color
+static constexpr int ASSIGN_PIXELS{32};                                 // Work (number of pixels) to assign at a time to a ray/worker thread
+static constexpr int RAY_DEPTH{4};                                      // Max number of ray bounces per ray
+static constexpr Color BACKGROUND_COLOR{0.04, 0.04, 0.04};        // Effective ambient color
 
-// Multithreaded pixel handling
+// Draw pixels into a .ppm image file (multithreaded pixel handling with a sort of work queue)
 void Renderer::render(const HittableList& world) const {
     const unsigned ray_threads{std::max(1u, std::thread::hardware_concurrency() - 1)};  // Reserve 1 thread for logging
     std::cout << "This system can support " << ray_threads + 1 << " threads." << std::endl;
@@ -74,10 +76,30 @@ void Renderer::render(const HittableList& world) const {
                 }
             });
         }
-    }
+    }   // Auto-join threads, start coloring
     // Done generating rays, write pixel colors to file
-    write_to_file("image.ppm", pixel_colors);
+    write_to_file("image.ppm", pixel_colors, true);
     std::cout << "\rWrote to image.ppm" << std::endl;
+}
+
+// Get noise values and draw results into a .ppm image file
+void Renderer::render(const OpenSimplex2S& simplex, const int freq) const {
+    const size_t num_pixels = image_width_ * image_height_;
+    std::vector<Color> pixel_colors;
+    pixel_colors.reserve(num_pixels);
+
+    for (int i = 0; i < image_height_; i++) {
+        for (int j = 0; j < image_width_; j++) {
+            const double x(static_cast<double>(j) / image_width_ * freq);
+            const double y(static_cast<double>(i) / image_height_ * freq);
+            const double output{(simplex.noise2(x, y) + 1.f) / 2};
+            const float grayscale{static_cast<float>(output)};
+            pixel_colors.emplace_back(grayscale , grayscale, grayscale);
+        }
+    }
+
+    write_to_file("noise.ppm", pixel_colors, false);
+    std::cout << "Wrote to noise.ppm" << std::endl;
 }
 
 Color Renderer::pixel_color(const int x, const int y, const HittableList& world) const {
@@ -112,6 +134,8 @@ Color Renderer::ray_color(const Ray& ray, const int depth, const Hittable& world
     return attenuation * ray_color(next, depth - 1, world) + color_from_emission;
 }
 
+/* Generate a primary ray which influences its pixel's final color.
+ * Behavior upon intersection with an object depends on its Material. */
 Ray Renderer::generate_ray(const int x, const int y) const {
     // Get a vector to a random point inside the pixel square centered at (i, j)
     const float random_x{Utilities::random_float()};
@@ -126,7 +150,8 @@ Ray Renderer::generate_ray(const int x, const int y) const {
     return {ray_origin, unit(pixel_sample - ray_origin)};
 }
 
-void Renderer::write_to_file(const std::string& filename, const std::vector<Color>& pixels) const {
+// Writes a complete vector of pixel colors to a .ppm file with optional gamma color correction
+void Renderer::write_to_file(const std::string& filename, const std::vector<Color>& pixels, const bool gamma) const {
     std::ofstream out{filename, std::ios_base::binary};
     if (!out) {
         const std::error_code error{errno, std::generic_category()};
@@ -142,14 +167,17 @@ void Renderer::write_to_file(const std::string& filename, const std::vector<Colo
         float b{pixel.z()};
 
         // Gamma color correction (linear to gamma conversion)
-        constexpr float gamma{2.2f};
-        r = std::pow(std::fabs(r), 1 / gamma);
-        g = std::pow(std::fabs(g), 1 / gamma);
-        b = std::pow(std::fabs(b), 1 / gamma);
+        if (gamma) {
+            constexpr float gm{2.2f};
+            r = std::pow(std::fabs(r), 1 / gm);
+            g = std::pow(std::fabs(g), 1 / gm);
+            b = std::pow(std::fabs(b), 1 / gm);
+        }
         constexpr Interval color_intensity{0.f, 0.999f};
         outbuf.push_back(static_cast<uint8_t>(256 * color_intensity.clamp(r)));
         outbuf.push_back(static_cast<uint8_t>(256 * color_intensity.clamp(g)));
         outbuf.push_back(static_cast<uint8_t>(256 * color_intensity.clamp(b)));
     }
     out.write(reinterpret_cast<const char*>(outbuf.data()), static_cast<long>(outbuf.size()));
+    out.close();
 }

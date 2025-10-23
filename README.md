@@ -43,12 +43,11 @@ on cooking up.
 - [X] Triangles
 - [X] Base terrain heightmaps
   - [X] Triangle mesh construction
-  - [ ] Noise functions
-    - [ ] Perlin
-    - [ ] Fractal
-    - [ ] Simplex
+  - [X] Noise functions
+    - [X] Opensimplex
   - [ ] Erosion?
   - [ ] Instancing?
+- Alternative acceleration structure
 ### Phase 3: Volumetrics
 - [ ] Clouds
 - [ ] Water

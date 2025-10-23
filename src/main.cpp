@@ -10,6 +10,7 @@
 #include "rt/geom/triangle.hpp"
 #include "rt/render/render.hpp"
 #include "rt/geom/heightmap.hpp"
+#include "terrain/noise/opensimplex2s.hpp"
 
 using std::make_shared;
 using std::shared_ptr;
@@ -18,7 +19,7 @@ using namespace std::chrono_literals;
 
 int main() {
     auto start{std::chrono::steady_clock::now()};
-    constexpr int num_samples{50};             // Increase for more samples = less noise but more compute
+    constexpr int num_samples{5000};             // Increase for more samples = less noise but more compute
     constexpr float aspect_ratio{16.f/9.f};
     constexpr int image_height{1080};
 
@@ -39,6 +40,7 @@ int main() {
     std::cout << "Seed: " << seed << std::endl;
 
     // Setup the world and 3d objects
+    const Renderer renderer{camera};
     HittableList world;
     constexpr float world_medium{1};    // Refraction index of the medium all objects are in (i.e. air ≈ 1)
 
@@ -50,15 +52,26 @@ int main() {
     world.add(make_shared<Sphere>(coord3{6, 0.5, -6},   Radius{0.5}, light));
     world.add(make_shared<Sphere>(coord3{6, 0.5, 6},    Radius{0.5}, light));
     world.add(make_shared<Sphere>(coord3{-6, 0.5, 6},   Radius{0.5}, light));
-    world.add(make_shared<Sphere>(coord3{0, 1, 0},  Radius{1}, glass_blue));
+    world.add(make_shared<Sphere>(coord3{0, 1, 0},      Radius{1}, glass_blue));
+
+    // Noise generation for terrain
+    const OpenSimplex2S simplex{seed};
+    #ifndef NDEBUG
+    renderer.render(simplex, 5);
+    #endif
 
     // Ground
-    Heightmap map{{-10, -1, -10}, 0.2, 100, 100};
+    Heightmap map{
+        [&](const double x, const double y){ return simplex.noise2(x, y); },
+        {-10, -1, -10},
+        0.05,
+        400,
+        400
+    };
     for (std::vector ground_triangles{map.construct_map(green)}; const shared_ptr<Triangle>& triangle : ground_triangles) {
         world.add(triangle);
     }
 
-    const Renderer renderer{camera};
     world = HittableList(make_shared<Bvh>(world));          // Put objects into the BVH
     auto checkpoint{std::chrono::steady_clock::now()};
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(checkpoint - start);

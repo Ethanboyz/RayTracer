@@ -6,11 +6,9 @@
 #include "rt/geom/hittable.hpp"
 #include "rt/geom/hittable_list.hpp"
 #include "rt/geom/aabb.hpp"
-#include "rt/utilities.hpp"
 
 using std::shared_ptr;
 using std::fabs;
-using Utilities::random_int;
 
 /**
  * @class Bvh

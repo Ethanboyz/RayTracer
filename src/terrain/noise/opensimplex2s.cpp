@@ -91,8 +91,8 @@ double OpenSimplex2S::noise2_Base(const double xs, const double ys) const {
           continue;
         }
 
-        const int pxm = xsb + c.xsv & PMASK;
-        const int pym = ysb + c.ysv & PMASK;
+        const int pxm = (xsb + c.xsv) & PMASK;
+        const int pym = (ysb + c.ysv) & PMASK;
         Grad2 grad = permGrad2[perm[pxm] ^ pym];
         const double extrapolation = grad.dx * dx + grad.dy * dy;
 
