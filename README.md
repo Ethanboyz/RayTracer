@@ -45,6 +45,7 @@ on cooking up.
   - [X] Triangle mesh construction
   - [X] Noise functions
     - [X] Opensimplex
+  - [ ] FBM
   - [ ] Erosion?
   - [ ] Instancing?
 - Alternative acceleration structure
