@@ -16,8 +16,9 @@ public:
     /** @brief Constructs a new double-sided Triangle with the specified vertices a, b, c. */
     constexpr Triangle(const coord3& a, const coord3& b, const coord3& c, const Material& material) :
         a_{a},
-        b_{b},
-        c_{c},
+        ab_{b - a_},
+        ac_{c - a_},
+        normal_{unit(cross(ab_, ac_))},
         material_{material},
         bbox_{
             Interval{fmin(fmin(a.x(), b.x()), c.x()), fmax(fmax(a.x(), b.x()), c.x())},
@@ -45,7 +46,9 @@ public:
     [[nodiscard]] Aabb bounding_box() const override { return bbox_; }
 
 private:
-    coord3 a_, b_, c_;              // Triangle vertices
+    coord3 a_;                      // First triangle vertex
+    vec3 ab_, ac_;                  // Triangle edges
+    uvec3 normal_;
     Material material_;
     Aabb bbox_;
 };

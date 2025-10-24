@@ -2,10 +2,8 @@
 #include "rt/math/ray.hpp"
 
 bool Triangle::ray_hit(const Ray& ray, const Interval<float>& t, HitRecord& hit_record) const {
-    const vec3 ab{b_ - a_};
-    const vec3 ac{c_ - a_};
-    const vec3 ray_cross_ac{cross(nounit(ray.direction()), ac)};
-    const float det{dot(ab, ray_cross_ac)};
+    const vec3 ray_cross_ac{cross(nounit(ray.direction()), ac_)};
+    const float det{dot(ab_, ray_cross_ac)};
 
     // Ray parallel to triangle = never intersects
     if (std::fabs(det) < 1e-8) {
@@ -19,19 +17,19 @@ bool Triangle::ray_hit(const Ray& ray, const Interval<float>& t, HitRecord& hit_
     if (constexpr Interval interval{0.f, 1.f}; !interval.inclusive_contains(u, 1e-6)) {
         return false;
     }
-    const vec3 r_cross_ab{cross(r, ab)};
+    const vec3 r_cross_ab{cross(r, ab_)};
     if (const float v{inv_det * dot(ray.direction(), r_cross_ab)}; v < -1e-6 || u + v > 1 + 1e-6) {
         return false;
     }
 
-    const float ray_t{inv_det * dot(ac, r_cross_ab)};
+    const float ray_t{inv_det * dot(ac_, r_cross_ab)};
     if (!t.inclusive_contains(ray_t, 1e-4)) {
         return false;
     }
     // Initialize all HitRecord fields before returning
     hit_record.point(ray.position(ray_t));
     hit_record.t(ray_t);
-    hit_record.set_face_normal(ray, unit(cross(ab, ac)));
+    hit_record.set_face_normal(ray, normal_);
     hit_record.material(material_);
     return true;
 }

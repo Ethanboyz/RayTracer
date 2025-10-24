@@ -17,10 +17,6 @@ using std::fabs;
  * Each object can be treated as the root of its own tree.
  */
 class Bvh final : public Hittable {
-    static constexpr int MAX_LEAF{2};           // Max number of primitives per binary set of children (keep as 2 until robust Leaf structure is made)
-    static constexpr int NUM_BINS{16};          // Number of bins/buckets to divide axis into
-    static constexpr int INTERSECT_COST{1};     // Cost of ray-primitive intersection
-    static constexpr int TRAVERSAL_COST{1};     // Cost of "traversal" from node to children
 public:
     explicit Bvh(HittableList list) : Bvh(list.objects(), 0, list.size()) {}
 

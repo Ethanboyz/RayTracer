@@ -19,7 +19,7 @@ using namespace std::chrono_literals;
 
 int main() {
     auto start{std::chrono::steady_clock::now()};
-    constexpr int num_samples{5000};             // Increase for more samples = less noise but more compute
+    constexpr int num_samples{10};             // Increase for more samples = less noise but more compute
     constexpr float aspect_ratio{16.f/9.f};
     constexpr int image_height{1080};
 
@@ -64,9 +64,9 @@ int main() {
     Heightmap map{
         [&](const double x, const double y){ return simplex.noise2(x, y); },
         {-10, -1, -10},
-        0.05,
-        400,
-        400
+        0.1,
+        200,
+        200
     };
     for (std::vector ground_triangles{map.construct_map(green)}; const shared_ptr<Triangle>& triangle : ground_triangles) {
         world.add(triangle);

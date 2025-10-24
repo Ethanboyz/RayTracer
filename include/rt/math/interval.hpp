@@ -8,6 +8,10 @@
  * @brief Represents an interval/range between a lower and upper bound.
  * @tparam T Interval values type (must be arithmetic).
  */
+
+using std::fmin;
+using std::fabs;
+
 template<class T>
 class Interval {
     static_assert(std::is_arithmetic_v<T> && !std::is_same_v<T, bool>, "Intervals must be numerical.");
@@ -52,8 +56,8 @@ public:
 
     /** @return True if x is within the interval range (inclusive) with epsilon tolerance. */
     [[nodiscard]] constexpr bool inclusive_contains(const T x, float epsilon) const noexcept {
-        epsilon = std::fmin(std::fabs(epsilon), range());
-        return min_ <= x + std::fabs(epsilon) && x <= max_ - std::fabs(epsilon);
+        epsilon = fmin(fabs(epsilon), range());
+        return min_ <= x + fabs(epsilon) && x <= max_ - fabs(epsilon);
     }
 
     /** @return True if x is within the interval range (exclusive). */
