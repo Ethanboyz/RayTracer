@@ -45,10 +45,9 @@ public:
     /**
      * @brief Constructs triangles arranged in grid arrangement, where each grid square are of unit dimensions and composed
      * of two Triangles.
-     * @param material Material of all the constructed Triangles.
      * @return Vector of Triangles to be passed into the BVH.
      */
-    [[nodiscard]] std::vector<shared_ptr<Triangle>> construct_map(const Material& material) const;
+    [[nodiscard]] std::vector<shared_ptr<Triangle>> construct_map() const;
 private:
     coord3 corner_;                         // Location of first grid square
     float grid_square_len_;                 // Length of each grid square

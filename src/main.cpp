@@ -19,12 +19,12 @@ using namespace std::chrono_literals;
 
 int main() {
     auto start{std::chrono::steady_clock::now()};
-    constexpr int num_samples{10};             // Increase for more samples = less noise but more compute
+    constexpr int num_samples{10000};             // Increase for more samples = less noise but more compute
     constexpr float aspect_ratio{16.f/9.f};
     constexpr int image_height{1080};
 
     Camera camera{
-        coord3{10, 5, 0},
+        coord3{0, 1.1, 10},
         coord3{0, 0, 0},
         uvec3{0, 1, 0},
         2.1,
@@ -42,17 +42,11 @@ int main() {
     // Setup the world and 3d objects
     const Renderer renderer{camera};
     HittableList world;
-    constexpr float world_medium{1};    // Refraction index of the medium all objects are in (i.e. air ≈ 1)
 
-    Material light      {Material::create_light(Color{1.0, 1.0, 1.0}, Emittance{10.0})};
-    Material glass_blue {Material::create_refractive_material(Color{0.0, 0.0, 1.0}, Refraction{0.7}, RefractionIndex{1.5f / world_medium})};
-    Material green      {Material::create_reflective_material(Color{0.0, 1.0, 0.0}, Reflectance{1.0}, Shininess{0.0})};
-
-    world.add(make_shared<Sphere>(coord3{-6, 0.5, -6},  Radius{0.5}, light));
-    world.add(make_shared<Sphere>(coord3{6, 0.5, -6},   Radius{0.5}, light));
-    world.add(make_shared<Sphere>(coord3{6, 0.5, 6},    Radius{0.5}, light));
-    world.add(make_shared<Sphere>(coord3{-6, 0.5, 6},   Radius{0.5}, light));
-    world.add(make_shared<Sphere>(coord3{0, 1, 0},      Radius{1}, glass_blue));
+    Material light {Material::create_light(Color{1.0, 1.0, 1.0}, Emittance{10.0})};
+    world.add(make_shared<Sphere>(coord3{0, 1.5, 0},   Radius{0.5}, light));
+    /*constexpr float world_medium{1};    // Refraction index of the medium all objects are in (i.e. air ≈ 1)
+    Material glass_blue {Material::create_refractive_material(Color{0.0, 0.0, 1.0}, Refraction{0.7}, RefractionIndex{1.5f / world_medium})};*/
 
     // Noise generation for terrain
     const OpenSimplex2S simplex{seed};
@@ -60,15 +54,20 @@ int main() {
     renderer.render(simplex, 5);
     #endif
 
-    // Ground
+    // Ground (center visible ground around camera)
+    constexpr float grid_square_length{0.2};
+    constexpr int length{100};
+    constexpr int width{200};
+    constexpr int norm{std::min(length, width)};
     Heightmap map{
-        [&](const double x, const double y){ return simplex.noise2(x, y); },
-        {-10, -1, -10},
-        0.1,
-        200,
-        200
+        [&](const double x, const double y){ return simplex.noise2(x * 6 / norm, y * 6 / norm); },
+        {-width * grid_square_length / 2, 0, -10},
+        grid_square_length,
+        length,
+        width
     };
-    for (std::vector ground_triangles{map.construct_map(green)}; const shared_ptr<Triangle>& triangle : ground_triangles) {
+    // Construct triangle mesh out of Heightmap
+    for (std::vector ground_triangles{map.construct_map()}; const shared_ptr<Triangle>& triangle : ground_triangles) {
         world.add(triangle);
     }
 

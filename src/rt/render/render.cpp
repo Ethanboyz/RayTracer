@@ -9,8 +9,8 @@
 #include "terrain/noise/opensimplex2s.hpp"
 
 static constexpr int ASSIGN_PIXELS{32};                                 // Work (number of pixels) to assign at a time to a ray/worker thread
-static constexpr int RAY_DEPTH{4};                                      // Max number of ray bounces per ray
-static constexpr Color BACKGROUND_COLOR{0.04, 0.04, 0.04};        // Effective ambient color
+static constexpr int RAY_DEPTH{8};                                      // Max number of ray bounces per ray
+static constexpr Color BACKGROUND_COLOR{0.4, 0.4, 0.8};        // Effective ambient color
 
 // Draw pixels into a .ppm image file (multithreaded pixel handling with a sort of work queue)
 void Renderer::render(const HittableList& world) const {
