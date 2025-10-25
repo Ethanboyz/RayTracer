@@ -46,18 +46,18 @@ on cooking up.
   - [X] Noise functions
     - [X] Opensimplex
   - [ ] FBM
-  - [ ] Erosion?
-  - [ ] Instancing?
-- Alternative acceleration structure
+- [ ] Alternative acceleration structure (for height map traversal)
 ### Phase 3: Volumetrics
 - [ ] Clouds
-- [ ] Water
+- [ ] Water?
 ### Phase 4: GPU Acceleration
 - [ ] CUDA port
-    - [ ] GPU-based materials system
-    - [ ] Faster BVH constructor
+    - [ ] GPU-based intersections system
+    - [ ] Improved BVH constructor
+    - [ ] Improved height map constructor
     - [ ] Performance benchmarking
 ### Phase 5: Polish??
+- [ ] Fancy(er) atmospherics
 - [ ] Config GUI
 - [ ] Denoising
 - [ ] Debug visualizations
