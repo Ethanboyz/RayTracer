@@ -49,6 +49,7 @@ on cooking up.
 - [ ] Alternative acceleration structure (for height map traversal)
 ### Phase 3: Volumetrics
 - [ ] Clouds
+  - Separate ray marching for volumetrics? Or more path tracing?
 - [ ] Water?
 ### Phase 4: GPU Acceleration
 - [ ] CUDA port
