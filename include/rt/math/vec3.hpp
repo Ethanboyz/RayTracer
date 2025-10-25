@@ -259,6 +259,17 @@ public:
     }
 
     /**
+     * @brief Vector == comparison.
+     * @param u Left side of the comparison.
+     * @param v Right side of the comparison.
+     * @return True if the given vectors are equal (or very close to equal), false otherwise.
+     */
+    constexpr friend bool operator==(const Vec3& u, const Vec3& v) noexcept {
+        constexpr float eps{1e-7};
+        return fabs(u.x() - v.x()) < eps && fabs(u.y() - v.y()) < eps && fabs(u.z() - v.z()) < eps;
+    }
+
+    /**
      * @brief Vector-vector dot operation.
      * @param u Left side of the operation.
      * @param v Right side of the operation.

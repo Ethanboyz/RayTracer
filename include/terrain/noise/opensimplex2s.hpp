@@ -137,7 +137,7 @@ public:
     explicit OpenSimplex2S(std::uint64_t seed = 0);
 
     /**
-    * 2D SuperSimplex noise, standard lattice orientation.
+    * 2D SuperSimplex noise, standard lattice orientation (-1.0 - 1.0).
     */
     [[nodiscard]] double noise2(double x, double y) const;
 

@@ -21,7 +21,7 @@ std::vector<shared_ptr<Triangle>> Heightmap::construct_map() const {
             const coord3 low_left{left_x, vertices_heights_[vertex + width_], low_z};
             const coord3 low_right{right_x, vertices_heights_[vertex + width_ + 1], low_z};
 
-            const float a{(vertices_heights_[vertex] + vertices_heights_[vertex + width_]) / 2};
+            const float a{up_left.y()};
             const Color color{(1.f - a) * Color{0.0, 1.0, 0.0} + a * Color{0.859, 0.580, 0.271}};
             const Material material{
                 Material::create_reflective_material(
