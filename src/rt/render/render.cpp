@@ -10,13 +10,14 @@
 
 static constexpr int ASSIGN_PIXELS{32};                                 // Work (number of pixels) to assign at a time to a ray/worker thread
 static constexpr int RAY_DEPTH{8};                                      // Max number of ray bounces per ray
-static constexpr Color BACKGROUND_COLOR{0.4, 0.4, 0.8};           // Color of the sky
-static constexpr Color AMBIENT_LIGHT{0.1, 0.1, 0.1};           // Effective ambient color
+static constexpr Color BLUE_BACKGROUND_COLOR{0.6, 0.6, 1.0};      // Sky color
+static constexpr Color ORANGE_BACKGROUND_COLOR{1.0, 0.4, 0.0};    // Sky color near horizon
+static constexpr Color AMBIENT_LIGHT{0.1, 0.1, 0.1};              // Effective ambient color
 
 // Draw pixels into a .ppm image file (multithreaded pixel handling with a sort of work queue)
 void Renderer::render(const HittableList& world) const {
     const unsigned ray_threads{std::max(1u, std::thread::hardware_concurrency() - 1)};  // Reserve 1 thread for logging
-    std::cout << "This system can support " << ray_threads + 1 << " threads." << std::endl;
+    std::cout << "This system can support " << ray_threads + 1 << " threads" << std::endl;
 
     std::atomic<size_t> next{};     // Batched pixels needing work
     std::atomic<size_t> done{};     // Completed pixels
@@ -121,7 +122,13 @@ Color Renderer::ray_color(const Ray& ray, const int depth, const Hittable& world
     }
     // Minimum of t = 0 so camera effectively looks forwards (not also backwards)
     if (!world.ray_hit(ray, Interval{0.001f, std::numeric_limits<float>::max()}, hit_record)) {
-        return ray.origin() == camera_.position() ? BACKGROUND_COLOR : AMBIENT_LIGHT;
+        if (ray.origin() == camera_.position()) {
+            // Linear interpolation of sky colors (closer to sun = orange, farther = blue)
+            const float y{0.5f * (ray.direction().y() + 1)};
+            const float x{0.5f * (std::fabs(ray.direction().x()) + 1)};
+            return (1.f - (x * y)) * ORANGE_BACKGROUND_COLOR + (x * y) * BLUE_BACKGROUND_COLOR;
+        }
+        return AMBIENT_LIGHT;
     }
 
     // Ray-object intersection, generate new child rays in random directions outwards from the surface

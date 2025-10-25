@@ -1,4 +1,6 @@
 #include "rt/geom/heightmap.hpp"
+
+#include "rt/utilities.hpp"
 #include "rt/geom/triangle.hpp"
 
 using std::make_shared;
@@ -23,14 +25,22 @@ std::vector<shared_ptr<Triangle>> Heightmap::construct_map() const {
 
             const float a{up_left.y()};
             const Color color{(1.f - a) * Color{0.0, 1.0, 0.0} + a * Color{0.859, 0.580, 0.271}};
-            const Material material{
+            const Color color1{color * Utilities::random_float(Interval{0.7f, 1.f})};
+            const Material material1{
                 Material::create_reflective_material(
-                    color,
+                    color1,
+                    Reflectance{1.0},
+                    Shininess{0.0}
+                    )};
+            const Color color2{color * Utilities::random_float(Interval{0.7f, 1.f})};
+            const Material material2{
+                Material::create_reflective_material(
+                    color2,
                     Reflectance{1.0},
                     Shininess{0.0}
                 )};
-            Triangle upper_left{up_left, up_right, low_left, material};
-            Triangle lower_right{up_right, low_left, low_right, material};
+            Triangle upper_left{up_left, up_right, low_left, material1};
+            Triangle lower_right{up_right, low_left, low_right, material2};
             triangles.push_back(make_shared<Triangle>(upper_left));
             triangles.push_back(make_shared<Triangle>(lower_right));
             vertex++;

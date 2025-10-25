@@ -19,13 +19,13 @@ using namespace std::chrono_literals;
 
 int main() {
     auto start{std::chrono::steady_clock::now()};
-    constexpr int num_samples{10};             // Increase for more samples = less noise but more compute
+    constexpr int num_samples{1};             // Increase for more samples = less noise but more compute
     constexpr float aspect_ratio{16.f/9.f};
-    constexpr int image_height{480};
+    constexpr int image_height{1080};
 
     Camera camera{
-        coord3{0, 1.0, 10},
-        coord3{0, 0, -10},
+        coord3{0, 1, 20},
+        coord3{0, 0, 0},
         uvec3{0, 1, 0},
         2.1,
         90,
@@ -35,7 +35,7 @@ int main() {
         image_height
     };
     std::random_device rd;
-    uint64_t seed{rd()};
+    uint64_t seed{3753314839};
     Utilities::seed_random_generator(seed);
     std::cout << "Seed: " << seed << std::endl;
 
@@ -43,23 +43,27 @@ int main() {
     const Renderer renderer{camera};
     HittableList world;
 
-    Material light {Material::create_light(Color{1.0, 1.0, 11.0}, Emittance{10.0})};
+    Material light {Material::create_light(Color{1.0, 0.9, 0.5}, Emittance{1.0})};
     world.add(make_shared<Sphere>(coord3{0, 1.5, 0},   Radius{0.5}, light));
 
     // Noise generation for terrain
     const OpenSimplex2S simplex{seed};
-    //#ifndef NDEBUG
-    renderer.render(simplex, 5);
-    //#endif
+    #ifndef NDEBUG
+    constexpr int noise_img_freq{5};
+    renderer.render(simplex, noise_img_freq);
+    #endif
 
     // Ground (center visible ground around camera)
-    constexpr float grid_square_length{0.2};
-    constexpr int length{100};
-    constexpr int width{200};
-    constexpr coord3 corner{-width * grid_square_length / 2, 0, 0};
+    constexpr float grid_square_length{0.5};       // <= 1, lower -> more triangles
+    constexpr int coord_length{20};
+    constexpr int coord_width{40};
+    constexpr int freq{6};
+    constexpr int length{static_cast<int>(coord_length / grid_square_length)};
+    constexpr int width{static_cast<int>(coord_width / grid_square_length)};
+    constexpr coord3 corner{static_cast<float>(-coord_length), 0, 0};
     constexpr int norm{std::min(length, width)};
     Heightmap map{
-        [&](const double x, const double y){ return simplex.noise2(x * 6 / norm, y * 6 / norm); },
+        [&](const double x, const double y){ return simplex.noise2(x * freq / norm, y * freq / norm); },
         corner,
         grid_square_length,
         length,
@@ -71,14 +75,15 @@ int main() {
     }
 
     // Water at low elevations
-    constexpr float world_medium{1};    // Refraction index of the medium all objects are in (i.e. air ≈ 1)
-    Material water {Material::create_refractive_material(Color{0.0, 0.0, 1.0}, Refraction{0.3}, RefractionIndex{1.5f / world_medium})};
+    //constexpr float world_medium{1};    // Refraction index of the medium all objects are in (i.e. air ≈ 1)
+    //Material water {Material::create_refractive_material(Color{0.0, 0.0, 1.0}, Refraction{0.3}, RefractionIndex{1.5f / world_medium})};
+    Material water {Material::create_reflective_material(Color{0.0, 0.0, 1.0}, Reflectance{0.9}, Shininess{0.9})};
 
     constexpr float sea_level{0};       // -1 for dry, 1 for completely submerged
-    constexpr coord3 a{corner.x(), sea_level, corner.z()};
-    constexpr coord3 b{-corner.x(), sea_level, corner.z()};
-    constexpr coord3 c{-corner.x(), sea_level, length * grid_square_length};
-    constexpr coord3 d{corner.x(), sea_level, length * grid_square_length};
+    constexpr coord3 a{-coord_length, sea_level, corner.z()};
+    constexpr coord3 b{coord_length, sea_level, corner.z()};
+    constexpr coord3 c{coord_length, sea_level, coord_width};
+    constexpr coord3 d{-coord_length, sea_level, coord_width};
     const auto water1{make_shared<Triangle>(Triangle{a, b, c, water})};
     const auto water2{make_shared<Triangle>(Triangle{a, c, d, water})};
     world.add(water1);
