@@ -44,7 +44,7 @@ int main() {
     HittableList world;
 
     Material light {Material::create_light(Color{1.0, 0.9, 0.5}, Emittance{1.0})};
-    world.add(make_shared<Sphere>(coord3{0, 1.5, 0},   Radius{0.5}, light));
+    world.add(make_shared<Sphere>(coord3{0, 1.1, 0},   Radius{0.5}, light));
 
     // Noise generation for terrain
     const OpenSimplex2S simplex{seed};

@@ -12,7 +12,7 @@ static constexpr int ASSIGN_PIXELS{32};                                 // Work 
 static constexpr int RAY_DEPTH{8};                                      // Max number of ray bounces per ray
 static constexpr Color BLUE_BACKGROUND_COLOR{0.6, 0.6, 1.0};      // Sky color
 static constexpr Color ORANGE_BACKGROUND_COLOR{1.0, 0.4, 0.0};    // Sky color near horizon
-static constexpr Color AMBIENT_LIGHT{0.1, 0.1, 0.1};              // Effective ambient color
+static constexpr Color AMBIENT_LIGHT{0.05, 0.05, 0.05};              // Effective ambient color
 
 // Draw pixels into a .ppm image file (multithreaded pixel handling with a sort of work queue)
 void Renderer::render(const HittableList& world) const {
@@ -123,10 +123,16 @@ Color Renderer::ray_color(const Ray& ray, const int depth, const Hittable& world
     // Minimum of t = 0 so camera effectively looks forwards (not also backwards)
     if (!world.ray_hit(ray, Interval{0.001f, std::numeric_limits<float>::max()}, hit_record)) {
         if (ray.origin() == camera_.position()) {
-            // Linear interpolation of sky colors (closer to sun = orange, farther = blue)
-            const float y{0.5f * (ray.direction().y() + 1)};
-            const float x{0.5f * (std::fabs(ray.direction().x()) + 1)};
-            return (1.f - (x * y)) * ORANGE_BACKGROUND_COLOR + (x * y) * BLUE_BACKGROUND_COLOR;
+            // Radial interpolation of sky colors (closer to center = orange, farther = blue)
+            const float lin_y{0.5f * (ray.direction().y() + 1)};
+            float x{0.5f * (ray.direction().x() + 1)};
+            float y{0.5f * (ray.direction().y() + 1)};
+            x -= 0.5f;
+            y -= 0.5f;
+
+            float a{std::sqrt(x * x + y * y)};
+            a = std::clamp(a / 0.5f, 0.f, 1.f);
+            return (1.f - (a * lin_y)) * ORANGE_BACKGROUND_COLOR + (a * lin_y) * BLUE_BACKGROUND_COLOR;
         }
         return AMBIENT_LIGHT;
     }
