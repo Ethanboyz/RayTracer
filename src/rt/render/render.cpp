@@ -9,7 +9,7 @@
 #include "terrain/noise/opensimplex2s.hpp"
 
 static constexpr int ASSIGN_PIXELS{32};                                 // Work (number of pixels) to assign at a time to a ray/worker thread
-static constexpr int RAY_DEPTH{8};                                      // Max number of ray bounces per ray
+static constexpr int RAY_DEPTH{16};                                      // Max number of ray bounces per ray
 static constexpr Color BLUE_BACKGROUND_COLOR{0.6, 0.6, 1.0};      // Sky color
 static constexpr Color ORANGE_BACKGROUND_COLOR{1.0, 0.4, 0.0};    // Sky color near horizon
 static constexpr Color AMBIENT_LIGHT{0.05, 0.05, 0.05};              // Effective ambient color
