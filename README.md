@@ -46,7 +46,8 @@ on cooking up.
   - [X] Noise functions
     - [X] Opensimplex
   - [ ] FBM
-- [ ] Alternative acceleration structure (for height map traversal)
+- [ ] Alternative acceleration structures (for height map traversal)
+  - DDA traversal?
 ### Phase 3: Volumetrics
 - [ ] Clouds
   - Separate ray marching for volumetrics? Or more path tracing?
