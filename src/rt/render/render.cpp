@@ -12,7 +12,7 @@ static constexpr int ASSIGN_PIXELS{32};                                 // Work 
 static constexpr int RAY_DEPTH{16};                                      // Max number of ray bounces per ray
 static constexpr Color BLUE_BACKGROUND_COLOR{0.6, 0.6, 1.0};      // Sky color
 static constexpr Color ORANGE_BACKGROUND_COLOR{1.0, 0.4, 0.0};    // Sky color near horizon
-static constexpr Color AMBIENT_LIGHT{0.05, 0.05, 0.05};              // Effective ambient color
+static constexpr Color AMBIENT_LIGHT{0.01, 0.01, 0.01};              // Effective ambient color
 
 // Draw pixels into a .ppm image file (multithreaded pixel handling with a sort of work queue)
 void Renderer::render(const HittableList& world) const {
@@ -120,9 +120,11 @@ Color Renderer::ray_color(const Ray& ray, const int depth, const Hittable& world
     if (depth <= 0) {
         return {0, 0, 0};
     }
+
+    const bool parent_ray{ray.origin() == camera_.position()};
     // Minimum of t = 0 so camera effectively looks forwards (not also backwards)
     if (!world.ray_hit(ray, Interval{0.001f, std::numeric_limits<float>::max()}, hit_record)) {
-        if (ray.origin() == camera_.position()) {
+        if (parent_ray) {
             // Radial interpolation of sky colors (closer to center = orange, farther = blue)
             const float lin_y{0.5f * (ray.direction().y() + 1)};
             float x{0.5f * (ray.direction().x() + 1)};
