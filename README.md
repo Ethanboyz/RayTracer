@@ -6,7 +6,9 @@ time.
 
 It uses simplex noise functions to generate randomized heightmaps, uses those to construct
 triangle meshes that resemble terrain, throws some water on top of it, adds some sunlight,
-and outputs full HD renders of the resulting scene to a .ppm image file.
+and outputs renders of the resulting scene to a .ppm image file.
+
+The result? A full HD sunset over low-poly islands scene with different terrain each iteration.
 
 ## How to run
 Clone this repository in a new directory and run
