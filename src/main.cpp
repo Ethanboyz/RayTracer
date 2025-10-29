@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
     num_samples = args.spp;
 
     Camera camera{
-        coord3{0, 1, 20},
+        coord3{0, 1, 19},
         coord3{0, 0, 0},
         uvec3{0, 1, 0},
         2.1,
@@ -55,14 +55,14 @@ int main(int argc, char* argv[]) {
     #endif
 
     // Ground (center visible ground around camera)
-    constexpr float grid_square_length{0.5};       // <= 1, lower -> more triangles
+    const float grid_square_length{args.triangle_length};       // <= 1, lower -> more triangles
     constexpr int coord_length{20};
     constexpr int coord_width{40};
     constexpr int freq{6};
-    constexpr int length{static_cast<int>(coord_length / grid_square_length)};
-    constexpr int width{static_cast<int>(coord_width / grid_square_length)};
+    const int length{static_cast<int>(coord_length / grid_square_length)};
+    const int width{static_cast<int>(coord_width / grid_square_length)};
     constexpr coord3 corner{static_cast<float>(-coord_length), 0, 0};
-    constexpr int norm{std::min(length, width)};
+    const int norm{std::min(length, width)};
     Heightmap map{
         [&](const double x, const double y){ return simplex.noise2(x * freq / norm, y * freq / norm); },
         corner,

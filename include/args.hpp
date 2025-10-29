@@ -11,6 +11,7 @@
 struct run_arguments {
     uint64_t seed;              // Random number generator seed, affects noise function for terrain
     int spp;                    // Parent rays per pixel
+    float triangle_length;      // Heightmap triangle lengths
 };
 
 inline error_t arg_parser(int key, char *arg, argp_state *state);
@@ -26,7 +27,8 @@ inline error_t arg_parser(int key, char *arg, argp_state *state);
 inline run_arguments arg_parseopt(const int argc, char *argv[]) {
     argp_option options[] = {
         { "seed", 's', "seed", 0, "Seed for terrain generation, can be any non-negative integer up to 18446744073709551615. Default: random seed", 0},
-        { "spp", 'n', "samples", 0, "Samples (number of parent/camera rays) per pixel. Increase for less noise. Default: 10", 0}
+        { "spp", 'n', "samples", 0, "Samples (number of parent/camera rays) per pixel. Increase for less noise. Default: 10", 0},
+        { "tri", 't', "triangles", 0, "Length of triangle edges per equilateral triangle that makes up the terrain. Decrease for more triangles. 0 < t ≤ 1. Default: 0.5", 0}
     };
 
     const argp argp_settings = {
@@ -44,6 +46,7 @@ inline run_arguments arg_parseopt(const int argc, char *argv[]) {
     std::random_device rd;
     args.seed = rd();
     args.spp = 10;
+    args.triangle_length = 0.5f;
 
     if (argp_parse(&argp_settings, argc, argv, 0, nullptr, &args) != 0) {
         std::cerr << "Error while parsing" << std::endl;
@@ -75,6 +78,13 @@ inline error_t arg_parser(const int key, char *arg, argp_state *state) {
 			argp_error(state, "Invalid spp, must be a positive number");
 		}
 		break;
+	}
+	case 't': {
+        args->triangle_length = std::stof(arg);
+        if (args->triangle_length <= 0 || args->triangle_length > 1) {
+            argp_error(state, "Invalid triangle length, must be greater than 0 and less or equal to 1");
+        }
+        break;
 	}
 	default:
 		ret = ARGP_ERR_UNKNOWN;

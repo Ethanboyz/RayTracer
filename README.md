@@ -15,6 +15,10 @@ Clone this repository in a new directory and run
 Running the executable will create a new image.ppm file with the
 completed render.
 
+./RayTracer -s 123456789 -n 10000
+ - -s: optional, specify a seed for the terrain generation (default: random seed)
+ - -n: optional, specify the samples per pixel taken (default: 10, increase for less noise)
+
 ## Progress
 Below is a non-exhaustive list of small milestones I've implemented along with features I plan
 on cooking up.
