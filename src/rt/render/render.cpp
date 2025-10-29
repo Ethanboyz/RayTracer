@@ -17,7 +17,9 @@ static constexpr Color AMBIENT_LIGHT{0.01, 0.01, 0.01};              // Effectiv
 // Draw pixels into a .ppm image file (multithreaded pixel handling with a sort of work queue)
 void Renderer::render(const HittableList& world) const {
     const unsigned ray_threads{std::max(1u, std::thread::hardware_concurrency() - 1)};  // Reserve 1 thread for logging
+    #ifndef NDEBUG
     std::cout << "This system can support " << ray_threads + 1 << " threads" << std::endl;
+    #endif
 
     std::atomic<size_t> next{};     // Batched pixels needing work
     std::atomic<size_t> done{};     // Completed pixels

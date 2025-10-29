@@ -1,7 +1,5 @@
 #include <chrono>
-#include <memory>
-#include <thread>
-#include <random>
+#include "args.hpp"
 #include "rt/geom/bvh.hpp"
 #include "rt/render/camera.hpp"
 #include "rt/geom/hittable_list.hpp"
@@ -17,11 +15,16 @@ using std::shared_ptr;
 using std::uint8_t;
 using namespace std::chrono_literals;
 
-int main() {
+int main(int argc, char* argv[]) {
     auto start{std::chrono::steady_clock::now()};
-    constexpr int num_samples{10000};             // Increase for more samples = less noise but more compute
+
+    int num_samples{};             // Increase for more samples = less noise but more compute
     constexpr float aspect_ratio{16.f/9.f};
     constexpr int image_height{1080};
+
+    const run_arguments args{arg_parseopt(argc, argv)};
+    uint64_t seed{args.seed};
+    num_samples = args.spp;
 
     Camera camera{
         coord3{0, 1, 20},
@@ -34,8 +37,6 @@ int main() {
         aspect_ratio,
         image_height
     };
-    std::random_device rd;
-    uint64_t seed{3753314839};
     Utilities::seed_random_generator(seed);
     std::cout << "Seed: " << seed << std::endl;
 
@@ -91,8 +92,10 @@ int main() {
 
     world = HittableList(make_shared<Bvh>(world));          // Put objects into the BVH
     auto checkpoint{std::chrono::steady_clock::now()};
-    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(checkpoint - start);
+    [[maybe_unused]] auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(checkpoint - start);
+    #ifndef NDEBUG
     std::cout << "Setup time: " << duration.count() << " ms" << std::endl;
+    #endif
 
     renderer.render(world);
 
