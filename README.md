@@ -1,6 +1,6 @@
 # RayTracer
 ## What is this project??
-Behold, a basic ray tracer I started to learn more about how graphics work, expose
+Behold, a tiny monte carlo path tracer I started to learn more about how graphics work, expose
 myself to the math/theory behind raytracing, and test my linear algebra coursework in my free
 time.
 
